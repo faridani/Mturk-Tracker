@@ -1,0 +1,12 @@
+*.pyc
+.pydevproject
+.tmp*
+DJANGO_SETTINGS_MODULE
+.DS_store
+media/.DS_store
+nuvola
+media/images/.DS_Store
+.DS_Store
+media/.DS_Store
+s3*test*
+sds*test*
