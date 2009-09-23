@@ -1,23 +1,13 @@
 from defaults import *
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
-ADMINS = (
-    ('konrad', 'conrad.adamczyk@gmail.com'),
+MANAGERS = ADMINS = (
+    ('maciel', 'cielecki@gmail.com'),
     ('mklujszo', 'mklujszo@gmail.com'),
 )
 
-MANAGERS = ADMINS
-
-SITE_ID = 1
-
-USE_I18N = True
-
-ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '1=r4y=s3=t-l&dj4t)s7yj&nhu^aio8%0l4f@v2r)e6v#upyi+'
+SECRET_KEY = 'op56pokf54./&^%$GDAWLEosh"AP#O$%^&KLUYHBLAKLPLPkso'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -30,16 +20,37 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.doc.XViewMiddleware',
 )
 
 TEMPLATE_DIRS = (
-    os.path.join(ROOT_PATH, 'templates'),
+    os.path.join(ROOT_PATH, "templates"),
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request',
 )
 
 INSTALLED_APPS = (
-    'django.contrib.admin',    
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.admin',
+    'mturk.main'    
 )
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+)
+INTERNAL_IPS = ['127.0.0.1']
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+LOGIN_REDIRECT_URL = "/"
