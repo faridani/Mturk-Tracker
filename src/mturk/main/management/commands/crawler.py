@@ -4,6 +4,7 @@ from multiprocessing import Pipe, Process
 from threading import Thread
 
 import re
+import time
 import urllib2
 
 from crawler_callbacks import callback_allhit, callback_group
@@ -32,6 +33,7 @@ class Crawler(Thread):
 
         self.conns = []
         self.processes = []
+        self.data = []
 
         #max_page = int(self.get_max_page())
         max_page = 2
@@ -56,15 +58,21 @@ class Crawler(Thread):
             if i == pages_range-2 and pages_to > max_page:
                 pages_to = max_page
 
-        print 'processes started'
         for process in self.processes: process.start()
-        for process in self.processes: process.join()
-        print 'processes stopped'
 
+        data_received = []
         for conn in self.conns:
-            data = conn.recv()
-            print len(data)
-        #    times_processes.append(conn.recv())
+            receiver = PipeReceiver(conn)
+            receiver.daemon = True
+            receiver.start()
+            receiver.join()
+            data_received.append(receiver.get_data())
+
+        for data in data_received:
+            for page_result in data:
+                print "\nPAGE", page_result['page_number']
+                for group in page_result['groups']:
+                    print "\n",group
 
         #log_results(self.log_path, generate_benchmark(times_processes))
 
@@ -82,13 +90,7 @@ class Crawler(Thread):
         worker = Worker(callback_allhit, pages_from=pages_from, pages_to=pages_to)
         worker.start()
         worker.join()
-        print 'worker finished'
-        print worker.data,"\n"
-        #conn.send({})
         conn.send(worker.data)
-        print 'worker data sent'
-        conn.close()
-        print 'worker conn closed'
 
 
 
@@ -110,3 +112,23 @@ class Worker(Thread):
     def run(self):
 
         self.data = self.callback(self.callback_arg)
+
+
+
+class PipeReceiver(Thread):
+    
+    def __init__(self, conn):
+        self.conn = conn
+        self.data = None
+        Thread.__init__(self)
+
+    def get_data(self):
+        return self.data
+
+    def run(self):
+        while True:
+            if self.conn.poll(None):
+                self.data = self.conn.recv()
+                break
+            time.sleep(1)
+        self.conn.close()

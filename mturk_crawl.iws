@@ -72,7 +72,7 @@
       <file leaf-file-name="crawler.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="64" column="12" selection-start="1802" selection-end="1802" vertical-scroll-proportion="0.4488189">
+            <state line="74" column="29" selection-start="2131" selection-end="2131" vertical-scroll-proportion="0.3301887">
               <folding />
             </state>
           </provider>
@@ -90,7 +90,7 @@
       <file leaf-file-name="crawler_callbacks.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="56" selection-start="208" selection-end="208" vertical-scroll-proportion="0.0">
+            <state line="119" column="4" selection-start="4418" selection-end="4418" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -592,7 +592,7 @@
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ROLLBACK_IN_BACKGROUND" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value=" * Crawler init&#10; * libs:&#10;  * BeautifulSoup" />
+    <option name="LAST_COMMIT_MESSAGE" value=" * Crawler fix" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -604,6 +604,7 @@
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
     <MESSAGE value=" * Crawler init&#10; * libs:&#10;  * BeautifulSoup" />
+    <MESSAGE value=" * Crawler fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -734,14 +735,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="56" selection-start="208" selection-end="208" vertical-scroll-proportion="0.0">
+        <state line="119" column="4" selection-start="4418" selection-end="4418" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="12" selection-start="1802" selection-end="1802" vertical-scroll-proportion="0.4488189">
+        <state line="74" column="29" selection-start="2131" selection-end="2131" vertical-scroll-proportion="0.3301887">
           <folding />
         </state>
       </provider>

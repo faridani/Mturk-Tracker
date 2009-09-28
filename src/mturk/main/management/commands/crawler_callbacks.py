@@ -117,6 +117,7 @@ def callback_allhit(pages):
 
     return results
 
+    
 def callback_group(id):
 
     if type(id) != type(1):
