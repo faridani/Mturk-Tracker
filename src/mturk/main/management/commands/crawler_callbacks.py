@@ -5,7 +5,9 @@ import datetime
 import re
 import urllib2
 
-def callback_allhit(self, pages):
+from crawler_common import get_allhit_url, get_group_url
+
+def callback_allhit(pages):
 
     if type(pages) != type([]):
         raise Exception, '::callback_allhit() must be called with one list argument'
@@ -25,7 +27,7 @@ def callback_allhit(self, pages):
 
     for page_number in pages:
 
-        response = urllib2.urlopen(self.get_allhit_url(page_number))
+        response = urllib2.urlopen(get_allhit_url(page_number))
         html = response.read()
         soup = BeautifulSoup(html)
 
@@ -115,7 +117,7 @@ def callback_allhit(self, pages):
 
     return results
 
-def callback_group(self, id):
+def callback_group(id):
 
     if type(id) != type(1):
         raise Exception, '::callback_group() must be called with one integer argument'

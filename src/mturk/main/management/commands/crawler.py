@@ -46,7 +46,7 @@ class Crawler(Thread):
 
         for i in range(0, pages_range):
 
-            parent_conn, child_conn = Pipe()
+            parent_conn, child_conn = Pipe(False)
             self.conns.append(parent_conn)
 
             self.processes.append(Process(target=self.launch_worker,args=(pages_from,pages_to,child_conn,)))
