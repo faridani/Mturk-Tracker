@@ -11,7 +11,7 @@ from crawler_callbacks import callback_allhit, callback_group
 from crawler_common import get_allhit_url, get_group_url
 
 class Command(BaseCommand):
-    help = 'Runs the MTurk crawler.'
+    help = 'Runs the MTurk crawler. ( This is a work in-progress. Be warned. )'
     args = '...'
 
     def handle(self, processes_count, **options):
@@ -28,53 +28,7 @@ class Crawler(Thread):
         Thread.__init__(self)
 
         self.processes_count = processes_count
-
-    def run(self):
-
-        self.conns = []
-        self.processes = []
         self.data = []
-
-        #max_page = int(self.get_max_page())
-        max_page = 2
-
-        interval = max_page/self.processes_count
-        pages_range = self.processes_count
-        if self.processes_count*(interval+1) < max_page:
-            pages_range = range + 1
-
-        pages_from = 1
-        pages_to = interval if interval <= max_page else max_page
-
-        for i in range(0, pages_range):
-
-            parent_conn, child_conn = Pipe(False)
-            self.conns.append(parent_conn)
-
-            self.processes.append(Process(target=self.launch_worker,args=(pages_from,pages_to,child_conn,)))
-
-            pages_from = pages_to + 1
-            pages_to = pages_to + interval + 1
-            if i == pages_range-2 and pages_to > max_page:
-                pages_to = max_page
-
-        for process in self.processes: process.start()
-
-        data_received = []
-        for conn in self.conns:
-            receiver = PipeReceiver(conn)
-            receiver.daemon = True
-            receiver.start()
-            receiver.join()
-            data_received.append(receiver.get_data())
-
-        for data in data_received:
-            for page_result in data:
-                print "\nPAGE", page_result['page_number']
-                for group in page_result['groups']:
-                    print "\n",group
-
-        #log_results(self.log_path, generate_benchmark(times_processes))
 
 
     def get_max_page(self):
@@ -86,49 +40,79 @@ class Crawler(Thread):
         else:        return 1
 
 
-    def launch_worker(self, pages_from, pages_to, conn):
-        worker = Worker(callback_allhit, pages_from=pages_from, pages_to=pages_to)
+    def launch_worker(self, conn, callback, callback_args):
+        worker = Worker(callback, callback_args)
         worker.start()
         worker.join()
         conn.send(worker.data)
 
 
+    def process_values(self, values, callback):
+
+        def receive_from_pipe(conn):
+            while True:
+                if conn.poll(None):
+                    data = conn.recv()
+                    conn.close()
+                    return data
+                time.sleep(1)
+
+        data = []
+
+        conns = []
+        processes = []
+
+        max_value = len(values)-1
+        interval = max_value/self.processes_count
+        values_range = self.processes_count
+        if self.processes_count*(interval+1) < max_value:
+            values_range = range + 1
+
+        values_from = 0
+        values_to = interval if interval <= max_value else max_value
+
+        for i in range(0, values_range):
+
+            parent_conn, child_conn = Pipe(False)
+            conns.append(parent_conn)
+
+            processes.append(Process(target=self.launch_worker, args=(child_conn,callback,values[values_from:values_to+1])))
+
+            values_from = values_to + 1
+            values_to = values_to + interval + 1
+            if i == values_range-2 and values_to > max_value:
+                values_to = max_value
+
+        for process in processes: process.start()
+
+        for conn in conns:
+            for result in receive_from_pipe(conn):
+                data.append(result)
+
+        for process in processes: process.join()
+
+        return data
+
+
+    def run(self):
+
+        #max_page = int(self.get_max_page())
+        max_page = 1
+
+        self.data = self.process_values(range(1,max_page+1), callback_allhit)
+
+        #self.process_values([result['group_id'] for result in self.data], callback_group)
+
 
 class Worker(Thread):
 
-    def __init__(self, callback, **kwargs):
+    def __init__(self, callback, callback_args):
         Thread.__init__(self)
 
         self.callback = callback
-        self.callback_arg = None
+        self.callback_arg = callback_args
         self.data = {}
-
-        if 'pages_from' in kwargs and 'pages_to' in kwargs:
-            self.callback_arg = [i for i in range(kwargs['pages_from'],kwargs['pages_to']+1)]
-
-        if 'group_id' in kwargs:
-            self.callback_arg = kwargs['group_id']
 
     def run(self):
 
         self.data = self.callback(self.callback_arg)
-
-
-
-class PipeReceiver(Thread):
-    
-    def __init__(self, conn):
-        self.conn = conn
-        self.data = None
-        Thread.__init__(self)
-
-    def get_data(self):
-        return self.data
-
-    def run(self):
-        while True:
-            if self.conn.poll(None):
-                self.data = self.conn.recv()
-                break
-            time.sleep(1)
-        self.conn.close()

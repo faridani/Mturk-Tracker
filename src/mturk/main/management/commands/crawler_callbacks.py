@@ -40,11 +40,7 @@ def callback_allhit(pages):
             hits_available = hits_available.contents[0]
             hits_available = int(re.sub(',', '', hits_available[:hits_available.index(' ')]))
 
-        result = {
-        'page_number': page_number,
-        'hits_available': hits_available,
-        'groups': []
-        }
+        results = []
 
         for i_group in range(0,len(table.contents)):
 
@@ -101,26 +97,27 @@ def callback_allhit(pages):
                     except:
                         continue
 
-                result['groups'].append({
-                'inpage_position': i_group+1,
-                'group_id': group_id,
-                'title': title,
-                'requester_id': requester_id,
-                'requester_name': requester_name,
-                'hit_expiration_date': hit_expiration_date,
-                'time_alloted': time_alloted,
-                'reward': reward,
-                'description': description
+                results.append({
+                    'page_number': page_number,
+                    'hits_available': hits_available,
+                    'inpage_position': i_group+1,
+                    'group_id': group_id,
+                    'title': title,
+                    'requester_id': requester_id,
+                    'requester_name': requester_name,
+                    'hit_expiration_date': hit_expiration_date,
+                    'time_alloted': time_alloted,
+                    'reward': reward,
+                    'description': description,
+                    'keywords': keywords
                 })
-
-        results.append(result)
 
     return results
 
     
-def callback_group(id):
+def callback_group(ids):
 
-    if type(id) != type(1):
-        raise Exception, '::callback_group() must be called with one integer argument'
+    if type(ids) != type([]):
+        raise Exception, '::callback_allhit() must be called with one list argument'
 
-    print 'group:',id
+    print ids
