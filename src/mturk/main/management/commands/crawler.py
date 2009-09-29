@@ -9,7 +9,7 @@ import re
 import time
 import urllib2
 
-from crawler_callbacks_download import callback_allhit, callback_group
+from crawler_callbacks_data import callback_allhit, callback_details, callback_add_crawlfk
 from crawler_callbacks_save import callback_database
 from crawler_common import get_allhit_url, get_group_url
 from mturk.main.models import Crawl
@@ -104,29 +104,33 @@ class Crawler(Thread):
 
         #self.get_max_page()
 
+        start_time = datetime.datetime.now()
+
+        self.data = self.process_values(range(1,3), callback_allhit)
+        self.data = self.process_values(self.data, callback_details)
+
         crawl = Crawl(**{
-            'start_time':           datetime.datetime.now(),
+            'start_time':           start_time,
             'end_time':             datetime.datetime.now(),
             'success':              True,
             'groups_downloaded':    len(self.data),
             'errors':               ''
         })
-        #print crawl
-        self.data = self.process_values(range(1,3), callback_allhit, crawl=crawl)
-        self.data = self.process_values(self.data, callback_group)
+        crawl.save()
+
+        self.data = self.process_values(self.data, callback_add_crawlfk, crawl=crawl)
 
         self.launch_worker(callback_database, self.data)
-
         
 
 class Worker(Thread):
 
-    def __init__(self, callback, callback_arg, **kwargs):
+    def __init__(self, callback, callback_arg, **callback_kwargs):
         Thread.__init__(self)
 
         self.callback = callback
         self.callback_arg = callback_arg
-        self.callback_kwargs = kwargs
+        self.callback_kwargs = callback_kwargs
         self.data = []
 
     def run(self):

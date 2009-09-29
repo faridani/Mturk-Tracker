@@ -24,7 +24,7 @@ def callback_allhit(pages, **kwargs):
             return True
         return False
 
-    results = []
+    data = []
 
     for page_number in pages:
         print "Page:",page_number
@@ -39,8 +39,6 @@ def callback_allhit(pages, **kwargs):
         if is_soup(hits_available):
             hits_available = hits_available.contents[0]
             hits_available = int(re.sub(',', '', hits_available[:hits_available.index(' ')]))
-
-        results = []
 
         for i_group in range(0,len(table.contents)):
 
@@ -97,7 +95,7 @@ def callback_allhit(pages, **kwargs):
                     except:
                         continue
 
-                results.append({
+                data.append({
                     'HitGroupContent': {
                         'title': title,
                         'requester_id': requester_id,
@@ -112,16 +110,15 @@ def callback_allhit(pages, **kwargs):
                             'hits_available': hits_available,
                             'page_number': page_number,
                             'inpage_position': i_group+1,
-                            'hit_expiration_date': hit_expiration_date,
-                            'crawl': kwargs['crawl']
+                            'hit_expiration_date': hit_expiration_date
                         })
                     }
                 })
 
-    return results
+    return data
 
     
-def callback_group(data, **kwargs):
+def callback_details(data, **kwargs):
 
     if type(data) != type([]):
         raise Exception, '::callback_allhit() must be called with one list argument'
@@ -137,13 +134,28 @@ def callback_group(data, **kwargs):
 
             if iframe_url:
                 try:
-                    html = urllib2.urlopen(iframe_url.group(1)).read()[:300] #testing
+                    html = urllib2.urlopen(iframe_url.group(1)).read()[:100] #testing
                 except urllib2.HTTPError:
                     pass
             else:
-                html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))[:300] #testing
+                html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))[:100] #testing
 
             if html:
                 data[i]['HitGroupContent']['html'] = html
+
+    return data
+
+def callback_add_crawlfk(data, **kwargs):
+
+    if type(data) != type([]):
+        raise Exception, '::callback_add_crawlfk() must be called with one list argument'
+
+    if 'crawl' not in kwargs:
+        raise Excepton, '::callback_add_crawlfk() must be called with \'crawl\' kwarg being an instance of Crawl model'
+
+    crawl = kwargs['crawl']   
+
+    for i in range(0, len(data)):
+        data[i]['HitGroupContent']['hit_group_status'].crawl = crawl
 
     return data

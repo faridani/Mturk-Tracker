@@ -8,9 +8,9 @@ class Crawl(models.Model):
     success             = models.BooleanField('Successfoul crawl?')
     groups_downloaded   = models.IntegerField('Groups downloaded')
     errors              = JSONField('errrors')
-    
-   # def __str__(self):
-   #     return 'Crawl: ' + str(self.pk)
+
+    def __str__(self):
+        return 'Crawl: ' + str(self.start_time) + ' ' + str(self.end_time)
      
 class HitGroupStatus(models.Model):
     
