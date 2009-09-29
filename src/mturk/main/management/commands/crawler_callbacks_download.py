@@ -1,13 +1,14 @@
 from BeautifulSoup import BeautifulSoup, ResultSet
-from tenclouds.text import remove_whitespaces, strip_html
+from tenclouds.text import fuse, remove_whitespaces, strip_html
 
 import datetime
 import re
 import urllib2
 
 from crawler_common import get_allhit_url, get_group_url
+from mturk.main.models import HitGroupStatus
 
-def callback_allhit(pages):
+def callback_allhit(pages, **kwargs):
 
     if type(pages) != type([]):
         raise Exception, '::callback_allhit() must be called with one list argument'
@@ -26,7 +27,7 @@ def callback_allhit(pages):
     results = []
 
     for page_number in pages:
-
+        print "Page:",page_number
         response = urllib2.urlopen(get_allhit_url(page_number))
         html = response.read()
         soup = BeautifulSoup(html)
@@ -34,7 +35,6 @@ def callback_allhit(pages):
         table = soup.find('table', cellpadding='0', cellspacing='5', border='0', width='100%')
         table.contents = remove_newline_fields(table.contents)
 
-        print "Page number:",page_number
         hits_available = soup.find('b', style='display:block;color:#CC6600')
         if is_soup(hits_available):
             hits_available = hits_available.contents[0]
@@ -92,32 +92,58 @@ def callback_allhit(pages):
                 keywords = []
                 for i in range(0, len(keywords_raw)):
                     try:
-                        keyword = keywords_raw[i].contents
+                        keyword = keywords_raw[i].contents[0]
                         keywords.append(keyword)
                     except:
                         continue
 
                 results.append({
-                    'page_number': page_number,
-                    'hits_available': hits_available,
-                    'inpage_position': i_group+1,
-                    'group_id': group_id,
-                    'title': title,
-                    'requester_id': requester_id,
-                    'requester_name': requester_name,
-                    'hit_expiration_date': hit_expiration_date,
-                    'time_alloted': time_alloted,
-                    'reward': reward,
-                    'description': description,
-                    'keywords': keywords
+                    'HitGroupContent': {
+                        'title': title,
+                        'requester_id': requester_id,
+                        'requester_name': requester_name,
+                        'time_alloted': time_alloted,
+                        'reward': reward,
+                        'description': description,
+                        'keywords': fuse(keywords, ','),
+                        'group_id': group_id,
+                        'hit_group_status': HitGroupStatus(**{
+                            'group_id': group_id,
+                            'hits_available': hits_available,
+                            'page_number': page_number,
+                            'inpage_position': i_group+1,
+                            'hit_expiration_date': hit_expiration_date,
+                            'crawl': kwargs['crawl']
+                        })
+                    }
                 })
 
     return results
 
     
-def callback_group(ids):
+def callback_group(data, **kwargs):
 
-    if type(ids) != type([]):
+    if type(data) != type([]):
         raise Exception, '::callback_allhit() must be called with one list argument'
 
-    print ids
+    for i in range(0, len(data)):
+        if data[i]['HitGroupContent']['group_id'] != 0:
+            print 'Group details:',data[i]['HitGroupContent']['group_id']
+            html = None
+
+            preview_html = urllib2.urlopen(get_group_url(data[i]['HitGroupContent']['group_id'])).read()
+
+            iframe_url = re.search(re.compile(r"<iframe.*?src=\"(.*?)\""), preview_html)
+
+            if iframe_url:
+                try:
+                    html = urllib2.urlopen(iframe_url.group(1)).read()[:300] #testing
+                except urllib2.HTTPError:
+                    pass
+            else:
+                html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))[:300] #testing
+
+            if html:
+                data[i]['HitGroupContent']['html'] = html
+
+    return data

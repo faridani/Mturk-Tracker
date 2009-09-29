@@ -9,9 +9,9 @@ class Crawl(models.Model):
     groups_downloaded   = models.IntegerField('Groups downloaded')
     errors              = JSONField('errrors')
     
-    def __str__(self):
-        return "Crawl("+ self.id + "): " + self.start_time + " to " + self.end_time
-
+   # def __str__(self):
+   #     return 'Crawl: ' + str(self.pk)
+     
 class HitGroupStatus(models.Model):
     
     group_id            = models.CharField('Group ID',max_length=50)
@@ -22,8 +22,8 @@ class HitGroupStatus(models.Model):
     
     crawl               = models.ForeignKey(Crawl)
 
-    def __str__(self):
-        return self.id + "|" + self.mturk_group_id
+    #def __str__(self):
+    #    return 'HitGroupStatus: ' + str(self.pk)
     
 class HitGroupContent(models.Model):
     
@@ -39,9 +39,12 @@ class HitGroupContent(models.Model):
     '''
     Time in minutes
     '''
-    time_allotted       = models.FloatField('Time alloted')
+    time_alloted       = models.FloatField('Time alloted')
     
     '''
     Used to recored during crawl when HitGroup is first detected
     '''
-    hit_group_status    = models.ForeignKey(HitGroupStatus) 
+    hit_group_status    = models.ForeignKey(HitGroupStatus)
+
+    #def __str__(self):
+    #    return 'HitGroupContent: ' + str(self.pk)

@@ -1,14 +1,18 @@
 from BeautifulSoup import BeautifulSoup, ResultSet
 from django.core.management.base import BaseCommand
+from django.db.models import Max
 from multiprocessing import Pipe, Process
 from threading import Thread
 
+import datetime
 import re
 import time
 import urllib2
 
-from crawler_callbacks import callback_allhit, callback_group
+from crawler_callbacks_download import callback_allhit, callback_group
+from crawler_callbacks_save import callback_database
 from crawler_common import get_allhit_url, get_group_url
+from mturk.main.models import Crawl
 
 class Command(BaseCommand):
     help = 'Runs the MTurk crawler. ( This is a work in-progress. Be warned. )'
@@ -36,18 +40,19 @@ class Crawler(Thread):
         html = response.read()
         pattern = re.compile(r"<a href=\".*pageNumber=([0-9]+).{150,200}Last</a>", re.MULTILINE | re.DOTALL)
         max_page = re.search(pattern, html)
-        if max_page: return max_page.group(1)
+        if max_page: return int(max_page.group(1))
         else:        return 1
 
 
-    def launch_worker(self, conn, callback, callback_args):
-        worker = Worker(callback, callback_args)
+    def launch_worker(self, callback, callback_arg, conn=None, **kwargs):
+        worker = Worker(callback, callback_arg, **kwargs)
         worker.start()
         worker.join()
-        conn.send(worker.data)
+        if conn:
+            conn.send(worker.data)
 
 
-    def process_values(self, values, callback):
+    def process_values(self, values, callback, **kwargs):
 
         def receive_from_pipe(conn):
             while True:
@@ -76,7 +81,8 @@ class Crawler(Thread):
             parent_conn, child_conn = Pipe(False)
             conns.append(parent_conn)
 
-            processes.append(Process(target=self.launch_worker, args=(child_conn,callback,values[values_from:values_to+1])))
+            processes.append(Process(target=self.launch_worker,
+                                     args=(callback,values[values_from:values_to+1],child_conn), kwargs=kwargs))
 
             values_from = values_to + 1
             values_to = values_to + interval + 1
@@ -96,23 +102,33 @@ class Crawler(Thread):
 
     def run(self):
 
-        #max_page = int(self.get_max_page())
-        max_page = 1
+        #self.get_max_page()
 
-        self.data = self.process_values(range(1,max_page+1), callback_allhit)
+        crawl = Crawl(**{
+            'start_time':           datetime.datetime.now(),
+            'end_time':             datetime.datetime.now(),
+            'success':              True,
+            'groups_downloaded':    len(self.data),
+            'errors':               ''
+        })
+        #print crawl
+        self.data = self.process_values(range(1,3), callback_allhit, crawl=crawl)
+        self.data = self.process_values(self.data, callback_group)
 
-        #self.process_values([result['group_id'] for result in self.data], callback_group)
+        self.launch_worker(callback_database, self.data)
 
+        
 
 class Worker(Thread):
 
-    def __init__(self, callback, callback_args):
+    def __init__(self, callback, callback_arg, **kwargs):
         Thread.__init__(self)
 
         self.callback = callback
-        self.callback_arg = callback_args
-        self.data = {}
+        self.callback_arg = callback_arg
+        self.callback_kwargs = kwargs
+        self.data = []
 
     def run(self):
 
-        self.data = self.callback(self.callback_arg)
+        self.data = self.callback(self.callback_arg, **self.callback_kwargs)

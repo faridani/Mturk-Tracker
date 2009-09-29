@@ -2,13 +2,16 @@
 <project relativePaths="false" version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="cabb402c-3d7f-4c14-b0fe-0314755dd01e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks.py" afterPath="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks.py" afterPath="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks_download.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_common.py" afterPath="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_common.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks_save.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mturk_crawl.iws" afterPath="$PROJECT_DIR$/mturk_crawl.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mturk/main/models.py" afterPath="$PROJECT_DIR$/src/mturk/main/models.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mturk/main/management/commands/crawler.py" afterPath="$PROJECT_DIR$/src/mturk/main/management/commands/crawler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DJANGO_SETTINGS_MODULE" afterPath="$PROJECT_DIR$/DJANGO_SETTINGS_MODULE" />
     </list>
-    <ignored path="mturk_crawl.iws" />
     <ignored path=".idea/workspace.xml" />
+    <ignored path="mturk_crawl.iws" />
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CreatePatchCommitExecutor">
@@ -60,19 +63,19 @@
   <component name="FileColors" enabled="false" enabledForTabs="false" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="konrad.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mturk/settings/konrad.py">
+      <file leaf-file-name="crawler.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="64" selection-start="225" selection-end="225" vertical-scroll-proportion="0.0">
+            <state line="117" column="8" selection-start="3472" selection-end="3472" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="crawler.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler.py">
+      <file leaf-file-name="crawler_callbacks_save.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks_save.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="103" column="9" selection-start="2868" selection-end="2868" vertical-scroll-proportion="2.4879227">
+            <state line="13" column="29" selection-start="488" selection-end="488" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -81,16 +84,16 @@
       <file leaf-file-name="crawler_common.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_common.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="18" selection-start="329" selection-end="329" vertical-scroll-proportion="0.0">
+            <state line="1" column="0" selection-start="28" selection-end="28" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="crawler_callbacks.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks.py">
+      <file leaf-file-name="crawler_callbacks_download.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks_download.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="119" column="15" selection-start="4492" selection-end="4492" vertical-scroll-proportion="0.0">
+            <state line="128" column="43" selection-start="5026" selection-end="5026" vertical-scroll-proportion="0.84951454">
               <folding />
             </state>
           </provider>
@@ -100,15 +103,6 @@
         <entry file="file://$PROJECT_DIR$/libs/tenclouds/text.py">
           <provider selected="true" editor-type-id="text-editor">
             <state line="71" column="42" selection-start="1734" selection-end="1734" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hellraiser.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file:///home/konrad/work/10clouds/numote/numote_backend/src/mycupid/client/management/commands/hellraiser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="12" selection-start="645" selection-end="645" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -151,7 +145,16 @@
       <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mturk/main/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="4" selection-start="817" selection-end="836" vertical-scroll-proportion="0.0">
+            <state line="9" column="70" selection-start="398" selection-end="398" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fields.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/mturk/fields.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -167,9 +170,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/settings.py" />
-        <option value="$PROJECT_DIR$/settings/base.py" />
-        <option value="$PROJECT_DIR$/settings/defaults.py" />
         <option value="$PROJECT_DIR$/manage.py" />
         <option value="$PROJECT_DIR$/src/mturk_crawl/settings/konrad.py" />
         <option value="$PROJECT_DIR$/src/mturk_crawl/main/urls.py" />
@@ -180,9 +180,12 @@
         <option value="$PROJECT_DIR$/DJANGO_SETTINGS_MODULE" />
         <option value="/home/konrad/tmp/a.xml" />
         <option value="$PROJECT_DIR$/libs/tenclouds/text.py" />
-        <option value="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_common.py" />
         <option value="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks.py" />
+        <option value="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_common.py" />
+        <option value="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks_save.py" />
+        <option value="$PROJECT_DIR$/src/mturk/main/models.py" />
         <option value="$PROJECT_DIR$/src/mturk/main/management/commands/crawler.py" />
+        <option value="$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks_download.py" />
       </list>
     </option>
   </component>
@@ -210,6 +213,54 @@
   </component>
   <component name="ProjectPane">
     <subPane>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="mturk_crawl" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="mturk_crawl" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="libs" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="libs" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="tenclouds" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="mturk_crawl" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="mturk_crawl" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="libs" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="libs" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
       <PATH>
         <PATH_ELEMENT>
           <option name="myItemId" value="mturk_crawl" />
@@ -286,70 +337,6 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="mturk_crawl" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="mturk_crawl" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="mturk_crawl" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="mturk" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="main" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="management" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="mturk_crawl" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="mturk_crawl" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="mturk_crawl" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="mturk" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="main" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="management" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="commands" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
     </subPane>
   </component>
   <component name="ProjectReloadState">
@@ -381,8 +368,8 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="PythonUnitTestConfigurationType" factoryName="Python's unittest">
@@ -549,13 +536,13 @@
       <list>
         <task id="Default" summary="Default task">
           <option name="active" value="true" />
-          <option name="updated" value="1254128030046" />
+          <option name="updated" value="1254219248972" />
         </task>
       </list>
     </option>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="6" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
@@ -566,7 +553,6 @@
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980332" sideWeight="0.5" order="7" side_tool="false" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980332" sideWeight="0.5" order="-1" side_tool="false" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
@@ -578,13 +564,14 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980332" sideWeight="0.5" order="7" side_tool="false" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" />
     </layout>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="false" />
-    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="PERFORM_UPDATE_IN_BACKGROUND" value="true" />
     <option name="PERFORM_COMMIT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
@@ -592,7 +579,7 @@
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ROLLBACK_IN_BACKGROUND" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value=" * Crawler++" />
+    <option name="LAST_COMMIT_MESSAGE" value="Crawler++" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -606,18 +593,12 @@
     <MESSAGE value=" * Crawler init&#10; * libs:&#10;  * BeautifulSoup" />
     <MESSAGE value=" * Crawler fix" />
     <MESSAGE value=" * Crawler++" />
+    <MESSAGE value="Crawler++" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///var/lib/python-support/python2.6/django/db/models/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/mturk/settings/mickek.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -653,7 +634,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mturk/fields.py">
+    <entry file="file://$PROJECT_DIR$/mturk_crawl.iws">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
@@ -667,16 +648,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/libs/tenclouds/text.py">
+    <entry file="file:///home/konrad/work/10clouds/numote/numote_backend/src/mycupid/client/management/commands/hellraiser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="42" selection-start="1734" selection-end="1734" vertical-scroll-proportion="0.0">
+        <state line="22" column="12" selection-start="645" selection-end="645" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file:///home/konrad/work/10clouds/numote/numote_backend/src/mycupid/client/management/commands/hellraiser.py">
+    <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_common.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="12" selection-start="645" selection-end="645" vertical-scroll-proportion="0.0">
+        <state line="1" column="0" selection-start="28" selection-end="28" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mturk/fields.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -713,37 +701,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mturk/main/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="4" selection-start="817" selection-end="836" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_common.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="18" selection-start="329" selection-end="329" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mturk_crawl.iws">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="119" column="15" selection-start="4492" selection-end="4492" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="9" selection-start="2868" selection-end="2868" vertical-scroll-proportion="2.4879227">
+        <state line="117" column="8" selection-start="3472" selection-end="3472" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/tenclouds/text.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="42" selection-start="1734" selection-end="1734" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks_save.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="29" selection-start="488" selection-end="488" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mturk/main/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="70" selection-start="398" selection-end="398" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mturk/main/management/commands/crawler_callbacks_download.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="128" column="43" selection-start="5026" selection-end="5026" vertical-scroll-proportion="0.84951454">
           <folding />
         </state>
       </provider>
