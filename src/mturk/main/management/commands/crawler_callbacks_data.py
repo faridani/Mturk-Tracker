@@ -2,6 +2,7 @@ from BeautifulSoup import BeautifulSoup, ResultSet
 from tenclouds.text import fuse, remove_whitespaces, strip_html
 
 import datetime
+import logging
 import re
 import urllib2
 
@@ -12,6 +13,7 @@ def callback_allhit(pages, **kwargs):
 
     if type(pages) != type([]):
         raise Exception, '::callback_allhit() must be called with one list argument'
+
 
     def remove_newline_fields(list):
         while True:
@@ -27,7 +29,7 @@ def callback_allhit(pages, **kwargs):
     data = []
 
     for page_number in pages:
-        print "Page:",page_number
+        logging.debug("Downloading page: %s" % page_number)
         response = urllib2.urlopen(get_allhit_url(page_number))
         html = response.read()
         soup = BeautifulSoup(html)
@@ -50,7 +52,7 @@ def callback_allhit(pages, **kwargs):
                     title = str(title.contents[0])
                 except:
                     title = unicode(title.contents[0])
-                title = remove_whitespaces(title)
+                title = unicode(remove_whitespaces(title))
 
             group_id = group_html.find('span', {'class':'capsulelink'})
             if is_soup(group_id):
@@ -67,7 +69,7 @@ def callback_allhit(pages, **kwargs):
             if is_soup(fields):
 
                 requester_html = remove_newline_fields(fields[0].contents)[0]
-                requester_name = requester_html.contents[0]
+                requester_name = unicode(requester_html.contents[0])
                 requester_id = requester_html['href']
                 start = requester_id.index('requesterId=')+12
                 stop = requester_id.index('&state')
@@ -80,11 +82,11 @@ def callback_allhit(pages, **kwargs):
 
                 time_alloted = remove_newline_fields(fields[2].contents)[0]
                 time_alloted = remove_whitespaces(strip_html(time_alloted))
-                time_alloted = time_alloted[:time_alloted.index(' ')]
+                time_alloted = int(time_alloted[:time_alloted.index(' ')])
 
                 reward = float(remove_newline_fields(fields[3].contents)[0][1:])
 
-                description = remove_newline_fields(fields[5].contents)[0]
+                description = unicode(remove_newline_fields(fields[5].contents)[0])
 
                 keywords_raw = remove_newline_fields(fields[6].contents)
                 keywords = []
@@ -94,6 +96,7 @@ def callback_allhit(pages, **kwargs):
                         keywords.append(keyword)
                     except:
                         continue
+                keywords = unicode(fuse(keywords, ','))      
 
                 data.append({
                     'HitGroupContent': {
@@ -103,7 +106,7 @@ def callback_allhit(pages, **kwargs):
                         'time_alloted': time_alloted,
                         'reward': reward,
                         'description': description,
-                        'keywords': fuse(keywords, ','),
+                        'keywords': keywords,
                         'group_id': group_id,
                         'hit_group_status': HitGroupStatus(**{
                             'group_id': group_id,
@@ -125,7 +128,7 @@ def callback_details(data, **kwargs):
 
     for i in range(0, len(data)):
         if data[i]['HitGroupContent']['group_id'] != 0:
-            print 'Group details:',data[i]['HitGroupContent']['group_id']
+            logging.debug("Downloading group details: %s" % data[i]['HitGroupContent']['group_id'])
             html = None
 
             preview_html = urllib2.urlopen(get_group_url(data[i]['HitGroupContent']['group_id'])).read()
@@ -133,12 +136,9 @@ def callback_details(data, **kwargs):
             iframe_url = re.search(re.compile(r"<iframe.*?src=\"(.*?)\""), preview_html)
 
             if iframe_url:
-                try:
-                    html = urllib2.urlopen(iframe_url.group(1)).read()[:100] #testing
-                except urllib2.HTTPError:
-                    pass
+                html = urllib2.urlopen(iframe_url.group(1)).read()[:100]
             else:
-                html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))[:100] #testing
+                html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))[:100]
 
             if html:
                 data[i]['HitGroupContent']['html'] = html
@@ -151,11 +151,9 @@ def callback_add_crawlfk(data, **kwargs):
         raise Exception, '::callback_add_crawlfk() must be called with one list argument'
 
     if 'crawl' not in kwargs:
-        raise Excepton, '::callback_add_crawlfk() must be called with \'crawl\' kwarg being an instance of Crawl model'
-
-    crawl = kwargs['crawl']   
+        raise Exception, '::callback_add_crawlfk() must be called with \'crawl\' kwarg being an instance of Crawl model'
 
     for i in range(0, len(data)):
-        data[i]['HitGroupContent']['hit_group_status'].crawl = crawl
+        data[i]['HitGroupContent']['hit_group_status'].crawl = kwargs['crawl']
 
     return data

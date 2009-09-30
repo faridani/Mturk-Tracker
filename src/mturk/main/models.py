@@ -7,7 +7,7 @@ class Crawl(models.Model):
     end_time            = models.DateTimeField('End Time')
     success             = models.BooleanField('Successfoul crawl?')
     groups_downloaded   = models.IntegerField('Groups downloaded')
-    errors              = JSONField('errrors')
+    errors              = JSONField('errrors', blank=True, null=True)
 
     def __str__(self):
         return 'Crawl: ' + str(self.start_time) + ' ' + str(self.end_time)
@@ -31,15 +31,15 @@ class HitGroupContent(models.Model):
     requester_id        = models.CharField('Requester ID', max_length=50)
     requester_name      = models.CharField('Requester Name', max_length=500)
     reward              = models.FloatField('Reward')
-    html                = models.TextField('HTML', max_length=1000000)
+    html                = models.TextField('HTML', max_length=100000000)
     description         = models.TextField('Description', max_length=1000000)
     title               = models.CharField('Title', max_length=100)
-    keywords            = models.CharField('Keywords', max_length=500)
+    keywords            = models.CharField('Keywords', blank=True, max_length=500, null=True)
     qualifications      = models.CharField('Qualifications', max_length=500)
     '''
     Time in minutes
     '''
-    time_alloted       = models.FloatField('Time alloted')
+    time_alloted       = models.IntegerField('Time alloted')
     
     '''
     Used to recored during crawl when HitGroup is first detected

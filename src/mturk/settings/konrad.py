@@ -9,3 +9,13 @@ DATABASE_PORT = '5432'
 
 TIME_ZONE = 'Europe/Warsaw'
 LANGUAGE_CODE = 'pl-pl'
+
+LOG_DIRECTORY = '/var/log/mturk/'
+
+import logging
+logging.basicConfig(
+    level = logging.DEBUG,
+    format = '%(asctime)s %(levelname)s %(message)s',
+    filename = LOG_DIRECTORY + 'crawl.log',
+    filemode = 'a'
+)

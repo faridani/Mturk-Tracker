@@ -5,7 +5,9 @@ from multiprocessing import Pipe, Process
 from threading import Thread
 
 import datetime
+import logging
 import re
+import sys
 import time
 import urllib2
 
@@ -30,15 +32,18 @@ class Crawler(Thread):
 
     def __init__(self, processes_count):
         Thread.__init__(self)
-
+        
         self.processes_count = processes_count
         self.data = []
+        self.errors = []
+
+        logging.debug('Crawler started')
 
 
     def get_max_page(self):
         response = urllib2.urlopen(get_allhit_url())
         html = response.read()
-        pattern = re.compile(r"<a href=\".*pageNumber=([0-9]+).{150,200}Last</a>", re.MULTILINE | re.DOTALL)
+        pattern = re.compile(r"<a href=\".*pageNumber=([0-9]+).{150,200}Last</a>")
         max_page = re.search(pattern, html)
         if max_page: return int(max_page.group(1))
         else:        return 1
@@ -49,7 +54,10 @@ class Crawler(Thread):
         worker.start()
         worker.join()
         if conn:
-            conn.send(worker.data)
+            conn.send({
+                'data': worker.data,
+                'errors': worker.errors
+            })
 
 
     def process_values(self, values, callback, **kwargs):
@@ -63,6 +71,7 @@ class Crawler(Thread):
                 time.sleep(1)
 
         data = []
+        errors = []
 
         conns = []
         processes = []
@@ -92,33 +101,48 @@ class Crawler(Thread):
         for process in processes: process.start()
 
         for conn in conns:
-            for result in receive_from_pipe(conn):
-                data.append(result)
+            result = receive_from_pipe(conn)
+            for record in result['data']: data.append(record)
+            for error in result['errors']: errors.append(error)
 
         for process in processes: process.join()
 
-        return data
+        return {
+            'data': data,
+            'errors': errors
+        }
 
 
     def run(self):
 
-        #self.get_max_page()
-
         start_time = datetime.datetime.now()
 
-        self.data = self.process_values(range(1,3), callback_allhit)
-        self.data = self.process_values(self.data, callback_details)
+        result_allhit = self.process_values(range(1,self.get_max_page()), callback_allhit)
+        self.data = result_allhit['data']
+        for error in result_allhit['errors']:
+            self.errors.append(error)
 
+        result_details = self.process_values(self.data, callback_details)
+        self.data = result_details['data']
+        for error in result_details['errors']:
+            self.errors.append(error)
+
+        success = True if len(self.data) > 0 else False
+        print self.errors
         crawl = Crawl(**{
             'start_time':           start_time,
             'end_time':             datetime.datetime.now(),
-            'success':              True,
+            'success':              success,
             'groups_downloaded':    len(self.data),
+            #'errors':               str(self.errors) # !
             'errors':               ''
         })
         crawl.save()
 
-        self.data = self.process_values(self.data, callback_add_crawlfk, crawl=crawl)
+        result_add_crawlfk = self.process_values(self.data, callback_add_crawlfk, crawl=crawl)
+        self.data = result_add_crawlfk['data']
+        for error in result_add_crawlfk['errors']:
+            self.errors.append(error)
 
         self.launch_worker(callback_database, self.data)
         
@@ -132,7 +156,17 @@ class Worker(Thread):
         self.callback_arg = callback_arg
         self.callback_kwargs = callback_kwargs
         self.data = []
+        self.errors = []
 
     def run(self):
 
-        self.data = self.callback(self.callback_arg, **self.callback_kwargs)
+        try:
+            self.data = self.callback(self.callback_arg, **self.callback_kwargs)
+        except:
+            import traceback
+            logging.error('%s: %s' % (sys.exc_info()[0].__name__, sys.exc_info()[1]))
+            self.errors.append({
+                'type': str(sys.exc_info()[0].__name__),
+                'value': str(sys.exc_info()[1]),
+                #'traceback': unicode(traceback.extract_tb(sys.exc_info()[2]))
+            })
