@@ -7,7 +7,7 @@ class Crawl(models.Model):
     end_time            = models.DateTimeField('End Time')
     success             = models.BooleanField('Successfoul crawl?')
     groups_downloaded   = models.IntegerField('Groups downloaded')
-    errors              = JSONField('errrors', blank=True, null=True)
+    errors              = JSONField('Errors', blank=True, null=True)
 
     def __str__(self):
         return 'Crawl: ' + str(self.start_time) + ' ' + str(self.end_time)

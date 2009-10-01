@@ -117,7 +117,7 @@ class Crawler(Thread):
 
         start_time = datetime.datetime.now()
 
-        result_allhit = self.process_values(range(1,self.get_max_page()), callback_allhit)
+        result_allhit = self.process_values(range(1,10), callback_allhit)
         self.data = result_allhit['data']
         for error in result_allhit['errors']:
             self.errors.append(error)
@@ -145,6 +145,14 @@ class Crawler(Thread):
             self.errors.append(error)
 
         self.launch_worker(callback_database, self.data)
+
+        logging.debug(
+            "Crawler finished in %s with %d results and %d errors" % (
+                (datetime.datetime.now()-start_time),
+                len(self.data),
+                len(self.errors)
+            )
+        )
         
 
 class Worker(Thread):
@@ -168,5 +176,5 @@ class Worker(Thread):
             self.errors.append({
                 'type': str(sys.exc_info()[0].__name__),
                 'value': str(sys.exc_info()[1]),
-                #'traceback': unicode(traceback.extract_tb(sys.exc_info()[2]))
+                'traceback': unicode(traceback.extract_tb(sys.exc_info()[2]))
             })
