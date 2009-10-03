@@ -122,7 +122,7 @@ class Crawler(Thread):
 
         start_time = datetime.datetime.now()
 
-        result_allhit = self.process_values(range(1,10), callback_allhit)
+        result_allhit = self.process_values(range(1,self.get_max_page()), callback_allhit)
         self.data = result_allhit['data']
         self.append_errors(result_allhit['errors'])
 
