@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup, ResultSet
 from django.core.management.base import BaseCommand
 from django.db.models import Max
@@ -38,6 +39,10 @@ class Crawler(Thread):
         self.errors = []
 
         logging.debug('Crawler started')
+
+    def append_errors(self, errors):
+        for error in errors:
+            self.errors.append(error)
 
 
     def get_max_page(self):
@@ -119,13 +124,11 @@ class Crawler(Thread):
 
         result_allhit = self.process_values(range(1,10), callback_allhit)
         self.data = result_allhit['data']
-        for error in result_allhit['errors']:
-            self.errors.append(error)
+        self.append_errors(result_allhit['errors'])
 
         result_details = self.process_values(self.data, callback_details)
         self.data = result_details['data']
-        for error in result_details['errors']:
-            self.errors.append(error)
+        self.append_errors(result_details['errors'])
 
         success = True if len(self.data) > 0 else False
         print self.errors
@@ -137,12 +140,10 @@ class Crawler(Thread):
             #'errors':               str(self.errors) # !
             'errors':               ''
         })
-        crawl.save()
 
         result_add_crawlfk = self.process_values(self.data, callback_add_crawlfk, crawl=crawl)
         self.data = result_add_crawlfk['data']
-        for error in result_add_crawlfk['errors']:
-            self.errors.append(error)
+        self.append_errors(result_add_crawlfk['errors'])
 
         self.launch_worker(callback_database, self.data)
 
@@ -168,13 +169,13 @@ class Worker(Thread):
 
     def run(self):
 
-        try:
-            self.data = self.callback(self.callback_arg, **self.callback_kwargs)
-        except:
-            import traceback
-            logging.error('%s: %s' % (sys.exc_info()[0].__name__, sys.exc_info()[1]))
-            self.errors.append({
-                'type': str(sys.exc_info()[0].__name__),
-                'value': str(sys.exc_info()[1]),
-                'traceback': unicode(traceback.extract_tb(sys.exc_info()[2]))
-            })
+        #try:
+            self.data, self.errors = self.callback(self.callback_arg, **self.callback_kwargs)
+        #except:
+        #    import traceback
+        #    logging.error('%s: %s' % (sys.exc_info()[0].__name__, sys.exc_info()[1]))
+        #    self.errors.append({
+        #        'type': str(sys.exc_info()[0].__name__),
+        #        'value': str(sys.exc_info()[1]),
+        #        'traceback': unicode(traceback.extract_tb(sys.exc_info()[2]))
+        #    })

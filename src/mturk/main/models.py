@@ -11,22 +11,9 @@ class Crawl(models.Model):
 
     def __str__(self):
         return 'Crawl: ' + str(self.start_time) + ' ' + str(self.end_time)
-     
-class HitGroupStatus(models.Model):
-    
-    group_id            = models.CharField('Group ID',max_length=50)
-    hits_available      = models.IntegerField('Hits Avaliable')
-    page_number         = models.IntegerField('Page Number')
-    inpage_position     = models.IntegerField('In Page Position')
-    hit_expiration_date = models.DateTimeField('Hit expiration Date')
-    
-    crawl               = models.ForeignKey(Crawl)
 
-    #def __str__(self):
-    #    return 'HitGroupStatus: ' + str(self.pk)
-    
 class HitGroupContent(models.Model):
-    
+
     group_id            = models.CharField('Group ID', max_length=50)
     requester_id        = models.CharField('Requester ID', max_length=50)
     requester_name      = models.CharField('Requester Name', max_length=500)
@@ -40,11 +27,23 @@ class HitGroupContent(models.Model):
     Time in minutes
     '''
     time_alloted       = models.IntegerField('Time alloted')
-    
+
     '''
     Used to recored during crawl when HitGroup is first detected
     '''
-    hit_group_status    = models.ForeignKey(HitGroupStatus)
+    #hit_group_status    = models.ForeignKey(HitGroupStatus)       
+
+class HitGroupStatus(models.Model):
+    
+    group_id            = models.CharField('Group ID',max_length=50)
+    hits_available      = models.IntegerField('Hits Avaliable')
+    page_number         = models.IntegerField('Page Number')
+    inpage_position     = models.IntegerField('In Page Position')
+    hit_expiration_date = models.DateTimeField('Hit expiration Date')
+
+    hit_group_content = models.ForeignKey(HitGroupContent)
+    
+    crawl               = models.ForeignKey(Crawl)
 
     #def __str__(self):
-    #    return 'HitGroupContent: ' + str(self.pk)
+    #    return 'HitGroupStatus: ' + str(self.pk)

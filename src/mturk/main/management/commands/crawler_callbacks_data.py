@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup, ResultSet
 from tenclouds.text import fuse, remove_whitespaces, strip_html
 
@@ -5,16 +6,16 @@ import datetime
 import logging
 import re
 import sys
+import traceback
 import urllib2
 
-from crawler_common import get_allhit_url, get_group_url
-from mturk.main.models import HitGroupStatus
+from crawler_common import get_allhit_url, get_group_url, grab_error
+from mturk.main.models import HitGroupContent
 
 def callback_allhit(pages, **kwargs):
 
     if type(pages) != type([]):
         raise Exception, '::callback_allhit() must be called with one list argument'
-
 
     def remove_newline_fields(list):
         while True:
@@ -28,6 +29,7 @@ def callback_allhit(pages, **kwargs):
         return False
 
     data = []
+    errors = []
 
     for page_number in pages:
         try:
@@ -101,38 +103,41 @@ def callback_allhit(pages, **kwargs):
                     keywords = unicode(fuse(keywords, ','))
 
                     data.append({
-                        'HitGroupContent': {
-                            'title': title,
-                            'requester_id': requester_id,
-                            'requester_name': requester_name,
-                            'time_alloted': time_alloted,
-                            'reward': reward,
-                            'description': description,
-                            'keywords': keywords,
+                        'HitGroupStatus': {
                             'group_id': group_id,
-                            'hit_group_status': HitGroupStatus(**{
-                                'group_id': group_id,
-                                'hits_available': hits_available,
-                                'page_number': page_number,
-                                'inpage_position': i_group+1,
-                                'hit_expiration_date': hit_expiration_date
+                            'hits_available': hits_available,
+                            'page_number': page_number,
+                            'inpage_position': i_group+1,
+                            'hit_expiration_date': hit_expiration_date,
+                            'hit_group_content': HitGroupContent(**{
+                                'title': title,
+                                'requester_id': requester_id,
+                                'requester_name': requester_name,
+                                'time_alloted': time_alloted,
+                                'reward': reward,
+                                'description': description,
+                                'keywords': keywords,
+                                'group_id': group_id
                             })
                         }
                     })
 
         except Exception, e:
-            raise Exception("Failed to process page %d" % (page_number)), None, sys.exc_info()[2]
+            logging.error("Failed to process page %d" % (page_number))
+            errors.append(grab_error(sys.exc_info()))
 
-    return data
+    return (data,errors)
 
     
 def callback_details(data, **kwargs):
 
     if type(data) != type([]):
         raise Exception, '::callback_allhit() must be called with one list argument'
+        
+    errors = []
 
     for i in range(0, len(data)):
-        group_id = data[i]['HitGroupContent']['group_id']
+        group_id = data[i]['HitGroupStatus']['group_id']
         if group_id != 0:
             try:
                 logging.debug("Downloading group details for: %s" % group_id)
@@ -143,16 +148,17 @@ def callback_details(data, **kwargs):
                 iframe_url = re.search(re.compile(r"<iframe.*?src=\"(.*?)\""), preview_html)
 
                 if iframe_url:
-                    html = urllib2.urlopen(iframe_url.group(1)).read()[:100]
+                    html = urllib2.urlopen(iframe_url.group(1)).read()
                 else:
-                    html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))[:100]
+                    html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))
 
                 if html:
-                    data[i]['HitGroupContent']['html'] = html
+                    data[i]['HitGroupStatus']['hit_group_content'].html = html
             except:
-                raise Exception("Failed to process group details for %s" % (group_id)), None, sys.exc_info()[2]
+                logging.error("Failed to process group details for %s" % (group_id))
+                errors.append(grab_error(sys.exc_info()))
 
-    return data
+    return (data,errors)
 
 def callback_add_crawlfk(data, **kwargs):
 
@@ -160,9 +166,9 @@ def callback_add_crawlfk(data, **kwargs):
         raise Exception, '::callback_add_crawlfk() must be called with one list argument'
 
     if 'crawl' not in kwargs:
-        raise Exception, '::callback_add_crawlfk() must be called with \'crawl\' kwarg being an instance of Crawl model'
+        raise Exception, '::callback_add_crawlfk() must be called with \'crawl_id\' kwarg being an id of Crawl'
 
     for i in range(0, len(data)):
-        data[i]['HitGroupContent']['hit_group_status'].crawl = kwargs['crawl']
+        data[i]['HitGroupStatus']['crawl'] = kwargs['crawl']
 
-    return data
+    return (data,[])
