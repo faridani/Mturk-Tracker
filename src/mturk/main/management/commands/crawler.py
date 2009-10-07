@@ -1,4 +1,16 @@
 # -*- coding: utf-8 -*-
+
+# Konrad Adamczyk (conrad.adamczyk at gmail.com)
+
+# Changelog:
+# 07.10.2009:	First release
+
+##########################################################################################
+
+# The program is written as an Amazon Mechanical Turk (mturk.com)
+# crawler consisting of Crawler and Worker classes using specified
+# callback functions.
+
 from BeautifulSoup import BeautifulSoup, ResultSet
 from django.core.management.base import BaseCommand
 from django.db.models import Max
@@ -18,8 +30,8 @@ from crawler_common import get_allhit_url, get_group_url
 from mturk.main.models import Crawl
 
 class Command(BaseCommand):
-    help = 'Runs the MTurk crawler. ( This is a work in-progress. Be warned. )'
-    args = '...'
+    help = 'Runs the MTurk crawler'
+    args = 'number of crawling processes'
 
     def handle(self, processes_count, **options):
         processes_count = int(processes_count)
@@ -28,9 +40,18 @@ class Command(BaseCommand):
         crawler.join()
 
 
-
+##########################################################################################
+# Thread-based class running the mturk crawl. Makes use of Worker objects fired as 
+# separate processes.
+##########################################################################################
 class Crawler(Thread):
 
+    ######################################################################################
+    # Contructor.
+    #
+    # In:
+    #  processes_count - number of Worker processes to fire during the crawl
+    ######################################################################################
     def __init__(self, processes_count):
         Thread.__init__(self)
         
@@ -40,11 +61,19 @@ class Crawler(Thread):
 
         logging.debug('Crawler started')
 
+    ######################################################################################
+    # Appends given list of errors to the overall list of errors that occured during crawl
+    #
+    # In:
+    #  errors - list containing error objects
+    ######################################################################################
     def append_errors(self, errors):
         for error in errors:
             self.errors.append(error)
 
-
+    ######################################################################################
+    # Fetches mturk.com and returns teh number of the furthermost page in the pagination.
+    ######################################################################################
     def get_max_page(self):
         response = urllib2.urlopen(get_allhit_url())
         html = response.read()
@@ -53,7 +82,15 @@ class Crawler(Thread):
         if max_page: return int(max_page.group(1))
         else:        return 1
 
-
+    ######################################################################################
+    # Launches Worker thread with a given job.
+    #
+    # In:
+    #  callback		- function to execute
+    #  callback_arg	- function's argument
+    #  conn			- Pipe's child connection
+    #  **kwargs
+    ######################################################################################
     def launch_worker(self, callback, callback_arg, conn=None, **kwargs):
         worker = Worker(callback, callback_arg, **kwargs)
         worker.start()
@@ -64,9 +101,25 @@ class Crawler(Thread):
                 'errors': worker.errors
             })
 
-
+    ######################################################################################
+    # Divide's given work between processes_count number of processes, where work is 
+    # defined as executing function with a list of values.
+    #
+    # Values given as the function's parameter are fairly distributed between a defined 
+    # number of processes, and each process uses them as a parameter in it's callback 
+    # function.
+    #
+    # In:
+    #  values			- list of values to process
+    #  callback			- function to execute
+    #  processes_count	- number of processes to work with values
+    #  **kwargs
+    ######################################################################################
     def process_values(self, values, callback, processes_count=1, **kwargs):
 
+        ##################################################################################
+        # Retrieves data from Pipe's connection
+        ##################################################################################
         def receive_from_pipe(conn):
             while True:
                 if conn.poll(None):
@@ -96,7 +149,8 @@ class Crawler(Thread):
             conns.append(parent_conn)
 
             processes.append(Process(target=self.launch_worker,
-                                     args=(callback,values[values_from:values_to+1],child_conn), kwargs=kwargs))
+                                     args=(callback,values[values_from:values_to+1],
+                                     child_conn), kwargs=kwargs))
 
             values_from = values_to + 1
             values_to = values_to + interval + 1
@@ -117,19 +171,24 @@ class Crawler(Thread):
             'errors': errors
         }
 
-
+	######################################################################################
     def run(self):
 
         start_time = datetime.datetime.now()
 
-        result_allhit = self.process_values(range(1,self.get_max_page()), callback_allhit, self.processes_count)
+		# Fetching data from every mturk.com HITs list page.
+        result_allhit = self.process_values(range(1,self.get_max_page()), callback_allhit, 
+                                            self.processes_count)
         self.data = result_allhit['data']
         self.append_errors(result_allhit['errors'])
 
-        result_details = self.process_values(self.data, callback_details, self.processes_count)
+		# Fetching html details for every HIT group.
+        result_details = self.process_values(self.data, callback_details, 
+                                             self.processes_count)
         self.data = result_details['data']
         self.append_errors(result_details['errors'])
 
+		# Logging crawl information into the database.
         success = True if len(self.data) > 0 else False
         
         crawl = Crawl(**{
@@ -142,10 +201,12 @@ class Crawler(Thread):
         })
         crawl.save()
 
-        result_add_crawlfk = self.process_values(self.data, callback_add_crawlfk, crawl=crawl)
+        result_add_crawlfk = self.process_values(self.data, callback_add_crawlfk, 
+                                                 crawl=crawl)
         self.data = result_add_crawlfk['data']
         self.append_errors(result_add_crawlfk['errors'])
 
+		# Saving results in the database.
         result_save_database = self.process_values(self.data, callback_database)
         print self.errors
 
@@ -157,9 +218,19 @@ class Crawler(Thread):
             )
         )
         
-
+##########################################################################################
+# Thread-based class executing given function with certain parameters.
+##########################################################################################
 class Worker(Thread):
 
+    ######################################################################################
+    # Contructor.
+    #
+    # In:
+    #  callback		- function to execute
+    #  callback_arg	- function's argument
+    #  **callback_kwargs
+    ######################################################################################
     def __init__(self, callback, callback_arg, **callback_kwargs):
         Thread.__init__(self)
 
@@ -171,13 +242,14 @@ class Worker(Thread):
 
     def run(self):
 
-        #try:
-            self.data, self.errors = self.callback(self.callback_arg, **self.callback_kwargs)
-        #except:
-        #    import traceback
-        #    logging.error('%s: %s' % (sys.exc_info()[0].__name__, sys.exc_info()[1]))
-        #    self.errors.append({
-        #        'type': str(sys.exc_info()[0].__name__),
-        #        'value': str(sys.exc_info()[1]),
-        #        'traceback': unicode(traceback.extract_tb(sys.exc_info()[2]))
-        #    })
+        try:
+            self.data, self.errors = self.callback(self.callback_arg, 
+                                                   **self.callback_kwargs)
+        except:
+            import traceback
+            logging.error('%s: %s' % (sys.exc_info()[0].__name__, sys.exc_info()[1]))
+            self.errors.append({
+                'type': str(sys.exc_info()[0].__name__),
+                'value': str(sys.exc_info()[1]),
+                'traceback': unicode(traceback.extract_tb(sys.exc_info()[2]))
+            })

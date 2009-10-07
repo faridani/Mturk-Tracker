@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+
+# Konrad Adamczyk (conrad.adamczyk at gmail.com)
+
+# Changelog:
+# 07.10.2009:	First release
+
+##########################################################################################
+
+# Functions saving data fetched from a Amazon Mechanical Turk (mturk.com) service.
+
 from django.db.models import Model
 
 import logging
@@ -7,16 +17,34 @@ import traceback
 
 from crawler_common import grab_error
 
+##########################################################################################
+# saves data in a database.
+#
+# In:
+#  pages - list of page numbers
+##########################################################################################
 def callback_database(data, **kwargs):
 
     errors = []
 
+    ######################################################################################
+    # Saves a given model.
+    #
+    # In:
+    #  model - instance of aModel object
+    ######################################################################################
     def save(model):
         try:
             model.save()
         except:
             raise Exception("Failed to save object:\n%s" % model.values()), None, sys.exc_info()[2]
 
+    ######################################################################################
+    # Saves any Model object nested in the given record. (Currently unused)
+    #
+    # In:
+    #  fields - dictionary representing a record
+    ######################################################################################
     def save_recursively(fields):
         for key,value in fields.items():
             if isinstance(value, Model):
@@ -39,7 +67,8 @@ def callback_database(data, **kwargs):
 
                         #save_recursively(fields)
 
-                        clazz = __import__('mturk.main.models', {}, {}, [model]).__getattribute__(model)
+                        clazz = __import__('mturk.main.models', {}, {}, 
+                                           [model]).__getattribute__(model)
                         obj = clazz(**fields)
                         try:
                             obj.save()
