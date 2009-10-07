@@ -28,8 +28,8 @@ def callback_database(data, **kwargs):
     if type(data) != type([]):
         raise Exception, '::callback_database() must be called with one list argument'
 
-    logging.debug('Saving results to database')   
-
+    logging.debug('Saving results to database (%s records)' % len(data))   
+    
     for record in data:
         try:
             if type(record) == type({}):
@@ -37,7 +37,7 @@ def callback_database(data, **kwargs):
                 for model,fields in record.items():
                     try:
 
-                        save_recursively(fields)
+                        #save_recursively(fields)
 
                         clazz = __import__('mturk.main.models', {}, {}, [model]).__getattribute__(model)
                         obj = clazz(**fields)

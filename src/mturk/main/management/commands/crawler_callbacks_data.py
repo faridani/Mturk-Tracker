@@ -66,7 +66,7 @@ def callback_allhit(pages, **kwargs):
                         stop = group_id['href'].index('&')
                         group_id = group_id['href'][start:stop]
                     else:
-                        group_id = 0
+                        group_id = '0'
 
                 fields = group_html.findAll('td', {'align':'left','valign':'top','class':'capsule_field_text'})
 
@@ -101,15 +101,14 @@ def callback_allhit(pages, **kwargs):
                         except:
                             continue
                     keywords = unicode(fuse(keywords, ','))
-
-                    data.append({
-                        'HitGroupStatus': {
-                            'group_id': group_id,
-                            'hits_available': hits_available,
-                            'page_number': page_number,
-                            'inpage_position': i_group+1,
-                            'hit_expiration_date': hit_expiration_date,
-                            'hit_group_content': HitGroupContent(**{
+                    
+                    hit_group_content = None
+                    try:
+                        hit_group_content = HitGroupContent.objects.get(group_id=group_id, requester_id=requester_id, title=title)
+                        print "Got %s: %s, %s" % (group_id,requester_id,title)
+                    except HitGroupContent.DoesNotExist: 
+                        print "Creating %s: %s, %s" % (group_id,requester_id,title)
+                        hit_group_content = HitGroupContent(**{
                                 'title': title,
                                 'requester_id': requester_id,
                                 'requester_name': requester_name,
@@ -119,10 +118,20 @@ def callback_allhit(pages, **kwargs):
                                 'keywords': keywords,
                                 'group_id': group_id
                             })
+                        hit_group_content.save()
+
+                    data.append({
+                        'HitGroupStatus': {
+                            'group_id': group_id,
+                            'hits_available': hits_available,
+                            'page_number': page_number,
+                            'inpage_position': i_group+1,
+                            'hit_expiration_date': hit_expiration_date,
+                            'hit_group_content': hit_group_content
                         }
                     })
 
-        except Exception, e:
+        except:
             logging.error("Failed to process page %d" % (page_number))
             errors.append(grab_error(sys.exc_info()))
 
@@ -138,7 +147,7 @@ def callback_details(data, **kwargs):
 
     for i in range(0, len(data)):
         group_id = data[i]['HitGroupStatus']['group_id']
-        if group_id != 0:
+        if group_id != '0':
             try:
                 logging.debug("Downloading group details for: %s" % group_id)
                 html = None
@@ -148,9 +157,9 @@ def callback_details(data, **kwargs):
                 iframe_url = re.search(re.compile(r"<iframe.*?src=\"(.*?)\""), preview_html)
 
                 if iframe_url:
-                    html = urllib2.urlopen(iframe_url.group(1)).read()
+                    html = urllib2.urlopen(iframe_url.group(1)).read()[:10]
                 else:
-                    html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))
+                    html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))[:10]
 
                 if html:
                     data[i]['HitGroupStatus']['hit_group_content'].html = html

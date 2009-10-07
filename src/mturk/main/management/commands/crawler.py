@@ -65,7 +65,7 @@ class Crawler(Thread):
             })
 
 
-    def process_values(self, values, callback, **kwargs):
+    def process_values(self, values, callback, processes_count=1, **kwargs):
 
         def receive_from_pipe(conn):
             while True:
@@ -82,10 +82,10 @@ class Crawler(Thread):
         processes = []
 
         max_value = len(values)-1
-        interval = max_value/self.processes_count
-        values_range = self.processes_count
-        if self.processes_count*(interval+1) < max_value:
-            values_range = range + 1
+        interval = max_value/processes_count
+        values_range = processes_count
+        if processes_count*(interval+1) < max_value:
+            values_range = values_range + 1
 
         values_from = 0
         values_to = interval if interval <= max_value else max_value
@@ -122,16 +122,16 @@ class Crawler(Thread):
 
         start_time = datetime.datetime.now()
 
-        result_allhit = self.process_values(range(1,self.get_max_page()), callback_allhit)
+        result_allhit = self.process_values(range(1,self.get_max_page()), callback_allhit, self.processes_count)
         self.data = result_allhit['data']
         self.append_errors(result_allhit['errors'])
 
-        result_details = self.process_values(self.data, callback_details)
+        result_details = self.process_values(self.data, callback_details, self.processes_count)
         self.data = result_details['data']
         self.append_errors(result_details['errors'])
 
         success = True if len(self.data) > 0 else False
-        print self.errors
+        
         crawl = Crawl(**{
             'start_time':           start_time,
             'end_time':             datetime.datetime.now(),
@@ -140,12 +140,14 @@ class Crawler(Thread):
             #'errors':               str(self.errors) # !
             'errors':               ''
         })
+        crawl.save()
 
         result_add_crawlfk = self.process_values(self.data, callback_add_crawlfk, crawl=crawl)
         self.data = result_add_crawlfk['data']
         self.append_errors(result_add_crawlfk['errors'])
 
-        self.launch_worker(callback_database, self.data)
+        result_save_database = self.process_values(self.data, callback_database)
+        print self.errors
 
         logging.debug(
             "Crawler finished in %s with %d results and %d errors" % (

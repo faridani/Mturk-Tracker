@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from mturk.fields import JSONField
 
@@ -20,7 +21,7 @@ class HitGroupContent(models.Model):
     reward              = models.FloatField('Reward')
     html                = models.TextField('HTML', max_length=100000000)
     description         = models.TextField('Description', max_length=1000000)
-    title               = models.CharField('Title', max_length=100)
+    title               = models.CharField('Title', max_length=500)
     keywords            = models.CharField('Keywords', blank=True, max_length=500, null=True)
     qualifications      = models.CharField('Qualifications', max_length=500)
     '''
