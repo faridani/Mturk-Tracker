@@ -59,7 +59,6 @@ class Crawler(Thread):
         self.data = []
         self.errors = []
 
-        logging.debug('Crawler started')
 
     ######################################################################################
     # Appends given list of errors to the overall list of errors that occured during crawl
@@ -173,6 +172,8 @@ class Crawler(Thread):
 
 	######################################################################################
     def run(self):
+
+        logging.debug('Crawler started')
 
         start_time = datetime.datetime.now()
 
