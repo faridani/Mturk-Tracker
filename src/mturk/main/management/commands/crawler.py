@@ -47,7 +47,7 @@ class Command(BaseCommand):
 class Crawler(Thread):
 
     ######################################################################################
-    # Contructor.
+    # Contructor
     #
     # In:
     #  processes_count - number of Worker processes to fire during the crawl
