@@ -138,9 +138,7 @@ def callback_allhit(pages, **kwargs):
                         hit_group_content = HitGroupContent.objects.get(group_id=group_id, 
                                                                         requester_id=requester_id, 
                                                                         title=title)
-                        print "Got %s: %s, %s" % (group_id,requester_id,title)
                     except HitGroupContent.DoesNotExist: 
-                        print "Creating %s: %s, %s" % (group_id,requester_id,title)
                         hit_group_content = HitGroupContent(**{
                                 'title': title,
                                 'requester_id': requester_id,
@@ -165,7 +163,7 @@ def callback_allhit(pages, **kwargs):
                     })
 
         except:
-            logging.error("Failed to process page %d" % (page_number))
+            logging.error("Failed to process page %d (%s)" % (page_number,sys.exc_info()[0].__name__))
             errors.append(grab_error(sys.exc_info()))
 
     return (data,errors)
@@ -207,7 +205,8 @@ def callback_details(data, **kwargs):
                 if html:
                     data[i]['HitGroupStatus']['hit_group_content'].html = html
             except:
-                logging.error("Failed to process group details for %s" % (group_id))
+                logging.error("Failed to process group details for %s (%s)" % (group_id, 
+                              sys.exc_info()[0].__name__))
                 errors.append(grab_error(sys.exc_info()))
 
     return (data,errors)
