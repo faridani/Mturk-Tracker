@@ -178,7 +178,7 @@ class Crawler(Thread):
         start_time = datetime.datetime.now()
 
 		# Fetching data from every mturk.com HITs list page.
-        result_allhit = self.process_values(range(1,self.get_max_page()), callback_allhit, 
+        result_allhit = self.process_values(range(1,2), callback_allhit, 
                                             self.processes_count)
         self.data = result_allhit['data']
         self.append_errors(result_allhit['errors'])

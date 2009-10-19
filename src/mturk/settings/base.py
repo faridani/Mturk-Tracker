@@ -3,6 +3,7 @@ from defaults import *
 MANAGERS = ADMINS = (
     ('maciel', 'cielecki@gmail.com'),
     ('mklujszo', 'mklujszo@gmail.com'),
+    ('konrad', 'conrad.adamczyk@gmail.com'),
 )
 
 
@@ -24,10 +25,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 TEMPLATE_DIRS = (
-    os.path.join(ROOT_PATH, "templates"),
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+    os.path.join(ROOT_PATH, 'templates'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -43,7 +41,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'django.contrib.admin',
     'mturk.main'    
 )
 

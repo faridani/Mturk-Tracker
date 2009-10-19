@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+#===============================================================================
+# # -*- coding: utf-8 -*-
+#===============================================================================
 
 # Konrad Adamczyk (conrad.adamczyk at gmail.com)
 
@@ -149,7 +151,6 @@ def callback_allhit(pages, **kwargs):
                                 'keywords': keywords,
                                 'group_id': group_id
                             })
-                        hit_group_content.save()
 
                     data.append({
                         'HitGroupStatus': {
@@ -201,13 +202,16 @@ def callback_details(data, **kwargs):
                     html = urllib2.urlopen(iframe_url.group(1)).read()
                 else:
                     html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))
-
+                
                 if html:
                     data[i]['HitGroupStatus']['hit_group_content'].html = html
+                    
             except:
                 logging.error("Failed to process group details for %s (%s)" % (group_id, 
                               sys.exc_info()[0].__name__))
                 errors.append(grab_error(sys.exc_info()))
+            
+        data[i]['HitGroupStatus']['hit_group_content'].save()
 
     return (data,errors)
 
