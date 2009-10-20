@@ -1,4 +1,3 @@
-import htmlentitydefs
 import re
 from datetime import datetime
 
