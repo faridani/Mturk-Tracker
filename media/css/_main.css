@@ -1,0 +1,18 @@
+#pages {
+	margin: 1em auto 1em auto;
+	width: 830px;
+}
+
+.column-left {
+	float: left;
+	width: 385px;
+}
+
+.column-right {
+	float: right;
+	width: 385px;
+}
+
+#footer { border-top: 1px solid #d3d3d3; font-size: 70%; text-align: center; }
+
+.text { margin: 0.5em 0 0.5em 0; text-indent: 30px; }

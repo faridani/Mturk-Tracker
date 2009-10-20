@@ -150,7 +150,6 @@ def callback_allhit(pages, **kwargs):
                                                                             time_alloted=time_alloted,
                                                                             reward=reward
                                                                             )
-                            print "Got ",group_id
                         except HitGroupContent.DoesNotExist: 
                             hit_group_content = HitGroupContent(**{
                                     'title': title,
@@ -163,7 +162,6 @@ def callback_allhit(pages, **kwargs):
                                     'keywords': keywords,
                                     'group_id': group_id
                                 })
-                            print 'Creating ',group_id
     
                         data.append({
                             'HitGroupStatus': {
