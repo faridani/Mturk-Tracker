@@ -3,25 +3,46 @@
 from south.db import db
 from django.db import models
 from mturk.main.models import *
-from django.conf import settings
-import os
 
 class Migration:
-    '''
-    Materialised views according to http://tech.jonathangardner.net/wiki/PostgreSQL/Materialized_Views
-    '''
+    
     def forwards(self, orm):
-
-        mviews_sql = os.path.join(settings.ROOT_PATH,'src/mturk/main/migrations/mviews.sql')
-        db.execute_many(open(mviews_sql).read())
+        db.execute("""
+        CREATE VIEW hits_v AS 
+            select 
+                p.id as "status_id", 
+                q.id as "content_id", 
+                p.group_id, 
+                p.crawl_id, 
+                q.requester_id, 
+                p.hits_available, 
+                p.page_number, 
+                p.inpage_position, 
+                p.hit_expiration_date, 
+                q.requester_name, 
+                q.reward, 
+                q.html, 
+                q.description, 
+                q.title, 
+                q.keywords, 
+                q.qualifications, 
+                q.time_alloted 
+            from main_hitgroupstatus p left join main_hitgroupcontent q on (p.group_id = q.group_id)""")
+        
+        db.execute("""
+            SELECT create_matview('hits_mv', 'hits_v');
+        """)
     
     
     def backwards(self, orm):
-
-        mviews_drop_sql = os.path.join(settings.ROOT_PATH,'src/mturk/main/migrations/mviews_drop.sql')
-        db.execute_many(open(mviews_drop_sql).read())
-
-    
+        
+        db.execute("""
+            DROP TABLE hits_mv;
+        """)
+        
+        db.execute("""
+            DROP VIEW hits_v;
+        """)
     
     models = {
         'main.hitgroupstatus': {
