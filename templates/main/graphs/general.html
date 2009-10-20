@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
+{% load graph %}
+
 {% block title %}General data{% endblock %}
 {% block header_text %}{{block.super}}: General data{% endblock %}
 
 {% block content %}
+
+	{% google_timeline data %}
 
 {% endblock %}

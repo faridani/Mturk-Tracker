@@ -1,0 +1,31 @@
+<script type='text/javascript' src='http://www.google.com/jsapi'></script> 
+<script type='text/javascript'> 
+	google.load('visualization', '1', {'packages':['annotatedtimeline']});
+	google.setOnLoadCallback(drawChart);
+
+	google.load('visualization', '1', {'packages':['annotatedtimeline']});
+	google.setOnLoadCallback(drawChart);
+
+	function drawChart() {
+
+		var data = new google.visualization.DataTable();
+		data.addColumn('date', 'Date');
+		data.addColumn('number', '#HITs');
+		data.addColumn('number', 'Rewards($)');
+		data.addColumn('number', '#Projects');
+    	{% for row in data %}
+    	data.addRow({{row}});
+    	{% endfor %}
+	
+		/* List data from the last week */
+		var currentdate =new Date();
+		var pastdate = new Date();
+		pastdate.setDate(currentdate.getDate()-7);
+		 
+        var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
+        chart.draw(data, {displayAnnotations: false, scaleColumns: [0, 1], scaleType: 'allfixed', legendPosition: 'newRow', zoomEndTime:  currentdate, zoomStartTime:  pastdate });		
+	}	
+      
+</script>
+
+<div id="chart_div" style="height: 600px;"></div>
