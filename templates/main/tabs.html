@@ -1,14 +1,15 @@
 <div id="top-tabs" class="span-24 ui-tabs ui-widget ui-widget-content ui-corner-all"> 
 	<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all"> 
-		<li class="ui-state-default ui-corner-top"><a href="">Start</a></li>
-		<li class="ui-state-default ui-corner-top"><a href="">Top requesters</a></li>
-		<li class="ui-state-default ui-corner-top"><a href="">Arrivals</a></li>
-		<li class="ui-state-default ui-corner-top"><a href="">Completed</a></li>
-		<li class="ui-state-default ui-corner-top"><a href="">Hits</a></li>
-		<li class="ui-state-default ui-corner-top"><a href="">Hits Duration</a></li>
-		<li class="ui-state-default ui-corner-top"><a href="">Projects</a></li>
-		<li class="ui-state-default ui-corner-top"><a href="">Rewards</a></li>
-		<li class="ui-state-default ui-corner-top"><a href="">Tasks</a></li>
+		<li class="ui-state-default ui-corner-top{% ifequal top_tab 'start'%} ui-tabs-selected ui-state-active{%endifequal%}"><a href="/">Start</a></li>
+		<li class="ui-state-default ui-corner-top{% ifequal top_tab 'general'%} ui-tabs-selected ui-state-active{%endifequal%}"><a href="{%url graphs_general%}">General</a></li>
+		<li class="ui-state-default ui-corner-top{% ifequal top_tab 'top_requesters'%} ui-tabs-selected ui-state-active{%endifequal%}"><a href="">Top requesters</a></li>
+		<li class="ui-state-default ui-corner-top{% ifequal top_tab 'arrivals'%} ui-tabs-selected ui-state-active{%endifequal%}"><a href="">Arrivals</a></li>
+		<li class="ui-state-default ui-corner-top{% ifequal top_tab 'completed'%} ui-tabs-selected ui-state-active{%endifequal%}"><a href="">Completed</a></li>
+		<li class="ui-state-default ui-corner-top{% ifequal top_tab 'hits'%} ui-tabs-selected ui-state-active{%endifequal%}"><a href="">Hits</a></li>
+		<li class="ui-state-default ui-corner-top{% ifequal top_tab 'hits_duration'%} ui-tabs-selected ui-state-active{%endifequal%}"><a href="">Hits Duration</a></li>
+		<li class="ui-state-default ui-corner-top{% ifequal top_tab 'project'%} ui-tabs-selected ui-state-active{%endifequal%}"><a href="">Projects</a></li>
+		<li class="ui-state-default ui-corner-top{% ifequal top_tab 'rewards'%} ui-tabs-selected ui-state-active{%endifequal%}"><a href="">Rewards</a></li>
+		<li class="ui-state-default ui-corner-top{% ifequal top_tab 'tasks'%} ui-tabs-selected ui-state-active{%endifequal%}"><a href="">Tasks</a></li>
 	</ul>			
-</div>	
-
+</div>
+<br style="clear:both;"/>

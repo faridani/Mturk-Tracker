@@ -1,4 +1,7 @@
 #logo{ text-align: center; margin: 1em 0px; }
-#top-tabs{}
+#top-tabs{ margin: 1em 0em;}
+
+ul.galleria{ width: 300px;}
+ul.galleria li{float:left !important;}
 
 #footer{ text-align: center; margin: 1em 0px; padding-top: 0.5em; border-top: 1px solid black; }

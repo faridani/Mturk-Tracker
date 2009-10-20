@@ -29,16 +29,15 @@
 	
 	
 		<div id="header" class="span-24">
-			<div id="logo"><h1>Mechanical Turk Monitor {%block header_text %}{% endblock %}</h1></div>
+			<div id="logo"><h1>{%block header_text %}Mechanical Turk Monitor{% endblock %}</h1></div>
 		</div>
+
+		<!-- Start tabs -->
+		{% include 'main/tabs.html' %} 
+		<!-- End tabs --> 		
 		
-		<div id="content">
+		<div id="content" class="span-24">
 		
-			<!-- Start tabs -->
-			{% include 'main/tabs.html' %} 
-			<!-- End tabs --> 		
-			
-			<br style="clear:both;"/>
 			
 			{% block content %}
 			{% endblock %}

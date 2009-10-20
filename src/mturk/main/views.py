@@ -1,8 +1,7 @@
-from django.shortcuts import render_to_response
-from django.template.context import RequestContext
+from django.views.generic.simple import direct_to_template
 
-def index(request):
+def general(request):
+
     
-    return render_to_response('main/index.html',
-                              {},
-                              context_instance=RequestContext(request))
+    
+    return direct_to_template(request, 'main/graphs/general.html', locals())
