@@ -10,3 +10,4 @@ media/images/.DS_Store
 media/.DS_Store
 s3*test*
 sds*test*
+.settings

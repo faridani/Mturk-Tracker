@@ -2,20 +2,53 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
-{% load main %}
+{% load home %}
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>{% block title %}Mechanical Turk Monitor{% endblock %}</title>
     
-    <link rel="stylesheet" href="{{MEDIA_URL}}css/base.css" media="screen" type="text/css"/>
+    <!--  blueprint stuff start -->
+	<link rel="stylesheet" href="{{MEDIA_URL}}blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="{{MEDIA_URL}}blueprint/print.css" type="text/css" media="print">	
+	<!--[if lt IE 8]><link rel="stylesheet" href="{{MEDIA_URL}}blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	<!--  blueprint stuff end -->
+	
+	<!--  jquery stuff start -->
+	<link rel="stylesheet" href="{{MEDIA_URL}}jqueryui/jquery-ui-1.7.1.css" type="text/css" />
+	<!--  jquery stuff end --> 
+	
+	<link rel="stylesheet" href="{{MEDIA_URL}}css/main.css" media="screen" type="text/css"/>
     
     <script src="http://www.google.com/jsapi"></script>
     {% jquery %}
     
     {% block head %}{%endblock%}
     </head>
-<body>
-asdadasdasdasd
+<body class="container">
+	
+	
+		<div id="header" class="span-24">
+			<div id="logo"><h1>Mechanical Turk Monitor {%block header_text %}{% endblock %}</h1></div>
+		</div>
+		
+		<div id="content">
+		
+			<!-- Start tabs -->
+			{% include 'main/tabs.html' %} 
+			<!-- End tabs --> 		
+			
+			<br style="clear:both;"/>
+			
+			{% block content %}
+			{% endblock %}
+		
+		</div>
+
+		<div id="footer">
+			<p>For bugs reports of feature requests, please contact <a href="http://www.stern.nyu.edu/~panos">Panos Ipeirotis</a> </p>
+		</div>
+		
+
 </body>
 </html>
