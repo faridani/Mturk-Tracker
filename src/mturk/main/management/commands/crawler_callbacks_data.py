@@ -5,7 +5,7 @@
 # Konrad Adamczyk (conrad.adamczyk at gmail.com)
 
 # Changelog:
-# 07.10.2009:	First release
+# 07.10.2009:    First release
 
 ##########################################################################################
 
@@ -64,7 +64,7 @@ def callback_allhit(pages, **kwargs):
             table = soup.find('table', cellpadding='0', cellspacing='5', border='0', width='100%')
             table.contents = remove_newline_fields(table.contents)
 
-			# Parsing and fetching information about each group
+            # Parsing and fetching information about each group
             for i_group in range(0,len(table.contents)):
                 try:
                     group_html = table.contents[i_group]
@@ -154,7 +154,7 @@ def callback_allhit(pages, **kwargs):
                                                                             time_alloted=time_alloted,
                                                                             reward=reward
                                                                             )
-                        except HitGroupContent.DoesNotExist: 
+                        except HitGroupContent.DoesNotExist: #@UndefinedVariable
                             hit_group_content = HitGroupContent(**{
                                     'title': title,
                                     'requester_id': requester_id,
