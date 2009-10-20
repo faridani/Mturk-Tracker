@@ -70,99 +70,116 @@ def callback_allhit(pages, **kwargs):
 
 			# Parsing and fetching information about each group
             for i_group in range(0,len(table.contents)):
-
-                group_html = table.contents[i_group]
-
-                # Title
-                title = group_html.find('a', {'class':'capsulelink'})
-                if is_soup(title):
-                    try:
-                        title = str(title.contents[0])
-                    except:
-                        title = unicode(title.contents[0])
-                    title = unicode(remove_whitespaces(title))
-
-                # Group ID
-                group_id = group_html.find('span', {'class':'capsulelink'})
-                if is_soup(group_id):
-                    group_id = remove_newline_fields(group_id.contents)[0]
-                    if 'href' in group_id._getAttrMap():
-                        start = group_id['href'].index('groupId=')+8
-                        stop = group_id['href'].index('&')
-                        group_id = group_id['href'][start:stop]
-                    else:
-                        group_id = '0'
-
-                fields = group_html.findAll('td', {'align':'left','valign':'top','class':'capsule_field_text'})
-
-                if is_soup(fields):
-
-                    # Requester's name and ID
-                    requester_html = remove_newline_fields(fields[0].contents)[0]
-                    requester_name = unicode(requester_html.contents[0])
-                    requester_id = requester_html['href']
-                    start = requester_id.index('requesterId=')+12
-                    stop = requester_id.index('&state')
-                    requester_id = requester_id[start:stop]
-
-                    # HIT group expiration date
-                    hit_expiration_date = remove_newline_fields(fields[1].contents)[0]
-                    hit_expiration_date = remove_whitespaces(strip_html(hit_expiration_date))
-                    hit_expiration_date = hit_expiration_date[:hit_expiration_date.index('(')-2]
-                    hit_expiration_date = datetime.datetime.strptime(hit_expiration_date, '%b %d, %Y')
-
-                    # Time alloted
-                    time_alloted = remove_newline_fields(fields[2].contents)[0]
-                    time_alloted = remove_whitespaces(strip_html(time_alloted))
-                    time_alloted = int(time_alloted[:time_alloted.index(' ')])
-
-                    # Reward
-                    reward = float(remove_newline_fields(fields[3].contents)[0][1:])
-
-                    # Description
-                    description = unicode(remove_newline_fields(fields[5].contents)[0])
-
-                    # Keywords
-                    keywords_raw = remove_newline_fields(fields[6].contents)
-                    keywords = []
-                    for i in range(0, len(keywords_raw)):
+                try:
+                    group_html = table.contents[i_group]
+    
+                    # Title
+                    title = group_html.find('a', {'class':'capsulelink'})
+                    if is_soup(title):
                         try:
-                            keyword = keywords_raw[i].contents[0]
-                            keywords.append(keyword)
+                            title = str(title.contents[0])
                         except:
-                            continue
-                    keywords = unicode(fuse(keywords, ','))
+                            title = unicode(title.contents[0])
+                        title = unicode(remove_whitespaces(title))
+    
+                    # Group ID
+                    group_id = group_html.find('span', {'class':'capsulelink'})
+                    if is_soup(group_id):
+                        group_id = remove_newline_fields(group_id.contents)[0]
+                        if 'href' in group_id._getAttrMap():
+                            start = group_id['href'].index('groupId=')+8
+                            stop = group_id['href'].index('&')
+                            group_id = group_id['href'][start:stop]
+                        else:
+                            group_id = '0'
+    
+                    fields = group_html.findAll('td', {'align':'left','valign':'top','class':'capsule_field_text'})
+    
+                    if is_soup(fields):
+    
+                        # Requester's name and ID
+                        requester_html = remove_newline_fields(fields[0].contents)[0]
+                        requester_name = unicode(requester_html.contents[0])
+                        requester_id = requester_html['href']
+                        start = requester_id.index('requesterId=')+12
+                        stop = requester_id.index('&state')
+                        requester_id = requester_id[start:stop]
+    
+                        # HIT group expiration date
+                        hit_expiration_date = remove_newline_fields(fields[1].contents)[0]
+                        hit_expiration_date = remove_whitespaces(strip_html(hit_expiration_date))
+                        hit_expiration_date = hit_expiration_date[:hit_expiration_date.index('(')-2]
+                        hit_expiration_date = datetime.datetime.strptime(hit_expiration_date, '%b %d, %Y')
+    
+                        # Time alloted
+                        time_alloted = remove_newline_fields(fields[2].contents)[0]
+                        time_alloted = remove_whitespaces(strip_html(time_alloted))
+                        time_alloted = int(time_alloted[:time_alloted.index(' ')])
+    
+                        # Reward
+                        reward = float(remove_newline_fields(fields[3].contents)[0][1:])
+    
+                        # Description
+                        description = unicode(remove_newline_fields(fields[5].contents)[0])
+    
+                        # Keywords
+                        keywords_raw = remove_newline_fields(fields[6].contents)
+                        keywords = []
+                        for i in range(0, len(keywords_raw)):
+                            try:
+                                keyword = keywords_raw[i].contents[0]
+                                keywords.append(keyword)
+                            except:
+                                continue
+                        keywords = unicode(fuse(keywords, ','))
+
+                        # Qualifications
+                        qfields = group_html.findAll('td', {'style':'padding-right: 2em; white-space: nowrap;'})
+                        if is_soup(qfields):
+                            qfields = [remove_whitespaces(unicode(remove_newline_fields(qfield.contents)[0])) for qfield in qfields]
+                            qualifications = fuse(qfields, ', ')
+
+                        # Checking whether processed content is already stored in the database
+                        # and saving it if it's not.
+                        hit_group_content = None
+                        try:
+                            hit_group_content = HitGroupContent.objects.get(group_id=group_id, 
+                                                                            requester_id=requester_id, 
+                                                                            title=title,
+                                                                            description=description,
+                                                                            time_alloted=time_alloted,
+                                                                            reward=reward
+                                                                            )
+                            print "Got ",group_id
+                        except HitGroupContent.DoesNotExist: 
+                            hit_group_content = HitGroupContent(**{
+                                    'title': title,
+                                    'requester_id': requester_id,
+                                    'requester_name': requester_name,
+                                    'time_alloted': time_alloted,
+                                    'reward': reward,
+                                    'html': '',
+                                    'description': description,
+                                    'keywords': keywords,
+                                    'group_id': group_id
+                                })
+                            print 'Creating ',group_id
+    
+                        data.append({
+                            'HitGroupStatus': {
+                                'group_id': group_id,
+                                'hits_available': hits_available,
+                                'page_number': page_number,
+                                'inpage_position': i_group+1,
+                                'hit_expiration_date': hit_expiration_date,
+                                'hit_group_content': hit_group_content
+                            }
+                        })
+
+                except:
+                    logging.error("Failed to process group %s on %d page (%s)" % (group_id,page_number,sys.exc_info()[0].__name__))
+                    errors.append(grab_error(sys.exc_info()))
                     
-                    # Checking whether processed content is already stored in the database
-                    # and saving it if it's not.
-                    hit_group_content = None
-                    try:
-                        hit_group_content = HitGroupContent.objects.get(group_id=group_id, 
-                                                                        requester_id=requester_id, 
-                                                                        title=title)
-                    except HitGroupContent.DoesNotExist: 
-                        hit_group_content = HitGroupContent(**{
-                                'title': title,
-                                'requester_id': requester_id,
-                                'requester_name': requester_name,
-                                'time_alloted': time_alloted,
-                                'reward': reward,
-                                'description': description,
-                                'keywords': keywords,
-                                'group_id': group_id
-                            })
-
-                    data.append({
-                        'HitGroupStatus': {
-                            'group_id': group_id,
-                            'hits_available': hits_available,
-                            'page_number': page_number,
-                            'inpage_position': i_group+1,
-                            'hit_expiration_date': hit_expiration_date,
-                            'hit_group_content': hit_group_content
-                        }
-                    })
-
         except:
             logging.error("Failed to process page %d (%s)" % (page_number,sys.exc_info()[0].__name__))
             errors.append(grab_error(sys.exc_info()))
@@ -184,6 +201,8 @@ def callback_details(data, **kwargs):
 
     # Processing each record
     for i in range(0, len(data)):
+        if data[i]['HitGroupStatus']['hit_group_content'].html != '': continue
+        
         group_id = data[i]['HitGroupStatus']['group_id']
         if group_id != '0':
             try:
