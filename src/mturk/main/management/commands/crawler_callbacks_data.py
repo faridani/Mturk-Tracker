@@ -13,8 +13,10 @@
 
 from BeautifulSoup import BeautifulSoup, ResultSet
 from tenclouds.text import fuse, remove_whitespaces, strip_html
+from boto.mturk.qualification import Qualifications
 
 import datetime
+import hashlib
 import logging
 import re
 import sys
@@ -82,17 +84,6 @@ def callback_allhit(pages, **kwargs):
                             title = unicode(title.contents[0])
                         title = unicode(remove_whitespaces(title))
     
-                    # Group ID
-                    group_id = group_html.find('span', {'class':'capsulelink'})
-                    if is_soup(group_id):
-                        group_id = remove_newline_fields(group_id.contents)[0]
-                        if 'href' in group_id._getAttrMap():
-                            start = group_id['href'].index('groupId=')+8
-                            stop = group_id['href'].index('&')
-                            group_id = group_id['href'][start:stop]
-                        else:
-                            group_id = '0'
-    
                     fields = group_html.findAll('td', {'align':'left','valign':'top','class':'capsule_field_text'})
     
                     if is_soup(fields):
@@ -133,14 +124,30 @@ def callback_allhit(pages, **kwargs):
                                 continue
                         keywords = unicode(fuse(keywords, ','))
 
-                        # Qualifications
+                        # Qualification
+                        qualifications = ''
                         qfields = group_html.findAll('td', {'style':'padding-right: 2em; white-space: nowrap;'})
                         if is_soup(qfields):
                             qfields = [remove_whitespaces(unicode(remove_newline_fields(qfield.contents)[0])) for qfield in qfields]
                             qualifications = fuse(qfields, ', ')
+                            
+                        # Group ID
+                        group_id = group_html.find('span', {'class':'capsulelink'})
+                        group_id_hashed = False
+                        if is_soup(group_id):
+                            group_id = remove_newline_fields(group_id.contents)[0]
+                            if 'href' in group_id._getAttrMap():
+                                start = group_id['href'].index('groupId=')+8
+                                stop = group_id['href'].index('&')
+                                group_id = group_id['href'][start:stop]
+                            else:
+                                group_id_hashed = True
+                                group_id = hashlib.md5("%s;%s;%s;%s;%s;%s;%s" % (title,requester_id,
+                                                                                 time_alloted,reward,
+                                                                                 description,keywords,
+                                                                                 qualifications)).hexdigest()
 
                         # Checking whether processed content is already stored in the database
-                        # and saving it if it's not.
                         hit_group_content = None
                         try:
                             hit_group_content = HitGroupContent.objects.get(group_id=group_id, 
@@ -160,7 +167,9 @@ def callback_allhit(pages, **kwargs):
                                     'html': '',
                                     'description': description,
                                     'keywords': keywords,
-                                    'group_id': group_id
+                                    'qualifications': qualifications,
+                                    'group_id': group_id,
+                                    'group_id_hashed': group_id_hashed
                                 })
     
                         data.append({
@@ -202,7 +211,7 @@ def callback_details(data, **kwargs):
         if data[i]['HitGroupStatus']['hit_group_content'].html != '': continue
         
         group_id = data[i]['HitGroupStatus']['group_id']
-        if group_id != '0':
+        if not data[i]['HitGroupStatus']['hit_group_content'].group_id_hashed:
             try:
                 logging.debug("Downloading group details for: %s" % group_id)
                 html = None

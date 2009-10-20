@@ -80,7 +80,7 @@ class Migration:
             'html': ('django.db.models.fields.TextField', [], {'max_length': '100000000'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'keywords': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'qualifications': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'qualifications': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'requester_id': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'requester_name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'reward': ('django.db.models.fields.FloatField', [], {}),

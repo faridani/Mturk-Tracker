@@ -16,6 +16,7 @@ class Crawl(models.Model):
 class HitGroupContent(models.Model):
 
     group_id            = models.CharField('Group ID', max_length=50, db_index=True)
+    group_id_hashed     = models.BooleanField(default=False)
     requester_id        = models.CharField('Requester ID', max_length=50)
     requester_name      = models.CharField('Requester Name', max_length=500)
     reward              = models.FloatField('Reward')
@@ -23,7 +24,7 @@ class HitGroupContent(models.Model):
     description         = models.TextField('Description', max_length=1000000)
     title               = models.CharField('Title', max_length=500)
     keywords            = models.CharField('Keywords', blank=True, max_length=500, null=True)
-    qualifications      = models.CharField('Qualifications', max_length=500)
+    qualifications      = models.CharField('Qualifications', blank=True, max_length=500, null=True)
     '''
     Time in minutes
     '''
