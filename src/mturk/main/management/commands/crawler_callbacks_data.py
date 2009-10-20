@@ -64,12 +64,6 @@ def callback_allhit(pages, **kwargs):
             table = soup.find('table', cellpadding='0', cellspacing='5', border='0', width='100%')
             table.contents = remove_newline_fields(table.contents)
 
-            # How many HITs are available
-            hits_available = soup.find('b', style='display:block;color:#CC6600')
-            if is_soup(hits_available):
-                hits_available = hits_available.contents[0]
-                hits_available = int(re.sub(',', '', hits_available[:hits_available.index(' ')]))
-
 			# Parsing and fetching information about each group
             for i_group in range(0,len(table.contents)):
                 try:
@@ -109,6 +103,9 @@ def callback_allhit(pages, **kwargs):
     
                         # Reward
                         reward = float(remove_newline_fields(fields[3].contents)[0][1:])
+
+                        # HITs available
+                        hits_available = int(remove_newline_fields(fields[4].contents)[0])
     
                         # Description
                         description = unicode(remove_newline_fields(fields[5].contents)[0])

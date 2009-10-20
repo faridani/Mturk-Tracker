@@ -4,6 +4,10 @@
 
 # Changelog:
 # 07.10.2009:	First release
+# 20.10.2009:	Fixed bug causing `html` not to save in the database; fixed bug causing
+#                `hits_available` to get overall mturk.com HITs instead of it's group-own
+#                ones; changed `group_id` from 0 to a hash derived from HitGroupContent's 
+#                content (except `html`); added fetching of "Qualifications Required".
 
 ##########################################################################################
 
