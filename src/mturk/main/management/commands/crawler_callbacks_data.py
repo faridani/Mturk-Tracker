@@ -128,6 +128,8 @@ def callback_allhit(pages, **kwargs):
                             qfields = [remove_whitespaces(unicode(remove_newline_fields(qfield.contents)[0])) for qfield in qfields]
                             qualifications = fuse(qfields, ', ')
                             
+                        occurrence_date = datetime.datetime.now()
+                            
                         # Group ID
                         group_id = group_html.find('span', {'class':'capsulelink'})
                         group_id_hashed = False
@@ -139,10 +141,11 @@ def callback_allhit(pages, **kwargs):
                                 group_id = group_id['href'][start:stop]
                             else:
                                 group_id_hashed = True
-                                group_id = hashlib.md5("%s;%s;%s;%s;%s;%s;%s" % (title,requester_id,
+                                group_id = hashlib.md5("%s;%s;%s;%s;%s;%s;%s;%s" % (title,requester_id,
                                                                                  time_alloted,reward,
                                                                                  description,keywords,
-                                                                                 qualifications)).hexdigest()
+                                                                                 qualifications,
+                                                                                 occurrence_date)).hexdigest()
 
                         # Checking whether processed content is already stored in the database
                         hit_group_content = None
@@ -152,9 +155,10 @@ def callback_allhit(pages, **kwargs):
                                                                             title=title,
                                                                             description=description,
                                                                             time_alloted=time_alloted,
-                                                                            reward=reward
+                                                                            reward=reward,
+                                                                            occurrence_date=occurrence_date
                                                                             )
-                        except HitGroupContent.DoesNotExist: #@UndefinedVariable
+                        except HitGroupContent.DoesNotExist:
                             hit_group_content = HitGroupContent(**{
                                     'title': title,
                                     'requester_id': requester_id,
@@ -165,6 +169,7 @@ def callback_allhit(pages, **kwargs):
                                     'description': description,
                                     'keywords': keywords,
                                     'qualifications': qualifications,
+                                    'occurrence_date': occurrence_date,
                                     'group_id': group_id,
                                     'group_id_hashed': group_id_hashed
                                 })
