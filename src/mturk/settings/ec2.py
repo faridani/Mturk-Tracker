@@ -1,5 +1,3 @@
-from base import *
-
 LOG_DIRECTORY = '/var/log/mturk/'
 
 import logging
@@ -10,5 +8,4 @@ logging.basicConfig(
     filemode = 'a'
 )
 
-TIME_ZONE = 'Europe/Warsaw'
-CACHE_BACKEND = 'dummy:///'
+CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
