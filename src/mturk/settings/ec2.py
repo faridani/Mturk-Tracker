@@ -1,6 +1,8 @@
 from base import *
 import logging
 
+DATABASE_NAME = 'mturk_crawl'
+
 LOG_DIRECTORY = '/var/log/mturk/'
 logging.basicConfig(
     level = logging.DEBUG,
