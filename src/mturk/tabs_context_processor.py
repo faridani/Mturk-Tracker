@@ -1,10 +1,11 @@
 def tabs(request):
 
-    top_tab = 'start'
+
     path = request.path_info
 
-    if path.startswith('/general'):
-        top_tab = 'general'        
+    top_tab = 'start'    
+    if path != "/":
+        top_tab = path.replace('/','')
     
     return {
         'top_tab':top_tab
