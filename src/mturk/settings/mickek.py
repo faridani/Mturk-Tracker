@@ -9,3 +9,5 @@ logging.basicConfig(
     filename = LOG_DIRECTORY + 'crawl.log',
     filemode = 'a'
 )
+
+TIME_ZONE = 'Europe/Warsaw'

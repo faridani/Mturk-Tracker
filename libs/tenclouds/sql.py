@@ -1,6 +1,7 @@
 from itertools import izip
 from django.db import connection
 
+
 def query_to_dicts(query_string, *query_args):
     """Run a simple query and produce a generator
     that returns the results as a bunch of dictionaries
@@ -16,3 +17,9 @@ def query_to_dicts(query_string, *query_args):
         row_dict = dict(izip(col_names, row))
         yield row_dict
     return
+
+def execute_sql(query_string, *query_args):
+    
+    cursor = connection.cursor() #@UndefinedVariable
+    cursor.execute(query_string, query_args)
+    return cursor.fetchone()
