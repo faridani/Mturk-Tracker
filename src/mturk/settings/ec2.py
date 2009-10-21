@@ -1,6 +1,7 @@
-LOG_DIRECTORY = '/var/log/mturk/'
-
+from base import *
 import logging
+
+LOG_DIRECTORY = '/var/log/mturk/'
 logging.basicConfig(
     level = logging.DEBUG,
     format = '%(asctime)s %(levelname)s %(message)s',
