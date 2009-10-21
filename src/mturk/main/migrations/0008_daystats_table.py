@@ -14,7 +14,7 @@ class Migration:
             ('arrivals_projects', orm['main.daystats:arrivals_projects']),
             ('arrivals_reward', orm['main.daystats:arrivals_reward']),
             ('day_end_projects', orm['main.daystats:day_end_projects']),
-            ('day_starts_hits', orm['main.daystats:day_starts_hits']),
+            ('day_start_hits', orm['main.daystats:day_start_hits']),
             ('arrivals_hits', orm['main.daystats:arrivals_hits']),
             ('date', orm['main.daystats:date']),
             ('day_start_reward', orm['main.daystats:day_start_reward']),
@@ -76,7 +76,7 @@ class Migration:
             'day_end_reward': ('django.db.models.fields.FloatField', [], {}),
             'day_start_projects': ('django.db.models.fields.FloatField', [], {}),
             'day_start_reward': ('django.db.models.fields.FloatField', [], {}),
-            'day_starts_hits': ('django.db.models.fields.FloatField', [], {}),
+            'day_start_hits': ('django.db.models.fields.FloatField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         }
     }
