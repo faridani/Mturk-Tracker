@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from mturk.fields import JSONField
+import datetime
 
 class Crawl(models.Model):
     
@@ -9,6 +10,11 @@ class Crawl(models.Model):
     success             = models.BooleanField('Successfoul crawl?')
     groups_downloaded   = models.IntegerField('Groups downloaded')
     errors              = JSONField('Errors', blank=True, null=True)
+    
+    def start_day(self):
+        return datetime.date(year= self.start_time.year, 
+                             month= self.start_time.month, 
+                             day= self.start_time.day)
 
     def __str__(self):
         return 'Crawl: ' + str(self.start_time) + ' ' + str(self.end_time)
@@ -31,11 +37,6 @@ class HitGroupContent(models.Model):
     '''
     time_alloted       = models.IntegerField('Time alloted')
 
-    '''
-    Used to recored during crawl when HitGroup is first detected
-    '''
-    #hit_group_status    = models.ForeignKey(HitGroupStatus)       
-
 class HitGroupStatus(models.Model):
     
     group_id            = models.CharField('Group ID',max_length=50, db_index=True)
@@ -48,5 +49,18 @@ class HitGroupStatus(models.Model):
     
     crawl               = models.ForeignKey(Crawl)
 
-    #def __str__(self):
-    #    return 'HitGroupStatus: ' + str(self.pk)
+class DayStats(models.Model):
+    
+    date                = models.DateField('Date', db_index=True)
+    
+    arrivals_reward     = models.FloatField('Arrivals Reward')
+    arrivals_hits       = models.FloatField('Arrivals Hits')
+    arrivals_projects   = models.FloatField('Arrivals Projects')
+    
+    day_start_reward    = models.FloatField('Day Start Reward')
+    day_start_hits     = models.FloatField('Day Start Hits')
+    day_start_projects  = models.FloatField('Day Start Projects')
+    
+    day_end_reward      = models.FloatField('Day End Reward')
+    day_end_hits        = models.FloatField('Day End Hits')
+    day_end_projects    = models.FloatField('Day End Projects')        
