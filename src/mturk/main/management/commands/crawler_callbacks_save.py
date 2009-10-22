@@ -2,9 +2,6 @@
 
 # Konrad Adamczyk (conrad.adamczyk at gmail.com)
 
-# Changelog:
-# 07.10.2009:	First release
-
 ##########################################################################################
 
 # Functions saving data fetched from a Amazon Mechanical Turk (mturk.com) service.
@@ -34,31 +31,33 @@ def callback_database(data, **kwargs):
     #  model - instance of aModel object
     ######################################################################################
     def save(model):
-        try:
-            fields = {}
-            for field in model._meta.get_all_field_names():
+        
+        fields = {}
+        
+        #try:
+        for field in model._meta.get_all_field_names():
+            
+            if model._meta.get_field_by_name(field)[0].__class__.__name__ == 'DateTimeField':
+                continue
                 
-                if model._meta.get_field_by_name(field).__class__.__name__ == 'DateTimeField':
-                    continue
-                
-                if field != 'id':
-                    try:
-                        value = model.serializable_value(field)
-                        if len(str(value)) <= 500:
-                            fields[field] = model.serializable_value(field)
-                    except:
-                        pass 
+            if field != 'id':
+                try:
+                    value = model.serializable_value(field)
+                    if len(str(value)) <= 500:
+                        fields[field] = value
+                except:
+                    pass 
                     
-            clazz = __import__('mturk.main.models', {}, {},
+        clazz = __import__('mturk.main.models', {}, {},
                         [model.__class__.__name__]).__getattribute__(model.__class__.__name__)
             
-            try:
-                obj = clazz.objects.get(**fields)
-            except clazz.DoesNotExist:
-                model.save()
+        try:
+            obj = clazz.objects.get(**fields)
+        except clazz.DoesNotExist:
+            model.save()
                 
-        except:
-            raise Exception("Failed to save object:\n%s" % model.values()), None, sys.exc_info()[2]
+        #except:
+        #    raise Exception("Failed to save object %s:\n%s" % (model.__class__.__name__, fields)), None, sys.exc_info()[2]
 
     ######################################################################################
     # Saves any Model object nested in the given record. (Currently unused)
@@ -86,7 +85,7 @@ def callback_database(data, **kwargs):
                 for model,fields in record.items():
                     try:
 
-                        save_recursively(fields)
+                        #save_recursively(fields)
 
                         clazz = __import__('mturk.main.models', {}, {}, 
                                            [model]).__getattribute__(model)
@@ -96,7 +95,10 @@ def callback_database(data, **kwargs):
                         except:
                             for key,value in fields.items():
                                 if isinstance(value, Model):
-                                    value.delete()
+                                    try: # value may be not saved in save_recursively because it is in DB already
+                                        value.delete()
+                                    except:
+                                        pass
                             raise Exception("Failed to save object with values:\n%s" % fields), None, sys.exc_info()[2]
                             
                     except:
