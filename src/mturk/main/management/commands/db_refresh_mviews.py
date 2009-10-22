@@ -12,6 +12,9 @@ class Command(BaseCommand):
         logging.info('Refreshing materialised views')
         
         start_time = time.time()
-        execute_sql("select refresh_matview('hits_mv');")
+        execute_sql("select incremental_refresh_matview('hits_mv');")
         execute_sql("analyze hits_mv;")
-        logging.info('refreshing hits_mv took: %s' % (time.time() - start_time))
+        execute_sql("commit;")
+        log = 'refreshing hits_mv took: %s' % (time.time() - start_time)
+        logging.info(log)
+        print log

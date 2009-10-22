@@ -21,7 +21,7 @@ class Crawl(models.Model):
 
 class HitGroupContent(models.Model):
 
-    group_id            = models.CharField('Group ID', max_length=50, db_index=True)
+    group_id            = models.CharField('Group ID', max_length=50, db_index=True, unique=True)
     group_id_hashed     = models.BooleanField(default=False)
     requester_id        = models.CharField('Requester ID', max_length=50)
     requester_name      = models.CharField('Requester Name', max_length=500)
