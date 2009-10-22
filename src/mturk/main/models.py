@@ -36,6 +36,9 @@ class HitGroupContent(models.Model):
     Time in minutes
     '''
     time_alloted       = models.IntegerField('Time alloted')
+    
+    #def __dict__(self):
+    #    return dict()
 
 class HitGroupStatus(models.Model):
     

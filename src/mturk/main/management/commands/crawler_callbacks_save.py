@@ -35,7 +35,28 @@ def callback_database(data, **kwargs):
     ######################################################################################
     def save(model):
         try:
-            model.save()
+            fields = {}
+            for field in model._meta.get_all_field_names():
+                
+                if model._meta.get_field_by_name(field).__class__.__name__ == 'DateTimeField':
+                    continue
+                
+                if field != 'id':
+                    try:
+                        value = model.serializable_value(field)
+                        if len(str(value)) <= 500:
+                            fields[field] = model.serializable_value(field)
+                    except:
+                        pass 
+                    
+            clazz = __import__('mturk.main.models', {}, {},
+                        [model.__class__.__name__]).__getattribute__(model.__class__.__name__)
+            
+            try:
+                obj = clazz.objects.get(**fields)
+            except clazz.DoesNotExist:
+                model.save()
+                
         except:
             raise Exception("Failed to save object:\n%s" % model.values()), None, sys.exc_info()[2]
 
@@ -48,7 +69,7 @@ def callback_database(data, **kwargs):
     def save_recursively(fields):
         for key,value in fields.items():
             if isinstance(value, Model):
-                save(value)
+                    save(value)
             else:
                 if type(value) == type([]):
                     callback_database(value)
@@ -65,7 +86,7 @@ def callback_database(data, **kwargs):
                 for model,fields in record.items():
                     try:
 
-                        #save_recursively(fields)
+                        save_recursively(fields)
 
                         clazz = __import__('mturk.main.models', {}, {}, 
                                            [model]).__getattribute__(model)

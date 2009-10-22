@@ -4,16 +4,12 @@
 
 # Konrad Adamczyk (conrad.adamczyk at gmail.com)
 
-# Changelog:
-# 07.10.2009:    First release
-
 ##########################################################################################
 
 # Functions fetching data from a Amazon Mechanical Turk (mturk.com) service.
 
 from BeautifulSoup import BeautifulSoup, ResultSet
 from tenclouds.text import fuse, remove_whitespaces, strip_html
-from boto.mturk.qualification import Qualifications
 
 import datetime
 import hashlib
@@ -128,6 +124,7 @@ def callback_allhit(pages, **kwargs):
                             qfields = [remove_whitespaces(unicode(remove_newline_fields(qfield.contents)[0])) for qfield in qfields]
                             qualifications = fuse(qfields, ', ')
                             
+                        # Occurrence date
                         occurrence_date = datetime.datetime.now()
                             
                         # Group ID
@@ -156,7 +153,6 @@ def callback_allhit(pages, **kwargs):
                                                                             description=description,
                                                                             time_alloted=time_alloted,
                                                                             reward=reward,
-                                                                            occurrence_date=occurrence_date
                                                                             )
                         except HitGroupContent.DoesNotExist:
                             hit_group_content = HitGroupContent(**{
@@ -239,7 +235,7 @@ def callback_details(data, **kwargs):
                               sys.exc_info()[0].__name__))
                 errors.append(grab_error(sys.exc_info()))
             
-        data[i]['HitGroupStatus']['hit_group_content'].save()
+        #data[i]['HitGroupStatus']['hit_group_content'].save()
 
     return (data,errors)
 

@@ -9,6 +9,9 @@
 #                ones; changed `group_id` from 0 to a hash derived from HitGroupContent's 
 #                content (except `html`); added fetching of "Qualifications Required"
 # 21.10.2009:   Added a date of HIT group's first occurrence
+# 22.10.2009:   Added protection from saving records which are already stored in the 
+#                database; fixed bug causing crawler to create new HitgroupContent instead
+#                of using one stored in the database
 
 ##########################################################################################
 
@@ -182,19 +185,19 @@ class Crawler(Thread):
 
         start_time = datetime.datetime.now()
 
-		# Fetching data from every mturk.com HITs list page.
-        result_allhit = self.process_values(range(1,self.get_max_page()), callback_allhit, 
+        #Fetching data from every mturk.com HITs list page
+        result_allhit = self.process_values(range(10,10+1), callback_allhit, 
                                             self.processes_count)
         self.data = result_allhit['data']
         self.append_errors(result_allhit['errors'])
 
-		# Fetching html details for every HIT group.
+        #Fetching html details for every HIT group
         result_details = self.process_values(self.data, callback_details, 
                                              self.processes_count)
         self.data = result_details['data']
         self.append_errors(result_details['errors'])
 
-		# Logging crawl information into the database.
+        #Logging crawl information into the database
         success = True if len(self.data) > 0 else False
         
         crawl = Crawl(**{
@@ -207,13 +210,16 @@ class Crawler(Thread):
         })
         crawl.save()
 
+        #Adding crawl FK
         result_add_crawlfk = self.process_values(self.data, callback_add_crawlfk, 
                                                  crawl=crawl)
         self.data = result_add_crawlfk['data']
         self.append_errors(result_add_crawlfk['errors'])
 
-		# Saving results in the database.
+        #Saving results in the database
         result_save_database = self.process_values(self.data, callback_database)
+        self.append_errors(result_save_database['errors'])
+        
         print self.errors
 
         logging.debug(
