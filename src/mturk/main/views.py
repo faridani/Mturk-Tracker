@@ -60,5 +60,15 @@ def completed(request):
                                                                      'columns':DEFAULT_COLUMNS, 
                                                                      'title': 'Tasks/HITs/$$$ completed per day'
     })
-
     
+@cache_page(ONE_DAY)
+def top_requesters(request):
+    
+    data = []
+    columns = []
+
+    return direct_to_template(request, 'main/graphs/table.html', {
+                                                                  'data':data,
+                                                                  'columns':columns,
+                                                                  'title':'Top-1000 Recent Requesters'
+                                                                  })

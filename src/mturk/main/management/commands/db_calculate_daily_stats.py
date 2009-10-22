@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from tenclouds.sql import execute_sql, query_to_dicts
+from tenclouds.sql import query_to_dicts
 from mturk.main.models import Crawl, DayStats
 from tenclouds.date import today
 import datetime

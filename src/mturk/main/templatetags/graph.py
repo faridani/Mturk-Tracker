@@ -15,6 +15,10 @@ def row_formater(input):
         row += ",".join(cc['row'])
         yield "["+row+"]"
 
+def text_row_formater(input):
+    for cc in input:
+        row = ",".join(cc['row'])
+        yield "["+row+"]"
 
 @register.simple_tag
 def google_timeline(context, columns, data):
@@ -23,4 +27,10 @@ def google_timeline(context, columns, data):
     '''
     return {'data':row_formater(data), 'columns':columns}
 
+@register.simple_tag
+def google_table(context, columns, data):
+    return {'data':text_row_formater(data), 'columns':columns}
+
+
 register.inclusion_tag('graphs/google_timeline.html', takes_context=True)(google_timeline)
+register.inclusion_tag('graphs/google_table.html', takes_context=True)(google_table)

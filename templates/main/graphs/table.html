@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% load graph %}
+
+{% block title %}{{title}}{% endblock %}
+{% block header_text %}{{block.super}}: {{title}}{% endblock %}
+
+{% block content %}
+
+	{% google_table columns data %}
+
+{% endblock %}

@@ -154,7 +154,7 @@ def callback_allhit(pages, **kwargs):
                                                                             time_alloted=time_alloted,
                                                                             reward=reward,
                                                                             )
-                        except HitGroupContent.DoesNotExist:
+                        except HitGroupContent.DoesNotExist: #@UndefinedVariable
                             hit_group_content = HitGroupContent(**{
                                     'title': title,
                                     'requester_id': requester_id,
@@ -256,5 +256,6 @@ def callback_add_crawlfk(data, **kwargs):
 
     for i in range(0, len(data)):
         data[i]['HitGroupStatus']['crawl'] = kwargs['crawl']
+        data[i]['HitGroupStatus']['hit_group_content'].first_crawl = kwargs['crawl']
 
     return (data,[])
