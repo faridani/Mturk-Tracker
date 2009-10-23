@@ -138,11 +138,10 @@ def callback_allhit(pages, **kwargs):
                                 group_id = group_id['href'][start:stop]
                             else:
                                 group_id_hashed = True
-                                group_id = hashlib.md5("%s;%s;%s;%s;%s;%s;%s;%s" % (title,requester_id,
+                                group_id = hashlib.md5("%s;%s;%s;%s;%s;%s;%s;" % (title,requester_id,
                                                                                  time_alloted,reward,
                                                                                  description,keywords,
-                                                                                 qualifications,
-                                                                                 occurrence_date)).hexdigest()
+                                                                                 qualifications)).hexdigest()
 
                         # Checking whether processed content is already stored in the database
                         hit_group_content = None
