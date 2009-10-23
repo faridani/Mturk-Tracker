@@ -66,8 +66,9 @@ def completed(request):
 def top_requesters(request):
     
     def row_formatter(input):
+        row = []
         for cc in input:
-            row = []
+
             row.append('%s' % cc[1])
             row.append('<a href="https://www.mturk.com/mturk/searchbar?requesterId=%s" target="_mturk">%s</a> (<a href="http://feed.crowdsauced.com/r/req/%s">RSS</a>)'
                        % (cc[0],cc[0],cc[0]) )
