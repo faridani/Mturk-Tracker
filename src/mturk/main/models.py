@@ -31,7 +31,7 @@ class HitGroupContent(models.Model):
     title               = models.CharField('Title', max_length=500)
     keywords            = models.CharField('Keywords', blank=True, max_length=500, null=True)
     qualifications      = models.CharField('Qualifications', blank=True, max_length=500, null=True)
-    occurrence_date     = models.DateTimeField('First occurrence date', blank=True, null=True)
+    occurrence_date     = models.DateTimeField('First occurrence date', blank=True, null=True, db_index=True)
     '''
     Time in minutes
     '''

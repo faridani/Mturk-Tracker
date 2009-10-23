@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django import template
+from django.utils import simplejson
+
 import datetime
+
 
 register = template.Library()
 
@@ -15,10 +18,23 @@ def row_formater(input):
         row += ",".join(cc['row'])
         yield "["+row+"]"
 
-def text_row_formater(input):
+def text_row_formater(input,columns):
     for cc in input:
-        row = ",".join(cc['row'])
-        yield "["+row+"]"
+        
+        row = []
+        
+        print columns
+        print cc
+        for i,el in enumerate(cc):
+            print i
+            if isinstance(el, datetime.datetime):
+                row.append("new Date(%s,%s,%s,%s,%s)," % (el.year, el.month-1, el.day, el.hour, el.minute))
+            elif isinstance(el, datetime.date):
+                row.append("new Date(%s,%s,%s)," % (el.year, el.month-1, el.day))
+            else:
+                    row.append(simplejson.dumps(el))
+        
+        yield "["+','.join(row)+"]"
 
 @register.simple_tag
 def google_timeline(context, columns, data):
@@ -29,7 +45,7 @@ def google_timeline(context, columns, data):
 
 @register.simple_tag
 def google_table(context, columns, data):
-    return {'data':text_row_formater(data), 'columns':columns}
+    return {'data':text_row_formater(data,columns), 'columns':columns}
 
 
 register.inclusion_tag('graphs/google_timeline.html', takes_context=True)(google_timeline)

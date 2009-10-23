@@ -1,12 +1,9 @@
 <script type='text/javascript' src='http://www.google.com/jsapi'></script> 
 <script type='text/javascript'> 
-	google.load('visualization', '1', {'packages':['annotatedtimeline']});
-	google.setOnLoadCallback(drawChart);
+	google.load('visualization', '1', {'packages':['table']});
+	google.setOnLoadCallback(drawTable);
 
-	google.load('visualization', '1', {'packages':['annotatedtimeline']});
-	google.setOnLoadCallback(drawChart);
-
-	function drawChart() {
+	function drawTable() {
 
 		var data = new google.visualization.DataTable();
 
@@ -15,18 +12,13 @@
 		{% endfor %}
 		
     	{% for row in data %}
-    	data.addRow({{row}});
+    	data.addRow({{row|safe}});
     	{% endfor %}
 	
-		/* List data from the last week */
-		var currentdate = new Date();
-		var pastdate = new Date();
-		pastdate.setDate(currentdate.getDate()-7);
-		 
-        var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
-        chart.draw(data, {displayAnnotations: false, scaleColumns: [0, 1], scaleType: 'allfixed', legendPosition: 'newRow', zoomEndTime:  currentdate, zoomStartTime:  pastdate });		
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+        table.draw(data, {showRowNumber: true, allowHtml: true, page: 'enable', pageSize: 25, width: '800px', alternatingRowStyle: true});		
 	}	
       
 </script>
 
-<div id="chart_div" style="height: 600px;"></div>
+<div id="table_div" style="height: 600px;"></div>

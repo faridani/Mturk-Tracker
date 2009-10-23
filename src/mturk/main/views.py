@@ -1,6 +1,7 @@
 from django.views.generic.simple import direct_to_template
-from tenclouds.sql import query_to_dicts
+from tenclouds.sql import query_to_dicts, query_to_tuples
 from django.views.decorators.cache import cache_page
+import datetime
 
 DEFAULT_COLUMNS =  (
                ('date','Date'),
@@ -64,8 +65,36 @@ def completed(request):
 @cache_page(ONE_DAY)
 def top_requesters(request):
     
-    data = []
-    columns = []
+    def row_formatter(input):
+        for cc in input:
+            row = []
+            row.append('%s' % cc[1])
+            row.append('<a href="https://www.mturk.com/mturk/searchbar?requesterId=%s" target="_mturk">%s</a> (<a href="http://feed.crowdsauced.com/r/req/%s">RSS</a>)'
+                       % (cc[0],cc[0],cc[0]) )
+            row.extend(cc[2:6])
+        yield row
+    
+    data = row_formatter(query_to_tuples('''
+select    
+    p.requester_id, 
+    p.requester_name, 
+    count(*) as "projects", 
+    sum(q.hits_available) as "hits", 
+    sum(q.hits_available*p.reward) as "reward",
+    max(p.occurrence_date) as "last_posted"
+from main_hitgroupcontent p join main_hitgroupstatus q 
+    on( p.first_crawl_id = q.crawl_id and q.hit_group_content_id = p.id )
+where p.occurrence_date > TIMESTAMP '%s'
+group by p.requester_id, p.requester_name
+order by sum(q.hits_available*p.reward) desc;    
+''' % (datetime.date.today() - datetime.timedelta(days=30)).isoformat())) 
+    
+    columns = (('string','Requester ID'),
+               ('string','Requester'),
+               ('number','#Task'),
+               ('number','#HITs'),
+               ('number','Rewards'),
+               ('datetime', 'Last Posted On'))
 
     return direct_to_template(request, 'main/graphs/table.html', {
                                                                   'data':data,
