@@ -37,9 +37,6 @@ class HitGroupContent(models.Model):
     '''
     time_alloted        = models.IntegerField('Time alloted')
     first_crawl         = models.ForeignKey(Crawl, blank=True, null=True)
-    
-    #def __dict__(self):
-    #    return dict()
 
 class HitGroupStatus(models.Model):
     

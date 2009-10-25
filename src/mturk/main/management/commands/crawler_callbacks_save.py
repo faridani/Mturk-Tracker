@@ -31,33 +31,33 @@ def callback_database(data, **kwargs):
     #  model - instance of aModel object
     ######################################################################################
     def save(model):
-        
         fields = {}
         
-        #try:
         for field in model._meta.get_all_field_names():
             
-            if model._meta.get_field_by_name(field)[0].__class__.__name__ == 'DateTimeField':
-                continue
+            #if model._meta.get_field_by_name(field)[0].__class__.__name__ == 'DateTimeField':
+            #    continue
                 
-            if field != 'id':
+            # Interested only in possibly most defining fields
+            if 'id' in field and field != 'id' and field != 'first_crawl':
                 try:
                     value = model.serializable_value(field)
-                    if len(str(value)) <= 500:
-                        fields[field] = value
+                    fields[field] = value
                 except:
                     pass 
                     
         clazz = __import__('mturk.main.models', {}, {},
                         [model.__class__.__name__]).__getattribute__(model.__class__.__name__)
-            
+        
         try:
             obj = clazz.objects.get(**fields)
+            return obj
+        except clazz.MultipleObjectsReturned:
+            model.save()
+            return model
         except clazz.DoesNotExist:
             model.save()
-                
-        #except:
-        #    raise Exception("Failed to save object %s:\n%s" % (model.__class__.__name__, fields)), None, sys.exc_info()[2]
+            return model
 
     ######################################################################################
     # Saves any Model object nested in the given record. (Currently unused)
@@ -66,12 +66,13 @@ def callback_database(data, **kwargs):
     #  fields - dictionary representing a record
     ######################################################################################
     def save_recursively(fields):
-        for key,value in fields.items():
-            if isinstance(value, Model):
-                    save(value)
-            else:
-                if type(value) == type([]):
-                    callback_database(value)
+        for key in fields.keys():
+            if isinstance(fields[key], Model):
+                fields[key] = save(fields[key])
+            #else:
+            #    if type(fields[key]) == type([]):
+            #        callback_database(fields[key])
+        return fields
 
     if type(data) != type([]):
         raise Exception, '::callback_database() must be called with one list argument'
@@ -82,18 +83,18 @@ def callback_database(data, **kwargs):
         try:
             if type(record) == type({}):
 
-                for model,fields in record.items():
+                for model in record.keys():
                     try:
 
-                        #save_recursively(fields)
+                        record[model] = save_recursively(record[model])
 
                         clazz = __import__('mturk.main.models', {}, {}, 
                                            [model]).__getattribute__(model)
-                        obj = clazz(**fields)
+                        obj = clazz(**record[model])
                         try:
                             obj.save()
                         except:
-                            for key,value in fields.items():
+                            for key,value in record[model].items():
                                 if isinstance(value, Model):
                                     try: # value may be not saved in save_recursively because it is in DB already
                                         value.delete()
