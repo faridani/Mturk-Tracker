@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load graph %}
+
+{% block title %}{{title}}{% endblock %}
+{% block header_text %}{{block.super}}: {{title}}{% endblock %}
+
+{% block content %}
+
+<script type='text/javascript' src='http://www.google.com/jsapi'></script> 
+<script type='text/javascript'> 
+	google.load('visualization', '1', {'packages':['table']});
+	google.setOnLoadCallback(drawTable);
+
+	function drawTable() {
+
+		var data = new google.visualization.DataTable();
+
+		{% for type,name in columns %}
+		data.addColumn('{{type}}', '{{name}}');
+		{% endfor %}
+		
+    	{% for row in data %}
+    	data.addRow({{row|safe}});
+    	{% endfor %}
+	
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+
+        var formatter = new google.visualization.TableBarFormat({width: 50, showValue: true});
+		formatter.format(data, 4);         
+        table.draw(data, {showRowNumber: true, allowHtml: true, page: 'enable', pageSize: 25, width: '100%', alternatingRowStyle: true});		
+	}	
+      
+</script>
+
+<div id="table_div"></div>
+
+{% endblock %}

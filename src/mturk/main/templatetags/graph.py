@@ -24,12 +24,15 @@ def text_row_formater(input):
         row = []
         for el in cc:
             if isinstance(el, datetime.datetime):
-                row.append("new Date(%s,%s,%s,%s,%s)," % (el.year, el.month-1, el.day, el.hour, el.minute))
+                row.append("new Date(%s,%s,%s,%s,%s)" % (el.year, el.month-1, el.day, el.hour, el.minute))
             elif isinstance(el, datetime.date):
-                row.append("new Date(%s,%s,%s)," % (el.year, el.month-1, el.day))
+                row.append("new Date(%s,%s,%s)" % (el.year, el.month-1, el.day))
+            elif isinstance(el, datetime.timedelta):
+                row.append(str(el.days + (float(el.seconds)/(60*60*24)) ))
             else:
                 row.append(simplejson.dumps(el))
-
+        
+        print row
         yield "["+','.join(row)+"]"
 
 @register.simple_tag

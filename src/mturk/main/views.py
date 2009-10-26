@@ -1,6 +1,10 @@
 from django.views.generic.simple import direct_to_template
 from tenclouds.sql import query_to_dicts, query_to_tuples
 from django.views.decorators.cache import cache_page
+from django.core.urlresolvers import reverse
+from mturk.main.templatetags.graph import text_row_formater
+from django.shortcuts import get_object_or_404
+from mturk.main.models import HitGroupContent
 import datetime
 
 DEFAULT_COLUMNS =  (
@@ -69,7 +73,8 @@ def top_requesters(request):
 
         for cc in input:
             row = []
-            row.append('%s' % cc[1])
+            row.append('<a href="%s">%s</a>' % (reverse('requester_details',kwargs={'requester_id':cc[0]}) ,cc[1]))
+            
             row.append('<a href="https://www.mturk.com/mturk/searchbar?requesterId=%s" target="_mturk">%s</a> (<a href="http://feed.crowdsauced.com/r/req/%s">RSS</a>)'
                        % (cc[0],cc[0],cc[0]) )
             row.extend(cc[2:6])
@@ -103,3 +108,48 @@ order by sum(q.hits_available*p.reward) desc;
                                                                   'columns':columns,
                                                                   'title':'Top-1000 Recent Requesters'
                                                                   })
+    
+def requester_details(request, requester_id):
+
+
+    def row_formatter(input):
+
+        for cc in input:
+            row = []
+            row.append('<a href="%s">%s</a>' % (reverse('hit_group_details',kwargs={'hit_group_id':cc[5]}) ,cc[0]))
+            row.extend(cc[1:5])
+            
+            yield row
+
+
+    data = query_to_tuples("""
+select 
+    title, 
+    hits_available, 
+    reward, 
+    occurrence_date, 
+    hit_expiration_date - occurrence_date,
+    p.group_id
+from main_hitgroupcontent p join main_hitgroupstatus q 
+    on( p.first_crawl_id = q.crawl_id and q.hit_group_content_id = p.id )
+where 
+    requester_id = '%s'    
+    """ % requester_id)
+    
+    columns = (('string', 'HIT Title'),
+               ('number', '#HITs'),
+               ('number', 'Reward'),
+               ('datetime', 'Posted'),
+               ('number', 'Duration (Days)'))
+        
+    return direct_to_template(request, 'main/requester_details.html',{
+                                                                      'data':text_row_formater(row_formatter(data)),
+                                                                      'columns':columns,
+                                                                      'title':'Last 100 Tasks posted by %s' % ('TODO')
+                                                                      })
+    
+def hit_group_details(request, hit_group_id):
+    
+    hit = get_object_or_404(HitGroupContent, group_id = hit_group_id)
+    
+    return direct_to_template(request, 'main/hit_group_details.html', {'hit':hit})

@@ -23,7 +23,7 @@ class HitGroupContent(models.Model):
 
     group_id            = models.CharField('Group ID', max_length=50, db_index=True, unique=True)
     group_id_hashed     = models.BooleanField(default=False)
-    requester_id        = models.CharField('Requester ID', max_length=50)
+    requester_id        = models.CharField('Requester ID', max_length=50, db_index=True)
     requester_name      = models.CharField('Requester Name', max_length=500)
     reward              = models.FloatField('Reward')
     html                = models.TextField('HTML', max_length=100000000)
