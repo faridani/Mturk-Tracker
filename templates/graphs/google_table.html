@@ -16,9 +16,9 @@
     	{% endfor %}
 	
         var table = new google.visualization.Table(document.getElementById('table_div'));
-        table.draw(data, {showRowNumber: true, allowHtml: true, page: 'enable', pageSize: 25, width: '800px', alternatingRowStyle: true});		
+        table.draw(data, {showRowNumber: true, allowHtml: true, page: 'enable', pageSize: 25, width: '100%', alternatingRowStyle: true});		
 	}	
       
 </script>
 
-<div id="table_div" style="height: 600px;"></div>
+<div id="table_div"></div>

@@ -18,22 +18,18 @@ def row_formater(input):
         row += ",".join(cc['row'])
         yield "["+row+"]"
 
-def text_row_formater(input,columns):
+def text_row_formater(input):
     for cc in input:
-        
+
         row = []
-        
-        print columns
-        print cc
-        for i,el in enumerate(cc):
-            print i
+        for el in cc:
             if isinstance(el, datetime.datetime):
                 row.append("new Date(%s,%s,%s,%s,%s)," % (el.year, el.month-1, el.day, el.hour, el.minute))
             elif isinstance(el, datetime.date):
                 row.append("new Date(%s,%s,%s)," % (el.year, el.month-1, el.day))
             else:
-                    row.append(simplejson.dumps(el))
-        
+                row.append(simplejson.dumps(el))
+
         yield "["+','.join(row)+"]"
 
 @register.simple_tag
@@ -45,7 +41,7 @@ def google_timeline(context, columns, data):
 
 @register.simple_tag
 def google_table(context, columns, data):
-    return {'data':text_row_formater(data,columns), 'columns':columns}
+    return {'data':text_row_formater(data), 'columns':columns}
 
 
 register.inclusion_tag('graphs/google_timeline.html', takes_context=True)(google_timeline)
