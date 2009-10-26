@@ -233,23 +233,6 @@ def callback_details(data, **kwargs):
                 logging.error("Failed to process group details for %s (%s)" % (group_id, 
                               sys.exc_info()[0].__name__))
                 errors.append(grab_error(sys.exc_info()))
-        group_id = data[i]['HitGroupStatus']['hit_group_content'].group_id
-        
-        try:
-            hit_group_content = HitGroupContent.objects.get(group_id=group_id, 
-                                    requester_id=data[i]['HitGroupStatus']['hit_group_content'].requester_id, 
-                                    title=data[i]['HitGroupStatus']['hit_group_content'].title,
-                                    description=data[i]['HitGroupStatus']['hit_group_content'].description,
-                                    time_alloted=data[i]['HitGroupStatus']['hit_group_content'].time_alloted,
-                                    reward=data[i]['HitGroupStatus']['hit_group_content'].reward,)
-            data[i]['HitGroupStatus']['hit_group_content'] = hit_group_content
-        except HitGroupContent.DoesNotExist: #@UndefinedVariable
-            try:
-                data[i]['HitGroupStatus']['hit_group_content'].save()
-            except:
-                logging.error("Failed to save content for %s (%s)" % (group_id, 
-                              sys.exc_info()[0].__name__))
-                errors.append(grab_error(sys.exc_info()))
     return (data,errors)
 
 ##########################################################################################
