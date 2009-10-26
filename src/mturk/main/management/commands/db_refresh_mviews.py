@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from tenclouds.sql import execute_sql
-from mturk.main.management.commands import clean_duplicates
+from mturk.main.management.commands import clean_duplicates,\
+    calculate_first_crawl_id
 import time
 import logging
 
@@ -12,7 +13,10 @@ class Command(BaseCommand):
         
         logging.info('cleaning up db from duplicates')
         
-        clean_duplicates()  
+        clean_duplicates()
+        
+        logging.info('calculating first_crawl_id')
+        calculate_first_crawl_id()  
         
         logging.info('Refreshing materialised views')
         

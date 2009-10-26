@@ -19,4 +19,11 @@ def clean_duplicates():
                         id != (select min(id) from main_hitgroupcontent where group_id = '%s') and group_id = '%s'
                     """ % (id['group_id'], id['group_id']))
         
-    execute_sql('commit;')            
+    execute_sql('commit;')    
+    
+    
+def calculate_first_crawl_id():
+    
+    execute_sql("""update main_hitgroupcontent p set first_crawl_id = 
+        (select min(crawl_id) from main_hitgroupstatus where group_id = p.group_id)
+    """)        
