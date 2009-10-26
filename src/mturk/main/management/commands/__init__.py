@@ -26,4 +26,6 @@ def calculate_first_crawl_id():
     
     execute_sql("""update main_hitgroupcontent p set first_crawl_id = 
         (select min(crawl_id) from main_hitgroupstatus where group_id = p.group_id)
+        where 
+            first_crawl_id is null
     """)        
