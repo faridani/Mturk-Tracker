@@ -16,8 +16,10 @@
 	<li>Qualifications: {{hit.qualifications}}</li>
 </ul>
 
+{% if hit.html %} 
 <div id="hit_group" style="padding:10px;border:1px solid black">
 	{{hit.html|safe}}
 </div>
+{% endif %}
 
 {% endblock %}
