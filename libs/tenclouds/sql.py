@@ -37,4 +37,4 @@ def execute_sql(query_string, *query_args):
     
     cursor = connection.cursor() #@UndefinedVariable
     cursor.execute(query_string, query_args)
-    return
+    return cursor

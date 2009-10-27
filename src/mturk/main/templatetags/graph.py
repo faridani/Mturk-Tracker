@@ -27,8 +27,10 @@ def text_row_formater(input):
                 row.append("new Date(%s,%s,%s,%s,%s)" % (el.year, el.month-1, el.day, el.hour, el.minute))
             elif isinstance(el, datetime.date):
                 row.append("new Date(%s,%s,%s)" % (el.year, el.month-1, el.day))
+            elif isinstance(el, float):
+                row.append("%.2f" % el)                
             elif isinstance(el, datetime.timedelta):
-                row.append(str(el.days + (float(el.seconds)/(60*60*24)) ))
+                row.append("%.2f" % ( el.days + (float(el.seconds)/(60*60*24) ) ))
             else:
                 row.append(simplejson.dumps(el))
         

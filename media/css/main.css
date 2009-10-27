@@ -1,7 +1,10 @@
-#logo{ text-align: center; margin: 1em 0px; }
-#top-tabs{ margin: 1em 0em;}
+#logo{ text-align: left; margin: 1em 0em 0em 0em; }
+#logo .desc{ font-size: 70%; color: gray; }
+#top-tabs{ margin: 0em 0em 1em 0em;}
 
 ul.galleria{ width: 300px;}
 ul.galleria li{float:left !important;}
 
-#footer{ text-align: center; margin: 1em 0px; padding-top: 0.5em; border-top: 1px solid black; }
+#introduction{ text-align: justify; }
+
+#footer{ text-align: center; margin: 1em 0px; padding-top: 0.5em;  }

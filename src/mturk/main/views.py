@@ -15,6 +15,7 @@ DEFAULT_COLUMNS =  (
 )
 
 ONE_DAY = 60 * 60 * 24
+ONE_HOUR = 60 * 60
 
 def data_formater(input):
     for cc in input:
@@ -22,7 +23,7 @@ def data_formater(input):
     return
 
 
-@cache_page(ONE_DAY)
+@cache_page(ONE_HOUR)
 def general(request):
     
     data = data_formater(query_to_dicts('''
@@ -66,7 +67,7 @@ def completed(request):
                                                                      'title': 'Tasks/HITs/$$$ completed per day'
     })
     
-@cache_page(ONE_DAY)
+@cache_page(ONE_HOUR)
 def top_requesters(request):
     
     def row_formatter(input):
@@ -121,19 +122,23 @@ def requester_details(request, requester_id):
             
             yield row
 
+    requster_name = HitGroupContent.objects.filter(requester_id = requester_id).values_list('requester_name',flat=True).distinct() 
+    
+    if requster_name: requster_name = requster_name[0]
+    else: requster_name = requester_id
 
     data = query_to_tuples("""
-select 
+select
     title, 
     hits_available, 
     reward, 
     occurrence_date, 
-    hit_expiration_date - occurrence_date,
+    (select end_time from main_crawl where id = (select distinct max(crawl_id) from main_hitgroupstatus where group_id = q.group_id and hit_group_content_id = p.id)) - occurrence_date,
     p.group_id
 from main_hitgroupcontent p join main_hitgroupstatus q 
-    on( p.first_crawl_id = q.crawl_id and q.hit_group_content_id = p.id )
+    on( q.hit_group_content_id = p.id and p.first_crawl_id = q.crawl_id )
 where 
-    requester_id = '%s'    
+    requester_id = '%s';    
     """ % requester_id)
     
     columns = (('string', 'HIT Title'),
@@ -145,7 +150,7 @@ where
     return direct_to_template(request, 'main/requester_details.html',{
                                                                       'data':text_row_formater(row_formatter(data)),
                                                                       'columns':columns,
-                                                                      'title':'Last 100 Tasks posted by %s' % ('TODO')
+                                                                      'title':'Last 100 Tasks posted by %s' % (requster_name)
                                                                       })
     
 def hit_group_details(request, hit_group_id):
