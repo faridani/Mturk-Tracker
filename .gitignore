@@ -11,3 +11,6 @@ media/.DS_Store
 s3*test*
 sds*test*
 .settings
+data
+data/**
+*.counter

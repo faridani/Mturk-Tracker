@@ -2,6 +2,7 @@ from base import *
 import logging
 
 DATABASE_NAME = 'mturk_crawl'
+DEBUG=False
 
 LOG_DIRECTORY = '/var/log/mturk/'
 logging.basicConfig(

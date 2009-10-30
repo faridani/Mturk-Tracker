@@ -48,7 +48,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.webdesign',
     'south',
-    'mturk.main'    
+    'mturk.main',
+    'mturk.importer'    
 )
 
 AUTHENTICATION_BACKENDS = (

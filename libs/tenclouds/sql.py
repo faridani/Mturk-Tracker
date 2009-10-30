@@ -38,3 +38,8 @@ def execute_sql(query_string, *query_args):
     cursor = connection.cursor() #@UndefinedVariable
     cursor.execute(query_string, query_args)
     return cursor
+
+def exists(query_string, *query_args):
+    
+    cursor = execute_sql(query_string, query_args)
+    return cursor.fetchone() is not None
