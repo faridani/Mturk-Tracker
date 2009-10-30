@@ -1,9 +1,10 @@
 from django.conf.urls.defaults import *
-from django.views.generic.simple import direct_to_template
+from django.views.generic.simple import direct_to_template, redirect_to
 
 urlpatterns = patterns('',
-                       url(r'^$',direct_to_template, {'template':'main/index.html'}, name='index'),
-                       url(r'^general/$','mturk.main.views.general', name='graphs_general'),
+                       url(r'^$', redirect_to, {'url':'/general/'}),
+                       url(r'^general/$','mturk.main.views.general', name='graphs_general'),                       
+                       url(r'^about/$',direct_to_template, {'template':'main/about.html'}, name='about'),
                        url(r'^arrivals/$','mturk.main.views.arrivals', name='graphs_arrivals'),
                        url(r'^completed/$','mturk.main.views.completed', name='graphs_completed'),
                        url(r'^top_requesters/$','mturk.main.views.top_requesters', name='graphs_top_requesters'),
