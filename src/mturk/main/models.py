@@ -41,7 +41,7 @@ class HitGroupContent(models.Model):
 
 class HitGroupStatus(models.Model):
     
-    group_id            = models.CharField('Group ID',max_length=50, db_index=True)
+    group_id            = models.CharField('Group ID', max_length=50, db_index=True)
     hits_available      = models.IntegerField('Hits Avaliable')
     page_number         = models.IntegerField('Page Number')
     inpage_position     = models.IntegerField('In Page Position')
