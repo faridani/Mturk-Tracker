@@ -20,7 +20,7 @@ class Command(BaseCommand):
         
         try:
         
-            commit_threshold = 1
+            commit_threshold = 10
             results = query_to_dicts("select id from main_crawl p where not exists(select id from hits_mv where crawl_id = p.id)")
             
             for i, row in enumerate(results):
