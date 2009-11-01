@@ -163,7 +163,7 @@ HitGroupStatus
                     obj = HitGroupStatus(group_id = group_id, hits_available = hits_available, page_number = page_no, inpage_position = inpage_position, hit_expiration_date = hit_expiration_date, hit_group_content_id = hit_group_content_mapping[group_id], crawl_id = crawl_mapping[crawl_id])
                     obj.save()
                         
-                except ValueError, KeyError:
+                except (ValueError, KeyError):
                     error_info = grab_error(sys.exc_info())
                     error_log.write(row)
                     error_log.write("\r\n")
