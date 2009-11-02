@@ -54,8 +54,8 @@ class Command(BaseCommand):
                     select count(*) as "projects", sum(reward*hits_available) as "reward", sum(hits_available) as "hits" from hits_mv p
                         where 
                             start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                            and crawl_id = ( select min(crawl_id) from hits_mv 
-                                where start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
+                            and crawl_id = ( select min(id) from main_crawl q  
+                                where q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
                                     and group_id = p.group_id
                             )
                             and not exists( select group_id from hits_mv where start_time < TIMESTAMP '%s' and group_id = p.group_id);                
@@ -68,7 +68,7 @@ class Command(BaseCommand):
                     select count(*) as "projects", sum(reward*hits_available) as "reward", sum(hits_available) as "hits" from hits_mv p
                         where 
                             start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                            and crawl_id = ( select min(crawl_id) from hits_mv q
+                            and crawl_id = ( select min(id) from main_crawl q  
                                 where q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
                                     and q.group_id = p.group_id
                             );
@@ -81,7 +81,7 @@ class Command(BaseCommand):
                     select count(*) as "projects", sum(reward*hits_available) as "reward", sum(hits_available) as "hits" from hits_mv p
                         where 
                             start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                            and crawl_id = ( select max(q.id) from main_crawl q
+                            and crawl_id = ( select max(id) from main_crawl q  
                                 where q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
                             );                    
                 ''' % ( range_start_date, range_end_date, range_start_date, range_end_date )).next()
