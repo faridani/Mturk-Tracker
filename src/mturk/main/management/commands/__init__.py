@@ -27,11 +27,21 @@ def clean_duplicates():
     
 def calculate_first_crawl_id():
     
-    execute_sql("""update main_hitgroupcontent p set first_crawl_id = 
-        (select min(crawl_id) from main_hitgroupstatus where group_id = p.group_id)
-        where 
-            first_crawl_id is null
-    """)    
+    progress = 100
+    results = query_to_dicts("select id from main_hitgroupcontent where first_crawl_id is null")
+    
+    for i,r in enumerate(results):
+        execute_sql("""update main_hitgroupcontent p set first_crawl_id = 
+            (select min(crawl_id) from main_hitgroupstatus where hit_group_content_id = p.id)
+            where 
+                id = %s
+        """ % r['id']) 
+        
+        if i % progress == 0:
+            execute_sql('commit;')  
+            logging.info("updated %s main_hitgroupcontent rows with first_crawl_id" % i)
+
+    
     
     execute_sql('commit;') 
     

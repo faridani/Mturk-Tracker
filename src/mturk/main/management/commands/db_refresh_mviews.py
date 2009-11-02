@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from mturk.main.management.commands import clean_duplicates, update_crawl_agregates,\
-    update_mviews
+    update_mviews, calculate_first_crawl_id
 import time
 import logging
 
@@ -13,8 +13,8 @@ class Command(BaseCommand):
         logging.info('cleaning up db from duplicates')
         clean_duplicates()
         
-        #logging.info('calculating first_crawl_id')
-        #calculate_first_crawl_id()  
+        logging.info('calculating first_crawl_id')
+        calculate_first_crawl_id()  
         
         logging.info('Refreshing materialised views')
         start_time = time.time()
