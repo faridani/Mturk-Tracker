@@ -34,7 +34,6 @@ def text_row_formater(input):
             else:
                 row.append(simplejson.dumps(el))
         
-        print row
         yield "["+','.join(row)+"]"
 
 @register.simple_tag
