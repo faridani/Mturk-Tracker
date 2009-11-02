@@ -66,3 +66,13 @@ class DayStats(models.Model):
     day_end_reward      = models.FloatField('Day End Reward')
     day_end_hits        = models.FloatField('Day End Hits')
     day_end_projects    = models.FloatField('Day End Projects')        
+    
+    
+class CrawlAgregates(models.Model):
+    
+    reward              = models.FloatField()
+    hits                = models.IntegerField()
+    projects            = models.IntegerField()
+    start_time          = models.DateTimeField()
+    
+    crawl               = models.ForeignKey(Crawl)

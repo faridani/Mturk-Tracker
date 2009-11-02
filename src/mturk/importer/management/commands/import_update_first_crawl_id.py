@@ -26,7 +26,7 @@ class Command(BaseCommand):
             for i, row in enumerate(results):
                 
                 execute_sql("""update main_hitgroupcontent p set first_crawl_id = 
-                    (select min(crawl_id) from main_hitgroupstatus where group_id = p.group_id)
+                    (select crawl_id from main_hitgroupstatus where group_id = p.group_id order by crawl_id asc LIMIT 1)
                     where 
                         id = %s
                 """ % row['id'])                    
