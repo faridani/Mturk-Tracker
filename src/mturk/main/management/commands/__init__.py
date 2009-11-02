@@ -34,11 +34,16 @@ def calculate_first_crawl_id():
     """)     
     
     
-def update_crawl_agregates(commit_threshold=10):
+def update_crawl_agregates(commit_threshold=10, only_new = True):
     
         try:
-        
-            results = query_to_dicts("select id from main_crawl p where not exists(select id from main_crawlagregates where crawl_id = p.id)")
+            
+            results = None
+            
+            if only_new:
+                results = query_to_dicts("select id from main_crawl p where old_id is null and not exists(select id from main_crawlagregates where crawl_id = p.id)")
+            else:
+                results = query_to_dicts("select id from main_crawl p where not exists(select id from main_crawlagregates where crawl_id = p.id)")
             
             for i, row in enumerate(results):
                 

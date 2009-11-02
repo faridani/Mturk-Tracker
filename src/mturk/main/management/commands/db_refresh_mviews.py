@@ -26,6 +26,6 @@ class Command(BaseCommand):
         
        
         logging.info('Updating crawl agregates')
-        update_crawl_agregates(1)
+        update_crawl_agregates(1, only_new = True)
         
         print log
