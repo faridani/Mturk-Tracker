@@ -31,7 +31,9 @@ def calculate_first_crawl_id():
         (select min(crawl_id) from main_hitgroupstatus where group_id = p.group_id)
         where 
             first_crawl_id is null
-    """)     
+    """)    
+    
+    execute_sql('commit;') 
     
 def update_mviews():
     
@@ -56,6 +58,8 @@ def update_mviews():
         WHERE 
             p.crawl_id IN ( %s );    
     """ % ','.join(missing_crawls_ids))
+    
+    execute_sql('commit;')
 
 
 def update_crawl_agregates(commit_threshold=10, only_new = True):

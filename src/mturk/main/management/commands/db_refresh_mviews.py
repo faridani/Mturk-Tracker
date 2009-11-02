@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from tenclouds.sql import execute_sql
 from mturk.main.management.commands import clean_duplicates, update_crawl_agregates,\
     update_mviews
 import time
