@@ -1,4 +1,4 @@
-from tenclouds.sql import query_to_dicts, execute_sql
+from tenclouds.sql import query_to_dicts, execute_sql, query_to_tuples
 from mturk.main.management.commands.crawler_common import grab_error
 import sys
 import datetime
@@ -33,7 +33,31 @@ def calculate_first_crawl_id():
             first_crawl_id is null
     """)     
     
+def update_mviews():
     
+    missing_crawls_ids = []
+    missing_crawls = query_to_tuples("""select id from main_crawl p where p.success = true and not exists (select id from main_crawlagregates where crawl_id = p.id )""")
+    
+    for row in missing_crawls:
+        missing_crawls_ids.append(str(row[0]))
+        
+    
+    logging.info("inserting missing crawls: %s" % ','.join(missing_crawls_ids))    
+    
+    execute_sql("""INSERT INTO 
+            hits_mv
+        SELECT p.id AS status_id, q.id AS content_id, p.group_id, p.crawl_id, 
+            ( SELECT main_crawl.start_time FROM main_crawl WHERE main_crawl.id = p.crawl_id) AS start_time, 
+            q.requester_id, p.hits_available, p.page_number, p.inpage_position, p.hit_expiration_date, q.reward, q.time_alloted
+        FROM 
+            main_hitgroupstatus p
+        JOIN 
+            main_hitgroupcontent q ON (q.group_id::text = p.group_id::text AND p.hit_group_content_id = q.id)
+        WHERE 
+            p.crawl_id IN ( %s );    
+    """ % ','.join(missing_crawls_ids))
+
+
 def update_crawl_agregates(commit_threshold=10, only_new = True):
     
         try:
