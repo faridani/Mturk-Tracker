@@ -73,6 +73,6 @@ class CrawlAgregates(models.Model):
     reward              = models.FloatField()
     hits                = models.IntegerField()
     projects            = models.IntegerField()
-    start_time          = models.DateTimeField()
+    start_time          = models.DateTimeField(db_index=True)
     
     crawl               = models.ForeignKey(Crawl)

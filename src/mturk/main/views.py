@@ -27,10 +27,9 @@ def data_formater(input):
 def general(request):
     
     data = data_formater(query_to_dicts('''
-        select sum(reward*hits_available) as "reward", sum(hits_available) as "hits", count(*) as "count", start_time 
-            from hits_mv p 
-            group by crawl_id, start_time
-            order by crawl_id asc    
+        select reward, hits, projects as "count", start_time 
+            from main_crawlagregates 
+            order by start_time asc    
     '''))
             
     return direct_to_template(request, 'main/graphs/timeline.html', {
