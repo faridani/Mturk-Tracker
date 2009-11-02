@@ -48,12 +48,15 @@ model:
                             'old_id':int(row[0]),
                             'start_time': datetime.datetime.strptime(row[1], "%Y-%m-%d %H:%M:%S"),
                             'end_time': datetime.datetime.strptime(row[2], "%Y-%m-%d %H:%M:%S"),
-                            'success': True if row[0] == 'YES' else False,
+                            'success': True if row[3] == 'YES' else False,
                             'groups_downloaded':0
                             })
-                    obj.save()
+                    #obj.save()
                     i = i+1
-            transaction.commit()
+                    
+                    if row[3] == 'NO': print row[0]
+                    
+            #transaction.commit()
             print 'saved %s rows' % i
         except KeyboardInterrupt:
             transaction.rollback()
