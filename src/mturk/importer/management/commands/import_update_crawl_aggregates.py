@@ -23,6 +23,7 @@ class Command(BaseCommand):
             
             if i % progress == 0:
                 print "processed %s rows" % i
+                execute_sql("commit;")
             
         execute_sql("commit;")
             

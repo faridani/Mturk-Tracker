@@ -4,6 +4,7 @@ from mturk.main.models import Crawl, DayStats
 from tenclouds.date import today
 import datetime
 import logging
+from django.db import transaction
 
 def get_first_crawl():
         crawls = Crawl.objects.filter().order_by('start_time')[:1]
@@ -28,6 +29,10 @@ class Command(BaseCommand):
         if not crawl:
             logging.error("no crawls in db")
             return
+        
+        transaction.enter_transaction_management()
+        transaction.managed(True)
+        
         
         for i in range(0,(today() - crawl.start_day()).days):
             
@@ -95,3 +100,5 @@ class Command(BaseCommand):
                                         day_end_hits        = day_end['hits'],
                                         day_end_projects    = day_end['projects']                                        
                                         )
+                
+                transaction.commit()
