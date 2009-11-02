@@ -27,9 +27,9 @@ def clean_duplicates():
     
 def calculate_first_crawl_id():
     
-    progress = 100
+    progress = 10
     results = query_to_dicts("select id from main_hitgroupcontent where first_crawl_id is null")
-    
+    logging.info('got missing ids results')
     for i,r in enumerate(results):
         execute_sql("""update main_hitgroupcontent p set first_crawl_id = 
             (select min(crawl_id) from main_hitgroupstatus where hit_group_content_id = p.id)
