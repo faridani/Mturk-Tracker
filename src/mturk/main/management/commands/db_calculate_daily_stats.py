@@ -51,15 +51,18 @@ class Command(BaseCommand):
                 stats for projects posted on particular day
                 '''
                 arrivals = query_to_dicts('''
-                    select count(*) as "projects", sum(reward*hits_available) as "reward", sum(hits_available) as "hits" from hits_mv p
-                        where 
-                            start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                            and crawl_id = ( select min(id) from main_crawl q  
-                                where q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                                    and group_id = p.group_id
-                            )
-                            and not exists( select group_id from hits_mv where start_time < TIMESTAMP '%s' and group_id = p.group_id);                
-                ''' % ( range_start_date, range_end_date, range_start_date, range_end_date, range_start_date )).next()
+                    select count(*) as "projects", sum(reward*hits_available) as "reward", sum(hits_available) as "hits"  
+                    from 
+                        hits_mv p join
+                        (select min(crawl_id) as "crawl_id",group_id from hits_mv q
+                            where
+                                q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
+                                group by q.group_id
+                        ) as "r" on ( p.group_id = r.group_id and p.crawl_id = r.crawl_id  )
+                    where
+                        p.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
+                        and not exists( select group_id from hits_mv where start_time < TIMESTAMP '%s' and group_id = p.group_id)                        
+                    ''' % ( range_start_date, range_end_date, range_start_date, range_end_date, range_start_date )).next()
                 
                 '''
                 stats at the begining of day
@@ -70,7 +73,6 @@ class Command(BaseCommand):
                             start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
                             and crawl_id = ( select min(id) from main_crawl q  
                                 where q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                                    and q.group_id = p.group_id
                             );
                 ''' % ( range_start_date, range_end_date, range_start_date, range_end_date )).next()
 

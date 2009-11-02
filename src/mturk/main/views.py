@@ -66,7 +66,7 @@ def completed(request):
                                                                      'title': 'Tasks/HITs/$$$ completed per day'
     })
     
-@cache_page(ONE_HOUR)
+@cache_page(ONE_DAY)
 def top_requesters(request):
     
     def row_formatter(input):
@@ -108,7 +108,7 @@ order by sum(q.hits_available*p.reward) desc;
                                                                   'columns':columns,
                                                                   'title':'Top-1000 Recent Requesters'
                                                                   })
-    
+@cache_page(ONE_DAY)    
 def requester_details(request, requester_id):
 
 
@@ -132,7 +132,7 @@ select
     hits_available, 
     reward, 
     occurrence_date, 
-    (select end_time from main_crawl where id = (select distinct max(crawl_id) from main_hitgroupstatus where group_id = q.group_id and hit_group_content_id = p.id)) - occurrence_date,
+    (select end_time from main_crawl where id = (select max(crawl_id) from main_hitgroupstatus where group_id = q.group_id and hit_group_content_id = p.id)) - occurrence_date,
     p.group_id
 from main_hitgroupcontent p join main_hitgroupstatus q 
     on( q.hit_group_content_id = p.id and p.first_crawl_id = q.crawl_id )
@@ -151,7 +151,7 @@ where
                                                                       'columns':columns,
                                                                       'title':'Last 100 Tasks posted by %s' % (requster_name)
                                                                       })
-    
+cache_page(ONE_DAY)
 def hit_group_details(request, hit_group_id):
     
     hit = get_object_or_404(HitGroupContent, group_id = hit_group_id)
