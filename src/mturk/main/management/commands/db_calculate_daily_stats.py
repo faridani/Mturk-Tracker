@@ -77,7 +77,7 @@ class Command(BaseCommand):
                         ) as "r" on ( p.group_id = r.group_id and p.crawl_id = r.crawl_id  )
                     where
                         p.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                    ''' % ( range_start_date, range_end_date, range_start_date, range_end_date )).next()
+                ''' % ( range_start_date, range_end_date, range_start_date, range_end_date )).next()
 
                 '''
                 stats at the end of day
@@ -90,6 +90,13 @@ class Command(BaseCommand):
                                 where q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
                             );                    
                 ''' % ( range_start_date, range_end_date, range_start_date, range_end_date )).next()
+
+                '''
+                making sure no null values are passed
+                '''
+                for map in (arrivals, day_start, day_end):
+                    for key,value in map.iteritems():
+                        if value is None: map[key] = 0
                 
                 DayStats.objects.create(date = day,
                                         
