@@ -37,7 +37,6 @@ class Command(BaseCommand):
         for i in range(0,(today() - crawl.start_day()).days):
             
             day = crawl.start_day()+datetime.timedelta(days=i)
-            logging.debug('db_calculate_daily_stats: checking day: %s' % day)
             
             try:
                 DayStats.objects.get(date = day)
@@ -68,13 +67,17 @@ class Command(BaseCommand):
                 stats at the begining of day
                 '''
                 day_start = query_to_dicts('''
-                    select count(*) as "projects", sum(reward*hits_available) as "reward", sum(hits_available) as "hits" from hits_mv p
-                        where 
-                            start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                            and crawl_id = ( select min(id) from main_crawl q  
-                                where q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                            );
-                ''' % ( range_start_date, range_end_date, range_start_date, range_end_date )).next()
+                    select count(*) as "projects", sum(reward*hits_available) as "reward", sum(hits_available) as "hits"
+                    from 
+                        hits_mv p join
+                        (select min(crawl_id) as "crawl_id",group_id from hits_mv q
+                            where
+                                q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
+                                group by q.group_id
+                        ) as "r" on ( p.group_id = r.group_id and p.crawl_id = r.crawl_id  )
+                    where
+                        p.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
+                    ''' % ( range_start_date, range_end_date, range_start_date, range_end_date )).next()
 
                 '''
                 stats at the end of day
