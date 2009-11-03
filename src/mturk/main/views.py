@@ -97,8 +97,8 @@ where
 group by p.requester_id, p.requester_name
 order by sum(q.hits_available*p.reward) desc;    
 ''' % (
-        (datetime.date.today() - datetime.timedelta(days=30).isoformat()),
-        (datetime.date.today() - datetime.timedelta(days=33).isoformat())
+        (datetime.date.today() - datetime.timedelta(days=30)).isoformat(),
+        (datetime.date.today() - datetime.timedelta(days=33)).isoformat()
         )
 )) 
     
