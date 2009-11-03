@@ -91,10 +91,13 @@ select
     max(p.occurrence_date) as "last_posted"
 from main_hitgroupcontent p join main_hitgroupstatus q 
     on( p.first_crawl_id = q.crawl_id and q.hit_group_content_id = p.id )
-where p.occurrence_date > TIMESTAMP '%s'
+where 
+    p.occurrence_date > TIMESTAMP '%s'
+    and q.crawl_id in ( select id from main_crawl where start_time > TIMESTAMP '%s')
 group by p.requester_id, p.requester_name
 order by sum(q.hits_available*p.reward) desc;    
-''' % (datetime.date.today() - datetime.timedelta(days=30)).isoformat())) 
+''' % (datetime.date.today() - datetime.timedelta(days=30)).isoformat(),
+        datetime.date.today() - datetime.timedelta(days=33)).isoformat()) 
     
     columns = (('string','Requester ID'),
                ('string','Requester'),
