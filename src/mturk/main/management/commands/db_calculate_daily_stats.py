@@ -96,7 +96,7 @@ class Command(BaseCommand):
                 '''
                 for map in (arrivals, day_start, day_end):
                     for key,value in map.iteritems():
-                        if value is None: map[key] = 0
+                        if value is None or value < 0: map[key] = 0
                 
                 DayStats.objects.create(date = day,
                                         

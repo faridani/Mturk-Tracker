@@ -43,7 +43,7 @@ def arrivals(request):
     
     data = data_formater(query_to_dicts('''
         select date as "start_time", arrivals_hits as "hits", arrivals_reward as "reward", arrivals_projects as "count"
-            from main_daystats
+            from main_daystats where day_end_hits != 0
     '''))
     
     return direct_to_template(request, 'main/graphs/timeline.html', {
@@ -57,7 +57,7 @@ def completed(request):
     
     data = data_formater(query_to_dicts('''
         select date as "start_time", day_start_hits - day_end_hits as "hits", day_start_reward - day_end_reward as "reward", day_start_projects - day_end_projects as "count"
-            from main_daystats
+            from main_daystats where day_end_hits != 0
     '''))
     
     return direct_to_template(request, 'main/graphs/timeline.html', {
