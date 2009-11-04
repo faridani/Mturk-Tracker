@@ -128,19 +128,22 @@ def requester_details(request, requester_id):
     if requster_name: requster_name = requster_name[0]
     else: requster_name = requester_id
 
+    date_from = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
+
     data = query_to_tuples("""
 select
     title, 
     hits_available, 
-    reward, 
-    occurrence_date, 
-    (select end_time from main_crawl where id = (select max(crawl_id) from main_hitgroupstatus where group_id = q.group_id and hit_group_content_id = p.id)) - occurrence_date,
+    p.reward, 
+    p.occurrence_date, 
+(select end_time from main_crawl where id = (select max(crawl_id) from main_hitgroupstatus where group_id = q.group_id and hit_group_content_id = p.id)) - p.occurrence_date,
     p.group_id
-from main_hitgroupcontent p join main_hitgroupstatus q 
-    on( q.hit_group_content_id = p.id and p.first_crawl_id = q.crawl_id )
+from main_hitgroupfirstoccurences p join main_hitgroupcontent q on ( p.group_content_id = q.id and p.requester_id = q.requester_id )
 where 
-    requester_id = '%s';    
-    """ % requester_id)
+    p.requester_id = '%s'
+    and p.occurrence_date > TIMESTAMP '%s' and
+    q.occurrence_date > TIMESTAMP '%s';    
+    """ % (requester_id, date_from, date_from))
     
     columns = (('string', 'HIT Title'),
                ('number', '#HITs'),
