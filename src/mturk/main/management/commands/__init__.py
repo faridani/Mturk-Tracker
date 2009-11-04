@@ -78,7 +78,7 @@ def update_first_occured_agregates():
     for row in missing_crawls:
         
         crawl_id = row[0]
-        logging.info("inserting missing crawl: %s" % crawl_id)    
+        logging.info("inserting missing crawl into main_hitgroupfirstoccurences: %s" % crawl_id)    
     
         execute_sql("""INSERT INTO 
                 main_hitgroupfirstoccurences

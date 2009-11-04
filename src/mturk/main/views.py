@@ -82,18 +82,19 @@ def top_requesters(request):
             yield row
     
     data = row_formatter(query_to_tuples('''
-select
-    requester_id, 
-    requester_name, 
-    count(*) as "projects", 
-    sum(hits_available) as "hits", 
-    sum(hits_available*reward) as "reward",
-    max(occurrence_date) as "last_posted"
-from main_hitgroupfirstoccurences
-where 
-    occurrence_date > TIMESTAMP '%s'
-group by requester_id, requester_name
-order by sum(hits_available*reward) desc;    
+                                            select
+                                                requester_id, 
+                                                requester_name, 
+                                                count(*) as "projects", 
+                                                sum(hits_available) as "hits", 
+                                                sum(hits_available*reward) as "reward",
+                                                max(occurrence_date) as "last_posted"
+                                            from main_hitgroupfirstoccurences
+                                            where 
+                                                occurrence_date > TIMESTAMP '%s'
+                                            group by requester_id, requester_name
+                                            order by sum(hits_available*reward) desc
+                                            limit 1000;    
 ''' % ( (datetime.date.today() - datetime.timedelta(days=30)).isoformat() )
 )) 
     
