@@ -28,28 +28,28 @@
     </head>
 <body class="container">
 	
+	<div id="header" class="span-24">
+		<div id="logo"><h1>{%block header_text %}Mechanical Turk Monitor{% endblock %}</h1></div>
+	</div>
+
+	<!-- Start tabs -->
+	{% include 'main/tabs.html' %} 
+	<!-- End tabs --> 		
 	
-		<div id="header" class="span-24">
-			<div id="logo"><h1>{%block header_text %}Mechanical Turk Monitor{% endblock %}</h1></div>
-		</div>
+	<div id="content" class="span-24">
+	
+		
+		{% block content %}
+		{% endblock %}
+	
+	</div>
 
-		<!-- Start tabs -->
-		{% include 'main/tabs.html' %} 
-		<!-- End tabs --> 		
+	<div id="footer">
+		<hr/>
+		<p>For bugs reports of feature requests, please contact <a href="http://www.stern.nyu.edu/~panos">Panos Ipeirotis</a> </p>
+	</div>
 		
-		<div id="content" class="span-24">
-		
-			
-			{% block content %}
-			{% endblock %}
-		
-		</div>
-
-		<div id="footer">
-			<hr/>
-			<p>For bugs reports of feature requests, please contact <a href="http://www.stern.nyu.edu/~panos">Panos Ipeirotis</a> </p>
-		</div>
-		
+	{% google_analytics_code %}
 
 </body>
 </html>

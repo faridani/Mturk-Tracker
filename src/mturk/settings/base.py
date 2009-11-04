@@ -6,7 +6,6 @@ MANAGERS = ADMINS = (
     ('konrad', 'conrad.adamczyk@gmail.com'),
 )
 
-
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'op56pokf54./&^%$GDAWLEosh"AP#O$%^&KLUYHBLAKLPLPkso'
 
@@ -57,7 +56,7 @@ AUTHENTICATION_BACKENDS = (
 )
 INTERNAL_IPS = ['127.0.0.1']
 
-GOOGLE_ANALYTICS_ID='UA-89122-1'
+GOOGLE_ANALYTICS_ID='UA-89122-17'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 LOGIN_REDIRECT_URL = "/"
