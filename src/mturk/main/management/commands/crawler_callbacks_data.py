@@ -9,6 +9,7 @@
 # Functions fetching data from a Amazon Mechanical Turk (mturk.com) service.
 
 from BeautifulSoup import BeautifulSoup, ResultSet
+from django.utils.encoding import smart_str
 from tenclouds.text import fuse, remove_whitespaces, strip_html
 
 import datetime
@@ -138,10 +139,12 @@ def callback_allhit(pages, **kwargs):
                                 group_id = group_id['href'][start:stop]
                             else:
                                 group_id_hashed = True
-                                group_id = hashlib.md5("%s;%s;%s;%s;%s;%s;%s;" % (title,requester_id,
-                                                                                 time_alloted,reward,
-                                                                                 description,keywords,
-                                                                                 qualifications)).hexdigest()
+                                composition = "%s;%s;%s;%s;%s;%s;%s;" % (title,requester_id,
+                                                                         time_alloted,reward,
+                                                                         description,keywords,
+                                                                         qualifications)
+                                composition = smart_str(composition)
+                                group_id = hashlib.md5(composition).hexdigest()
 
                         # Checking whether processed content is already stored in the database
                         hit_group_content = None

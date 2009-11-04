@@ -11,7 +11,10 @@
 # 21.10.2009:   Added a date of HIT group's first occurrence
 # 22.10.2009:   Added protection from saving records which are already stored in the 
 #                database; fixed bug causing crawler to create new HitgroupContent instead
-#                of using one stored in the database
+#                of using one stored in the databas
+# 04.11.2009:   Non-ASCII characters were causing an exception in a procedure creating 
+#               group_id hash when given HIT group was set to private (no explicit
+#               group_id available) 
 
 ##########################################################################################
 
