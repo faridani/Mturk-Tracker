@@ -136,7 +136,7 @@ select
     hits_available, 
     p.reward, 
     p.occurrence_date, 
-(select end_time from main_crawl where id = (select max(crawl_id) from main_hitgroupstatus where group_id = q.group_id and hit_group_content_id = p.id)) - p.occurrence_date,
+    (select end_time from main_crawl where id = (select max(crawl_id) from main_hitgroupstatus where group_id = q.group_id and hit_group_content_id = p.group_content_id)) - p.occurrence_date,
     p.group_id
 from main_hitgroupfirstoccurences p join main_hitgroupcontent q on ( p.group_content_id = q.id and p.requester_id = q.requester_id )
 where 
