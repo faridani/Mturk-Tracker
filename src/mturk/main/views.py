@@ -82,24 +82,19 @@ def top_requesters(request):
             yield row
     
     data = row_formatter(query_to_tuples('''
-select    
-    p.requester_id, 
-    p.requester_name, 
+select
+    requester_id, 
+    requester_name, 
     count(*) as "projects", 
-    sum(q.hits_available) as "hits", 
-    sum(q.hits_available*p.reward) as "reward",
-    max(p.occurrence_date) as "last_posted"
-from main_hitgroupcontent p join main_hitgroupstatus q 
-    on( p.first_crawl_id = q.crawl_id and q.hit_group_content_id = p.id )
+    sum(hits_available) as "hits", 
+    sum(hits_available*reward) as "reward",
+    max(occurrence_date) as "last_posted"
+from main_hitgroupfirstoccurences
 where 
-    p.occurrence_date > TIMESTAMP '%s'
-    and q.crawl_id in ( select id from main_crawl where start_time > TIMESTAMP '%s')
-group by p.requester_id, p.requester_name
-order by sum(q.hits_available*p.reward) desc;    
-''' % (
-        (datetime.date.today() - datetime.timedelta(days=30)).isoformat(),
-        (datetime.date.today() - datetime.timedelta(days=33)).isoformat()
-        )
+    occurrence_date > TIMESTAMP '%s'
+group by requester_id, requester_name
+order by sum(hits_available*reward) desc;    
+''' % ( (datetime.date.today() - datetime.timedelta(days=30)).isoformat() )
 )) 
     
     columns = (('string','Requester ID'),

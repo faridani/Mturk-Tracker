@@ -70,6 +70,34 @@ def update_mviews():
     """ % ','.join(missing_crawls_ids))
     
     execute_sql('commit;')
+    
+def update_first_occured_agregates():
+    
+    missing_crawls = query_to_tuples("""select id from main_crawl p where p.success = true and not exists (select crawl_id from main_hitgroupfirstoccurences where crawl_id = p.id );""")
+    
+    for row in missing_crawls:
+        
+        crawl_id = row[0]
+        logging.info("inserting missing crawl: %s" % crawl_id)    
+    
+        execute_sql("""INSERT INTO 
+                main_hitgroupfirstoccurences
+                    select
+                        p.reward,
+                        p.id,
+                        q.crawl_id,
+                        p.requester_name, 
+                        q.id, 
+                        p.occurrence_date,
+                        p.requester_id,                        
+                        p.group_id,
+                        q.hits_available,
+                        nextval('main_hitgroupfirstoccurences_id_seq'::regclass)                        
+                    from main_hitgroupcontent p join main_hitgroupstatus q 
+                        on( p.first_crawl_id = q.crawl_id and q.hit_group_content_id = p.id )
+                        where q.crawl_id = %s;""" % crawl_id)
+    
+        execute_sql('commit;')    
 
 
 def update_crawl_agregates(commit_threshold=10, only_new = True):

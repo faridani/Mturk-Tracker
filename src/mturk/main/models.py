@@ -76,3 +76,16 @@ class CrawlAgregates(models.Model):
     start_time          = models.DateTimeField(db_index=True)
     
     crawl               = models.ForeignKey(Crawl)
+    
+class HitGroupFirstOccurences(models.Model):
+    
+    requester_id        = models.CharField(max_length=50, db_index=True)
+    group_id            = models.CharField(max_length=50, db_index=True)
+    requester_name      = models.CharField(max_length=500)
+    hits_available      = models.IntegerField()
+    occurrence_date     = models.DateTimeField(db_index=True)
+    reward              = models.FloatField()
+    
+    crawl               = models.ForeignKey(Crawl)
+    group_status        = models.ForeignKey(HitGroupStatus)
+    group_content       = models.ForeignKey(HitGroupContent)
