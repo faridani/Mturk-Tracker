@@ -25,13 +25,13 @@ class HitGroupContent(models.Model):
     group_id            = models.CharField('Group ID', max_length=50, db_index=True, unique=True)
     group_id_hashed     = models.BooleanField(default=False)
     requester_id        = models.CharField('Requester ID', max_length=50, db_index=True)
-    requester_name      = models.CharField('Requester Name', max_length=500)
+    requester_name      = models.CharField('Requester Name', max_length=10000)
     reward              = models.FloatField('Reward')
     html                = models.TextField('HTML', max_length=100000000)
     description         = models.TextField('Description', max_length=1000000)
     title               = models.CharField('Title', max_length=10000)
-    keywords            = models.CharField('Keywords', blank=True, max_length=500, null=True)
-    qualifications      = models.CharField('Qualifications', blank=True, max_length=500, null=True)
+    keywords            = models.CharField('Keywords', blank=True, max_length=10000, null=True)
+    qualifications      = models.CharField('Qualifications', blank=True, max_length=10000, null=True)
     occurrence_date     = models.DateTimeField('First occurrence date', blank=True, null=True, db_index=True)
     '''
     Time in minutes
