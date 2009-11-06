@@ -29,7 +29,7 @@ class HitGroupContent(models.Model):
     reward              = models.FloatField('Reward')
     html                = models.TextField('HTML', max_length=100000000)
     description         = models.TextField('Description', max_length=1000000)
-    title               = models.CharField('Title', max_length=500)
+    title               = models.CharField('Title', max_length=10000)
     keywords            = models.CharField('Keywords', blank=True, max_length=500, null=True)
     qualifications      = models.CharField('Qualifications', blank=True, max_length=500, null=True)
     occurrence_date     = models.DateTimeField('First occurrence date', blank=True, null=True, db_index=True)
