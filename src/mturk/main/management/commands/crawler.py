@@ -1,22 +1,30 @@
+'''
+Copyright (c) 2009 Panagiotis G. Ipeirotis
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+Initially designed and created by 10clouds.com, contact at 10clouds.com
+'''
 # -*- coding: utf-8 -*-
-
-# Konrad Adamczyk (conrad.adamczyk at gmail.com)
-
-# Changelog:
-# 07.10.2009:	First release
-# 20.10.2009:	Fixed bug causing `html` not to save in the database; fixed bug causing
-#                `hits_available` to get overall mturk.com HITs instead of it's group-own
-#                ones; changed `group_id` from 0 to a hash derived from HitGroupContent's 
-#                content (except `html`); added fetching of "Qualifications Required"
-# 21.10.2009:   Added a date of HIT group's first occurrence
-# 22.10.2009:   Added protection from saving records which are already stored in the 
-#                database; fixed bug causing crawler to create new HitgroupContent instead
-#                of using one stored in the databas
-# 04.11.2009:   Non-ASCII characters were causing an exception in a procedure creating 
-#               group_id hash when given HIT group was set to private (no explicit
-#               group_id available) 
-
-##########################################################################################
 
 # The program is written as an Amazon Mechanical Turk (mturk.com)
 # crawler consisting of Crawler and Worker classes using specified
