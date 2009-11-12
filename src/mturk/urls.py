@@ -1,7 +1,5 @@
 from django.conf import settings
-from django.conf.urls.defaults import *
-from django.contrib import admin
-import os
+from django.conf.urls.defaults import * #@UnusedWildImport
 
 urlpatterns = patterns('',
     ('', include('mturk.main.urls')),
