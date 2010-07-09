@@ -36,6 +36,8 @@ from django.db.models import Max
 from multiprocessing import Pipe, Process
 from threading import Thread
 
+from tenclouds.pid import Pid
+
 import datetime
 import logging
 import re
@@ -191,6 +193,8 @@ class Crawler(Thread):
 
 	######################################################################################
     def run(self):
+        
+        pid = Pid('mturk_crawler', True)
 
         logging.debug('Crawler started')
 
@@ -240,6 +244,8 @@ class Crawler(Thread):
                 len(self.errors)
             )
         )
+        
+        pid.remove_pid()
         
 ##########################################################################################
 # Thread-based class executing given function with certain parameters.

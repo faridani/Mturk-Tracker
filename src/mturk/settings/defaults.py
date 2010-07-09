@@ -68,6 +68,8 @@ MEDIA_URL = '/s/'
 DYNAMIC_MEDIA = 'd/'
 ADMIN_MEDIA_PREFIX = MEDIA_URL + 'admin/'
 
+RUN_DATA_PATH = '/tmp'
+
 try:
     os.makedirs(os.path.join(MEDIA_ROOT, DYNAMIC_MEDIA))
 except Exception:

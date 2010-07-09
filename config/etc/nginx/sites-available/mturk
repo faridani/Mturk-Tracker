@@ -1,0 +1,61 @@
+server {
+        listen   80;
+        server_name .mturk-tracker.com mturk;
+
+        access_log  /var/log/nginx/mturk.access.log;
+        error_log   /var/log/nginx/mturk.error.log;
+
+	rewrite ^/s/(.*)$ /media/$1 last;
+
+        location /media  {
+                gzip on;
+                root /var/www/mturk/;
+		autoindex  off;
+                expires 60d;
+        }
+
+	location /admin/media {
+		gzip on;
+		root /var/www/mturk/libs/django/contrib/;
+		autoindex off;
+		expires 60d;
+	}
+
+        location / {
+
+		gzip on;
+		
+		expires -1;
+
+                #auth_basic            "Restricted";
+                #auth_basic_user_file  /etc/nginx/htpasswd;
+
+		proxy_read_timeout 300;
+		proxy_connect_timeout 300;
+
+                # host and port to fastcgi server
+                fastcgi_pass 127.0.0.1:8002;
+                fastcgi_param PATH_INFO $fastcgi_script_name;
+                fastcgi_param REQUEST_METHOD $request_method;
+                fastcgi_param QUERY_STRING $query_string;
+                fastcgi_param CONTENT_TYPE $content_type;
+                fastcgi_param CONTENT_LENGTH $content_length;
+                fastcgi_param SERVER_PROTOCOL $server_protocol;
+                fastcgi_param SERVER_PORT $server_port;
+                fastcgi_param SERVER_NAME $server_name;
+                fastcgi_pass_header Authorization;
+                fastcgi_intercept_errors off;
+        }
+
+        location = /robots.txt {
+                root   /var/www/mturk/templates/;
+        }
+
+
+        error_page  404  /404.html;
+        #error_page   500 502 503 504  /50x.html;
+        #location = /50x.html {
+        #        root   /var/www/nginx-default;
+        #}
+}
+

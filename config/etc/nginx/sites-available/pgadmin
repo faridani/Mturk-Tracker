@@ -1,0 +1,34 @@
+server {
+        listen   80;
+        server_name pgadmin.mturk-tracker.com pgadmin;
+
+        access_log  /var/log/nginx/pgadmin.access.log;
+        error_log   /var/log/nginx/pgadmin.error.log;
+
+        location / {
+
+		root /usr/share/phpmyadmin;
+		index  index.html index.htm;
+
+		gzip on;
+		expires -1;
+
+                auth_basic            "Restricted";
+                auth_basic_user_file  /etc/nginx/htpasswd;
+
+        }
+        
+        location ~ \.php$ {
+    	    fastcgi_pass 127.0.0.1:9000;
+    	    fastcgi_index index.php;
+    	    fastcgi_param SCRIPT_FILENAME /usr/share/phpPgAdmin$fastcgi_script_name;
+    	    include /etc/nginx/fastcgi.conf;
+        }
+
+        error_page  404  /404.html;
+        #error_page   500 502 503 504  /50x.html;
+        #location = /50x.html {
+        #        root   /var/www/nginx-default;
+        #}
+}
+

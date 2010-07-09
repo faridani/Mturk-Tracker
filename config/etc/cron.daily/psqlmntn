@@ -1,0 +1,3 @@
+#!/bin/sh
+su -c 'vacuumdb --all --full --analyze' postgres
+su -c 'reindexdb --all' postgres
