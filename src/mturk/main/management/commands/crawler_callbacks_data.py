@@ -25,7 +25,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
 # -*- coding: utf-8 -*-
-from BeautifulSoup import BeautifulSoup, ResultSet
+from BeautifulSoup import BeautifulSoup, ResultSet, Tag
 from django.utils.encoding import smart_str
 from tenclouds.text import fuse, remove_whitespaces, strip_html
 
@@ -58,7 +58,8 @@ def callback_allhit(pages, **kwargs):
         return list
 
     def is_soup(object):
-        if type(object) == type(BeautifulSoup()) or type(object) == type(ResultSet('')):
+        soup = BeautifulSoup()
+        if type(object) == type(soup) or type(object) == type(ResultSet('')) or type(object) == type(Tag(soup, "div", [])):
             return True
         return False
 
@@ -69,13 +70,16 @@ def callback_allhit(pages, **kwargs):
     for page_number in pages:
         try:
             # Downloading page
-            logging.debug("Downloading page: %s" % page_number)
+            logging.info("Downloading page: %s" % page_number)
             response = urllib2.urlopen(get_allhit_url(page_number))
             html = response.read()
             soup = BeautifulSoup(html)
 
             # Parsing HIT groups' list
             table = soup.find('table', cellpadding='0', cellspacing='5', border='0', width='100%')
+            if type(table) == type(None):
+                logging.warn("Soup returned an empty table. This should not happen.");
+                continue
             table.contents = remove_newline_fields(table.contents)
 
             # Parsing and fetching information about each group
@@ -166,6 +170,7 @@ def callback_allhit(pages, **kwargs):
                         # Checking whether processed content is already stored in the database
                         hit_group_content = None
                         try:
+                            logging.debug("group_id=%s; requester=%s; title=%s; desc=%s; ta=%s; reward=%s" % (group_id,requester_id,title,description,time_alloted,reward))
                             hit_group_content = HitGroupContent.objects.get(group_id=group_id, 
                                                                             requester_id=requester_id, 
                                                                             title=title,
@@ -207,6 +212,7 @@ def callback_allhit(pages, **kwargs):
         except:
             logging.error("Failed to process page %d (%s)" % (page_number,sys.exc_info()[0].__name__))
             errors.append(grab_error(sys.exc_info()))
+            print grab_error(sys.exc_info())
 
     return (data,errors)
 
@@ -230,7 +236,7 @@ def callback_details(data, **kwargs):
         group_id = data[i]['HitGroupStatus']['group_id']
         if not data[i]['HitGroupStatus']['hit_group_content'].group_id_hashed:
             try:
-                logging.debug("Downloading group details for: %s" % group_id)
+                logging.info("Downloading group details for: %s" % group_id)
                 html = None
 
                 # Downloading group details
