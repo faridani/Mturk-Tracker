@@ -30,7 +30,7 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 # crawler consisting of Crawler and Worker classes using specified
 # callback functions.
 
-from BeautifulSoup import BeautifulSoup, ResultSet
+from BeautifulSoup import BeautifulSoup, ResultSet, SoupStrainer
 from django.core.management.base import BaseCommand
 from django.db.models import Max
 from multiprocessing import Pipe, Process
@@ -195,6 +195,21 @@ class Crawler(Thread):
         logging.info('Crawler started')
 
         start_time = datetime.datetime.now()
+        
+        #Fetching statistical information about groups and HITs count
+        main_response = urllib2.urlopen(get_allhit_url())
+        main_html = main_response.read()
+        main_soup = BeautifulSoup(main_html, parseOnlyThese=SoupStrainer(text=re.compile("(^[0-9,]+ HITs|of [0-9]+ Results)")))
+        main_stats = [tag for tag in main_soup]
+        hits_available = -1
+        groups_available = -1
+        if len(main_stats) > 1:
+            hits_available_tmp = main_stats[0]
+            hits_available_tmp = hits_available_tmp[:hits_available_tmp.find(' ')].replace(',', '')
+            hits_available = int(hits_available_tmp)
+            groups_available_tmp = main_stats[1]
+            groups_available_tmp = groups_available_tmp[groups_available_tmp.find('of')+3:groups_available_tmp.find('Results')-1]
+            groups_available = int(groups_available_tmp)
 
         #Fetching data from every mturk.com HITs list page
         result_allhit = self.process_values(range(1,self.get_max_page()+1), callback_allhit, 
@@ -207,15 +222,21 @@ class Crawler(Thread):
                                              self.processes_count)
         self.data = result_details['data']
         self.append_errors(result_details['errors'])
+        
+        hits_downloaded = sum([hgs['HitGroupStatus']['hits_available'] for hgs in self.data])
+        groups_downloaded = len(self.data)
 
         #Logging crawl information into the database
-        success = True if len(self.data) > 0 else False
+        success = True if hits_available/hits_downloaded <= 1.5 and groups_available/groups_downloaded <= 1.5 else False
         
         crawl = Crawl(**{
             'start_time':           start_time,
             'end_time':             datetime.datetime.now(),
             'success':              success,
-            'groups_downloaded':    len(self.data),
+            'hits_available':       hits_available,
+            'hits_downloaded':      hits_downloaded,
+            'groups_available':     groups_available,
+            'groups_downloaded':    groups_downloaded,
             #'errors':               str(self.errors) # !
             'errors':               ''
         })
@@ -234,9 +255,13 @@ class Crawler(Thread):
         print self.errors
 
         logging.info(
-            "Crawler finished in %s with %d results and %d errors" % (
+            "Crawler finished %ssuccessfully in %s with %d results, %d HITs (of %d and %d) and %d errors" % (
+                "" if success else "un",
                 (datetime.datetime.now()-start_time),
-                len(self.data),
+                groups_downloaded,
+                hits_downloaded,
+                groups_available,
+                hits_available,
                 len(self.errors)
             )
         )

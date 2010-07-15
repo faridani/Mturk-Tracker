@@ -96,7 +96,7 @@ def callback_database(data, **kwargs):
     if type(data) != type([]):
         raise Exception, '::callback_database() must be called with one list argument'
 
-    logging.debug('Saving results to database (%s records)' % len(data))   
+    logging.info('Saving results to database (%s records)' % len(data))   
     
     for record in data:
         try:

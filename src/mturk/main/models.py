@@ -33,8 +33,11 @@ class Crawl(models.Model):
     
     start_time          = models.DateTimeField('Start Time')
     end_time            = models.DateTimeField('End Time')
-    success             = models.BooleanField('Successfoul crawl?')
+    hits_available      = models.IntegerField('All hits avaliable')
+    hits_downloaded     = models.IntegerField('All hits downloaded')
+    groups_available    = models.IntegerField('Groups available')
     groups_downloaded   = models.IntegerField('Groups downloaded')
+    success             = models.BooleanField('Successfoul crawl?')
     errors              = JSONField('Errors', blank=True, null=True)
     old_id              = models.IntegerField(null=True,blank=True,unique=True,db_index=True)
     

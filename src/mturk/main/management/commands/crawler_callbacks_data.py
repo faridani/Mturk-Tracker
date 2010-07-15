@@ -71,7 +71,9 @@ def callback_allhit(pages, **kwargs):
         try:
             # Downloading page
             logging.info("Downloading page: %s" % page_number)
-            response = urllib2.urlopen(get_allhit_url(page_number))
+            page_url = get_allhit_url(page_number)
+            logging.debug("Downloading %s"  % page_url)
+            response = urllib2.urlopen(page_url)
             html = response.read()
             soup = BeautifulSoup(html)
 
