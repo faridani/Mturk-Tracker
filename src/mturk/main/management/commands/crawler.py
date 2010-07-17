@@ -43,6 +43,8 @@ import sys
 import time
 import urllib2
 
+from tenclouds.pid import Pid
+
 from crawler_callbacks_data import callback_allhit, callback_details, callback_add_crawlfk
 from crawler_callbacks_save import callback_database
 from crawler_common import get_allhit_url, get_group_url
@@ -191,6 +193,8 @@ class Crawler(Thread):
 
 	######################################################################################
     def run(self):
+        
+        pid = Pid('mturk_crawler', True)
 
         logging.info('Crawler started')
 
@@ -265,6 +269,8 @@ class Crawler(Thread):
                 len(self.errors)
             )
         )
+        
+        pid.remove_pid()
         
 ##########################################################################################
 # Thread-based class executing given function with certain parameters.

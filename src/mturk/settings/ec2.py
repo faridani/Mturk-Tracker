@@ -32,7 +32,7 @@ DEBUG=False
 
 LOG_DIRECTORY = '/var/log/mturk/'
 logging.basicConfig(
-    level = logging.DEBUG,
+    level = logging.INFO,
     format = '%(asctime)s %(levelname)s %(message)s',
     filename = LOG_DIRECTORY + 'crawl.log',
     filemode = 'a'
