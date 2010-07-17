@@ -24,17 +24,40 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
+
+from os import kill, remove
+
+from django.conf import settings
 from django.core.management.base import BaseCommand
+
 from mturk.main.management.commands import clean_duplicates, update_crawl_agregates,\
     update_mviews, calculate_first_crawl_id, update_first_occured_agregates
+    
 import time
 import logging
 
+logger = logging.getLogger('db_refresh_mviews')
 
 class Command(BaseCommand):
     help = 'Refreshes materialised views used to generate stats'
 
     def handle(self, **options):
+        
+        name = 'mturk_crawler'
+        pid_file = '%s/%s.pid' % (settings.RUN_DATA_PATH, name)
+        try:
+           old_pid = int(open(pid_file).read())
+           try:
+               kill(old_pid, 0)
+               logger.info('process %s (%s) still exists' % (old_pid, name))
+               exit(1)
+           except OSError:
+               logger.info('process %s (%s) looks like almost dead' % (old_pid, name))
+               remove(pid_file)
+        except IOError:
+           logger.info('no such %s (%s) file' % (pid_file, name))
+        except ValueError:
+           logger.info('value error')
         
         logging.info('cleaning up db from duplicates')
         clean_duplicates()
