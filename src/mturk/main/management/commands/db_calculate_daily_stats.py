@@ -24,13 +24,21 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
-from django.core.management.base import BaseCommand
-from tenclouds.sql import query_to_dicts
-from mturk.main.models import Crawl, DayStats
-from tenclouds.date import today
+
 import datetime
 import logging
+
+from os import kill, remove
+from time import sleep
+
+from django.conf import settings
+from django.core.management.base import BaseCommand
 from django.db import transaction
+
+from tenclouds.date import today
+from tenclouds.sql import query_to_dicts
+from mturk.main.models import Crawl, DayStats
+
 
 def get_first_crawl():
         crawls = Crawl.objects.filter().order_by('start_time')[:1]
@@ -45,6 +53,26 @@ class Command(BaseCommand):
     help = 'Calculates daily stats'
 
     def handle(self, **options):
+        
+        while True:
+            name = 'mturk_crawler'
+            pid_file = '%s/%s.pid' % (settings.RUN_DATA_PATH, name)
+            try:
+               old_pid = int(open(pid_file).read())
+               try:
+                   kill(old_pid, 0)
+                   logging.info('process %s (%s) still exists' % (old_pid, name))
+                   sleep(60)
+                   continue
+               except OSError:
+                   logging.info('process %s (%s) looks like almost dead' % (old_pid, name))
+                   remove(pid_file)
+                   break
+            except IOError:
+               logging.info('no such %s (%s) file' % (pid_file, name))
+            except ValueError:
+               logging.info('value error')
+            break
         
         '''
         take earliest crawl
