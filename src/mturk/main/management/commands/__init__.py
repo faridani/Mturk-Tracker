@@ -75,27 +75,33 @@ def update_mviews():
     
     missing_crawls_ids = []
     missing_crawls = query_to_tuples("""select id from main_crawl p where p.success = true and not exists (select id from main_crawlagregates where crawl_id = p.id )""")
-    
+            
     for row in missing_crawls:
         missing_crawls_ids.append(str(row[0]))
         
+    if len(missing_crawls_ids) > 0:
+            
+        logging.info("inserting missing crawls: %s" % ','.join(missing_crawls_ids))    
+        
+        execute_sql("""INSERT INTO 
+                hits_mv
+            SELECT p.id AS status_id, q.id AS content_id, p.group_id, p.crawl_id, 
+                ( SELECT main_crawl.start_time FROM main_crawl WHERE main_crawl.id = p.crawl_id) AS start_time, 
+                q.requester_id, p.hits_available, p.page_number, p.inpage_position, p.hit_expiration_date, q.reward, q.time_alloted
+            FROM 
+                main_hitgroupstatus p
+            JOIN 
+                main_hitgroupcontent q ON (q.group_id::text = p.group_id::text AND p.hit_group_content_id = q.id)
+            WHERE 
+                p.crawl_id IN ( %s );    
+        """ % ','.join(missing_crawls_ids))
+        
+        execute_sql('commit;')
     
-    logging.info("inserting missing crawls: %s" % ','.join(missing_crawls_ids))    
-    
-    execute_sql("""INSERT INTO 
-            hits_mv
-        SELECT p.id AS status_id, q.id AS content_id, p.group_id, p.crawl_id, 
-            ( SELECT main_crawl.start_time FROM main_crawl WHERE main_crawl.id = p.crawl_id) AS start_time, 
-            q.requester_id, p.hits_available, p.page_number, p.inpage_position, p.hit_expiration_date, q.reward, q.time_alloted
-        FROM 
-            main_hitgroupstatus p
-        JOIN 
-            main_hitgroupcontent q ON (q.group_id::text = p.group_id::text AND p.hit_group_content_id = q.id)
-        WHERE 
-            p.crawl_id IN ( %s );    
-    """ % ','.join(missing_crawls_ids))
-    
-    execute_sql('commit;')
+    else:
+        
+        logging.info("no missing crawls")
+        
     
 def update_first_occured_agregates():
     

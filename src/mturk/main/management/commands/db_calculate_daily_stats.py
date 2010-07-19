@@ -54,9 +54,9 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         
+        name = 'mturk_crawler'
+        pid_file = '%s/%s.pid' % (settings.RUN_DATA_PATH, name)
         while True:
-            name = 'mturk_crawler'
-            pid_file = '%s/%s.pid' % (settings.RUN_DATA_PATH, name)
             try:
                old_pid = int(open(pid_file).read())
                try:
