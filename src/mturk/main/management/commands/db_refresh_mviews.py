@@ -34,6 +34,8 @@ from time import sleep
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
+from tenclouds.pid import Pid
+
 from mturk.main.management.commands import clean_duplicates, update_crawl_agregates,\
     update_mviews, calculate_first_crawl_id, update_first_occured_agregates
 
@@ -46,22 +48,24 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         
-        name = 'mturk_crawler'
-        pid_file = '%s/%s.pid' % (settings.RUN_DATA_PATH, name)
+        pid = Pid('mturk_rm', True)
+        
+        crawler_name = 'mturk_crawler'
+        crawler_pid_file = '%s/%s.pid' % (settings.RUN_DATA_PATH, crawler_name)
         while True:
             try:
-               old_pid = int(open(pid_file).read())
+               crawler_old_pid = int(open(crawler_pid_file).read())
                try:
-                   kill(old_pid, 0)
-                   logging.info('process %s (%s) still exists' % (old_pid, name))
+                   kill(crawler_old_pid, 0)
+                   logging.info('process %s (%s) still exists' % (crawler_old_pid, crawler_name))
                    sleep(60)
                    continue
                except OSError:
-                   logging.info('process %s (%s) looks like almost dead' % (old_pid, name))
-                   remove(pid_file)
+                   logging.info('process %s (%s) looks like almost dead' % (crawler_old_pid, crawler_name))
+                   remove(crawler_pid_file)
                    break
             except IOError:
-               logging.info('no such %s (%s) file' % (pid_file, name))
+               logging.info('no such %s (%s) file' % (crawler_pid_file, crawler_name))
             except ValueError:
                logging.info('value error')
             break
@@ -88,3 +92,5 @@ class Command(BaseCommand):
         logging.info('done refreshing mviews')
         
         print log
+        
+        pid.remove_pid()

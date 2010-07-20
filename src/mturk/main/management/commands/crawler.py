@@ -253,7 +253,7 @@ class Crawler(Thread):
         self.append_errors(result_add_crawlfk['errors'])
 
         #Saving results in the database
-        result_save_database = self.process_values(self.data, callback_database)
+        result_save_database = self.process_values(self.data, callback_database, 4)
         self.append_errors(result_save_database['errors'])
         
         print self.errors

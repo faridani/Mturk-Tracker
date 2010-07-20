@@ -36,6 +36,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from tenclouds.date import today
+from tenclouds.pid import Pid
 from tenclouds.sql import query_to_dicts
 from mturk.main.models import Crawl, DayStats
 
@@ -54,22 +55,24 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         
-        name = 'mturk_crawler'
-        pid_file = '%s/%s.pid' % (settings.RUN_DATA_PATH, name)
+        pid = Pid('mturk_cds', True)
+        
+        crawler_name = 'mturk_crawler'
+        crawler_pid_file = '%s/%s.pid' % (settings.RUN_DATA_PATH, crawler_name)
         while True:
             try:
-               old_pid = int(open(pid_file).read())
+               crawler_old_pid = int(open(crawler_pid_file).read())
                try:
-                   kill(old_pid, 0)
-                   logging.info('process %s (%s) still exists' % (old_pid, name))
+                   kill(crawler_old_pid, 0)
+                   logging.info('process %s (%s) still exists' % (crawler_old_pid, crawler_name))
                    sleep(60)
                    continue
                except OSError:
-                   logging.info('process %s (%s) looks like almost dead' % (old_pid, name))
-                   remove(pid_file)
+                   logging.info('process %s (%s) looks like almost dead' % (crawler_old_pid, crawler_name))
+                   remove(crawler_pid_file)
                    break
             except IOError:
-               logging.info('no such %s (%s) file' % (pid_file, name))
+               logging.info('no such %s (%s) file' % (crawler_pid_file, crawler_name))
             except ValueError:
                logging.info('value error')
             break
@@ -168,3 +171,4 @@ class Command(BaseCommand):
                                         )
                 
                 transaction.commit()
+                pid.remove_pid()
