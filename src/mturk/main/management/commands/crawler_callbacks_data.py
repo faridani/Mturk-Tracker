@@ -57,11 +57,11 @@ def callback_allhit(pages, **kwargs):
             except: break
         return list
 
-    def is_soup(object):
-        soup = BeautifulSoup()
-        if type(object) == type(soup) or type(object) == type(ResultSet('')) or type(object) == type(Tag(soup, "div", [])):
-            return True
-        return False
+#    def is_soup(object):
+#        soup = BeautifulSoup()
+#        if type(object) == type(soup) or type(object) == type(ResultSet('')) or type(object) == type(Tag(soup, "div", [])):
+#            return True
+#        return False
 
     data = []
     errors = []
@@ -80,27 +80,49 @@ def callback_allhit(pages, **kwargs):
             # Parsing HIT groups' list
             table = soup.find('table', cellpadding='0', cellspacing='5', border='0', width='100%')
             if type(table) == type(None):
-                logging.warn("Soup returned an empty table. This should not happen.");
-                continue
+                
+                i = 0
+                while i < 3:
+                    logging.warn("Soup returned an empty table for page %s. Trying once more" % page_number);
+                    response = urllib2.urlopen(page_url)
+                    html = response.read()
+                    soup = BeautifulSoup(html)
+                    table = soup.find('table', cellpadding='0', cellspacing='5', border='0', width='100%')
+                    if type(table) != type(None):
+                        break
+                    else:
+                        table = None
+                        soup = None
+                        html = None
+                        i = i + 1
+                        
+                if type(table) == type(None):
+                    logging.warn("Soup returned an empty table. This should not happen. Skipping page")
+                    continue
+                
             table.contents = remove_newline_fields(table.contents)
-
+    
             # Parsing and fetching information about each group
             for i_group in range(0,len(table.contents)):
+                logging.debug("Processing group %s on page %s" % (i_group,page_number))
                 try:
                     group_html = table.contents[i_group]
     
                     # Title
                     title = group_html.find('a', {'class':'capsulelink'})
-                    if is_soup(title):
+                    if type(title) != type(None):
                         try:
                             title = str(title.contents[0])
                         except:
                             title = unicode(title.contents[0])
-                        title = unicode(remove_whitespaces(title))
+                        try:
+                            title = unicode(remove_whitespaces(title))
+                        except:
+                            title = ''
     
                     fields = group_html.findAll('td', {'align':'left','valign':'top','class':'capsule_field_text'})
     
-                    if is_soup(fields):
+                    if len(fields) == 7:
     
                         # Requester's name and ID
                         requester_html = remove_newline_fields(fields[0].contents)[0]
@@ -144,9 +166,11 @@ def callback_allhit(pages, **kwargs):
                         # Qualification
                         qualifications = ''
                         qfields = group_html.findAll('td', {'style':'padding-right: 2em; white-space: nowrap;'})
-                        if is_soup(qfields):
+                        
+                        if len(qfields) > 0:
                             qfields = [remove_whitespaces(unicode(remove_newline_fields(qfield.contents)[0])) for qfield in qfields]
                             qualifications = fuse(qfields, ', ')
+                        qfields = None
                             
                         # Occurrence date
                         occurrence_date = datetime.datetime.now()
@@ -154,7 +178,7 @@ def callback_allhit(pages, **kwargs):
                         # Group ID
                         group_id = group_html.find('span', {'class':'capsulelink'})
                         group_id_hashed = False
-                        if is_soup(group_id):
+                        if type(group_id) != type(None):
                             group_id = remove_newline_fields(group_id.contents)[0]
                             if 'href' in group_id._getAttrMap():
                                 start = group_id['href'].index('groupId=')+8
@@ -207,16 +231,24 @@ def callback_allhit(pages, **kwargs):
                             }
                         })
 
+                    fields = None
+                    group_html = None
+
                 except:
-                    logging.error("Failed to process group %s on %d page (%s)" % (group_id,page_number,sys.exc_info()[0].__name__))
+                    logging.error("Failed to process group %s on %s page (%s)" % (i_group,page_number,sys.exc_info()[0].__name__))
                     errors.append(grab_error(sys.exc_info()))
+                    print grab_error(sys.exc_info())
+        
+            table = None
+            soup = None
+            html = None
                     
         except:
             logging.error("Failed to process page %d (%s)" % (page_number,sys.exc_info()[0].__name__))
             errors.append(grab_error(sys.exc_info()))
             print grab_error(sys.exc_info())
 
-    return (data,errors)
+    return {'data':data,'errors':errors}
 
 ##########################################################################################
 # Fetches html details for every HIT Group result record.
@@ -256,12 +288,14 @@ def callback_details(data, **kwargs):
                 
                 if html:
                     data[i]['HitGroupStatus']['hit_group_content'].html = html
+                
+                preview_html = None
                     
             except:
                 logging.error("Failed to process group details for %s (%s)" % (group_id, 
                               sys.exc_info()[0].__name__))
                 errors.append(grab_error(sys.exc_info()))
-    return (data,errors)
+    return {'data':data,'errors':errors}
 
 ##########################################################################################
 # Adds Crawl Model object to every HitGroupStatus. Must be called after fetching and
@@ -281,4 +315,4 @@ def callback_add_crawlfk(data, **kwargs):
     for i in range(0, len(data)):
         data[i]['HitGroupStatus']['crawl'] = kwargs['crawl']
 
-    return (data,[])
+    return {'data':data,'errors':[]}

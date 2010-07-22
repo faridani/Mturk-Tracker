@@ -131,4 +131,4 @@ def callback_database(data, **kwargs):
         except:
             errors.append(grab_error(sys.exc_info()))
     
-    return ([],errors)
+    return {'data':[],'errors':errors}

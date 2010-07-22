@@ -77,11 +77,10 @@ def update_mviews():
     missing_crawls = query_to_tuples("""select id from main_crawl p where p.success = true and not exists (select id from main_crawlagregates where crawl_id = p.id )""")
             
     for row in missing_crawls:
-        missing_crawls_ids.append(str(row[0]))
-        
-    if len(missing_crawls_ids) > 0:
             
-        logging.info("inserting missing crawls: %s" % ','.join(missing_crawls_ids))    
+        crawl_id = str(row[0])
+            
+        logging.info("inserting missing crawl: %s" % crawl_id)
         
         execute_sql("""INSERT INTO 
                 hits_mv
@@ -94,13 +93,9 @@ def update_mviews():
                 main_hitgroupcontent q ON (q.group_id::text = p.group_id::text AND p.hit_group_content_id = q.id)
             WHERE 
                 p.crawl_id IN ( %s );    
-        """ % ','.join(missing_crawls_ids))
+        """ % crawl_id)
         
         execute_sql('commit;')
-    
-    else:
-        
-        logging.info("no missing crawls")
         
     
 def update_first_occured_agregates():

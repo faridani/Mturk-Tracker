@@ -30,7 +30,7 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 # crawler consisting of Crawler and Worker classes using specified
 # callback functions.
 
-from BeautifulSoup import BeautifulSoup, ResultSet, SoupStrainer
+from BeautifulSoup import BeautifulSoup, ResultSet, SoupStrainer, Tag
 from django.core.management.base import BaseCommand
 from django.db.models import Max
 from multiprocessing import Pipe, Process
@@ -94,9 +94,10 @@ class Crawler(Thread):
     ######################################################################################
     # Fetches mturk.com and returns teh number of the furthermost page in the pagination.
     ######################################################################################
-    def get_max_page(self):
-        response = urllib2.urlopen(get_allhit_url())
-        html = response.read()
+    def get_max_page(self, html=None):
+        if not html:
+            response = urllib2.urlopen(get_allhit_url())
+            html = response.read()
         pattern = re.compile(r"<a href=\".*pageNumber=([0-9]+).{150,200}Last</a>")
         max_page = re.search(pattern, html)
         if max_page: return int(max_page.group(1))
@@ -148,48 +149,54 @@ class Crawler(Thread):
                     return data
                 time.sleep(1)
 
-        data = []
-        errors = []
-
-        conns = []
-        processes = []
-
-        max_value = len(values)-1
-        interval = max_value/processes_count
-        values_range = processes_count
-        if processes_count*(interval+1) < max_value:
-            values_range = values_range + 1
-
-        values_from = 0
-        values_to = interval if interval <= max_value else max_value
-
-        for i in range(0, values_range):
-
-            parent_conn, child_conn = Pipe(False)
-            conns.append(parent_conn)
-
-            processes.append(Process(target=self.launch_worker,
-                                     args=(callback,values[values_from:values_to+1],
-                                     child_conn), kwargs=kwargs))
-
-            values_from = values_to + 1
-            values_to = values_to + interval + 1
-            if i == values_range-2 and values_to > max_value:
-                values_to = max_value
-
-        for process in processes: process.start()
-
-        for conn in conns:
-            result = receive_from_pipe(conn)
-            for record in result['data']: data.append(record)
-            for error in result['errors']: errors.append(error)
-
-        for process in processes: process.join()
-
-        return {
-            'data': data,
-            'errors': errors
-        }
+        if processes_count > 1:
+            
+            data = []
+            errors = []
+    
+            conns = []
+            processes = []
+    
+            max_value = len(values)-1
+            interval = max_value/processes_count
+            values_range = processes_count
+            if processes_count*(interval+1) < max_value:
+                values_range = values_range + 1
+    
+            values_from = 0
+            values_to = interval if interval <= max_value else max_value
+    
+            for i in range(0, values_range):
+    
+                parent_conn, child_conn = Pipe(False)
+                conns.append(parent_conn)
+    
+                processes.append(Process(target=self.launch_worker,
+                                         args=(callback,values[values_from:values_to+1],
+                                         child_conn), kwargs=kwargs))
+    
+                values_from = values_to + 1
+                values_to = values_to + interval + 1
+                if i == values_range-2 and values_to > max_value:
+                    values_to = max_value
+    
+            for process in processes: process.start()
+    
+            for conn in conns:
+                result = receive_from_pipe(conn)
+                for record in result['data']: data.append(record)
+                for error in result['errors']: errors.append(error)
+    
+            for process in processes: process.join()
+    
+            return {
+                'data': data,
+                'errors': errors
+            }
+            
+        else:
+            
+            return callback(values, **kwargs)
 
 	######################################################################################
     def run(self):
@@ -201,6 +208,7 @@ class Crawler(Thread):
         start_time = datetime.datetime.now()
         
         #Fetching statistical information about groups and HITs count
+        logging.debug("Fetching stats")
         main_response = urllib2.urlopen(get_allhit_url())
         main_html = main_response.read()
         main_soup = BeautifulSoup(main_html, parseOnlyThese=SoupStrainer(text=re.compile("(^[0-9,]+ HITs|of [0-9]+ Results)")))
@@ -214,14 +222,17 @@ class Crawler(Thread):
             groups_available_tmp = main_stats[1]
             groups_available_tmp = groups_available_tmp[groups_available_tmp.find('of')+3:groups_available_tmp.find('Results')-1]
             groups_available = int(groups_available_tmp)
+        main_soup = None
 
         #Fetching data from every mturk.com HITs list page
-        result_allhit = self.process_values(range(1,self.get_max_page()+1), callback_allhit, 
+        logging.debug("Allhit processing")
+        result_allhit = self.process_values(range(1,self.get_max_page(main_html)+1), callback_allhit, 
                                             self.processes_count)
         self.data = result_allhit['data']
         self.append_errors(result_allhit['errors'])
 
         #Fetching html details for every HIT group
+        logging.debug("Details processing")
         result_details = self.process_values(self.data, callback_details, 
                                              self.processes_count)
         self.data = result_details['data']
@@ -231,8 +242,11 @@ class Crawler(Thread):
         groups_downloaded = len(self.data)
 
         #Logging crawl information into the database
-        success = True if hits_available/hits_downloaded <= 1.5 and groups_available/groups_downloaded <= 1.5 else False
+        success = False
+        if groups_downloaded > 0 and hits_downloaded > 0 and groups_available/groups_downloaded <= 1.5 and hits_available/hits_downloaded <= 1.5:
+            success = True
         
+        logging.debug("Crawl finished with success=%s. Saving main_crawl entry" % success)
         crawl = Crawl(**{
             'start_time':           start_time,
             'end_time':             datetime.datetime.now(),
@@ -247,13 +261,15 @@ class Crawler(Thread):
         crawl.save()
 
         #Adding crawl FK
+        logging.debug("Adding FKs")
         result_add_crawlfk = self.process_values(self.data, callback_add_crawlfk, 
                                                  crawl=crawl)
         self.data = result_add_crawlfk['data']
         self.append_errors(result_add_crawlfk['errors'])
 
         #Saving results in the database
-        result_save_database = self.process_values(self.data, callback_database, 4)
+        logging.debug("Saving results")
+        result_save_database = self.process_values(self.data, callback_database)
         self.append_errors(result_save_database['errors'])
         
         print self.errors
