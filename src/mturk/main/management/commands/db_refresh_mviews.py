@@ -28,9 +28,6 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 import time
 import logging
 
-from os import kill, remove
-from time import sleep
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
@@ -48,27 +45,7 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         
-        pid = Pid('mturk_rm', True)
-        
-        crawler_name = 'mturk_crawler'
-        crawler_pid_file = '%s/%s.pid' % (settings.RUN_DATA_PATH, crawler_name)
-        while True:
-            try:
-               crawler_old_pid = int(open(crawler_pid_file).read())
-               try:
-                   kill(crawler_old_pid, 0)
-                   logging.info('process %s (%s) still exists' % (crawler_old_pid, crawler_name))
-                   sleep(60)
-                   continue
-               except OSError:
-                   logging.info('process %s (%s) looks like almost dead' % (crawler_old_pid, crawler_name))
-                   remove(crawler_pid_file)
-                   break
-            except IOError:
-               logging.info('no such %s (%s) file' % (crawler_pid_file, crawler_name))
-            except ValueError:
-               logging.info('value error')
-            break
+        pid = Pid('mturk_crawler', True)
         
         logging.info('cleaning up db from duplicates')
         clean_duplicates()

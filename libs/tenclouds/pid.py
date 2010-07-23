@@ -10,6 +10,7 @@ from os import remove
 from os import makedirs
 from os.path import isdir
 from sys import exit
+from time import sleep
 
 from django.conf import settings
 
@@ -48,22 +49,31 @@ class Pid(object):
        self.exists = False
        PID_FILE = '%s/%s.pid' % (settings.RUN_DATA_PATH, name)
        self.PID_FILE = PID_FILE
+       tries = 0
        try:
-           old_pid = int(open(PID_FILE).read())
-           try:
-               kill(old_pid, 0)
-               logger.info('process %s (%s) still exists' % (old_pid, name))
-               if auto_exit:
-                   exit(1)
-               else:
-                   self.exists = True
-           except OSError:
-               logger.info('process %s (%s) looks like almost dead' % (old_pid, name))
-               remove(PID_FILE)
+           while True:
+               old_pid = int(open(PID_FILE).read())
+               try:
+                   kill(old_pid, 0)
+                   logger.info('process %s (%s) still exists' % (old_pid, name))
+                   sleep(60)
+                   tries = tries + 1
+                   if tries < 10:   
+                       continue
+                   else:
+                       if auto_exit:
+                           exit(1)
+                       else:
+                           self.exists = True
+                           break
+               except OSError:
+                   logger.info('process %s (%s) looks like almost dead' % (old_pid, name))
+                   remove(PID_FILE)
+                   break
        except IOError:
            logger.info('no such %s (%s) file' % (PID_FILE, name))
        except ValueError:
-           logger.info('value')
+           logger.info('value error')
 
        self.actual_pid_file = open(PID_FILE, 'w')
        self.actual_pid = str(getpid())

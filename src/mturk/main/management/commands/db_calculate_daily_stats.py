@@ -28,15 +28,11 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 import datetime
 import logging
 
-from os import kill, remove
-from time import sleep
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from tenclouds.date import today
-from tenclouds.pid import Pid
 from tenclouds.sql import query_to_dicts
 from mturk.main.models import Crawl, DayStats
 
@@ -54,28 +50,6 @@ class Command(BaseCommand):
     help = 'Calculates daily stats'
 
     def handle(self, **options):
-        
-        pid = Pid('mturk_cds', True)
-        
-        crawler_name = 'mturk_crawler'
-        crawler_pid_file = '%s/%s.pid' % (settings.RUN_DATA_PATH, crawler_name)
-        while True:
-            try:
-               crawler_old_pid = int(open(crawler_pid_file).read())
-               try:
-                   kill(crawler_old_pid, 0)
-                   logging.info('process %s (%s) still exists' % (crawler_old_pid, crawler_name))
-                   sleep(60)
-                   continue
-               except OSError:
-                   logging.info('process %s (%s) looks like almost dead' % (crawler_old_pid, crawler_name))
-                   remove(crawler_pid_file)
-                   break
-            except IOError:
-               logging.info('no such %s (%s) file' % (crawler_pid_file, crawler_name))
-            except ValueError:
-               logging.info('value error')
-            break
         
         '''
         take earliest crawl
