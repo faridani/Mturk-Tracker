@@ -20,7 +20,8 @@
 		pastdate.setDate(currentdate.getDate()-7);
 		 
         var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
-        chart.draw(data, {displayAnnotations: false, scaleColumns: [0, 1], scaleType: 'allfixed', legendPosition: 'newRow', zoomEndTime:  currentdate, zoomStartTime:  pastdate });		
+        chart.draw(data, {displayAnnotations: false, scaleColumns: [0, 1], scaleType: 'allfixed', legendPosition: 'newRow', wmode: 'transparent', zoomEndTime:  currentdate, zoomStartTime:  pastdate });
+        		
 	}	
       
 </script>

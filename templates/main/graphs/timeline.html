@@ -7,6 +7,43 @@
 
 {% block content %}
 
+<script type='text/javascript'>
+	$(document).ready( function() {
+	
+		$.datepicker.setDefaults($.extend(
+			{
+				dateFormat: 'mm/dd/yy',
+				showMonthAfterYear: false
+			}
+		));
+		
+		$('.datepick_from').datepicker();
+		$('.datepick_to').datepicker();
+		
+		var nowDate = new Date();
+		nowDate.setDate(nowDate.getDate()+1);
+		
+		$('.datepick_from').each( function() {
+			{% if not date_from %}$(this).datepicker('setDate', -30);{% endif %}
+			$(this).datepicker('option', 'maxDate', nowDate);
+		});
+		
+		$('.datepick_to').each( function() {
+			{% if not date_to %}$(this).datepicker('setDate', nowDate);{% endif %}
+			$(this).datepicker('option', 'maxDate', nowDate);
+		});
+		
+	});
+</script>
+
+	<div id="datepick">
+		<form method="get" action="">
+			<input class="datepick datepick_from ui-state-default ui-corner-all" type="text" name="date_from" id="form_date_from" value="{% if date_from %}{{date_from}}{% else %}date from{% endif %}"/>
+			<input class="datepick datepick_to ui-state-default ui-corner-all" type="text" name="date_to" id="form_date_to" value="{% if date_to %}{{date_to}}{% else %}date to{% endif %}"/>
+			<input class="ui-state-default ui-corner-all submit" type="submit" id="form_submit" value="Adjust chart"/>
+		</form>
+	</div>
+
 	{% google_timeline columns data %}
 
 {% endblock %}

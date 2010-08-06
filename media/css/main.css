@@ -8,3 +8,7 @@ ul.galleria li{float:left !important;}
 #introduction{ text-align: justify; }
 
 #footer{ text-align: center; margin: 1em 0px; padding-top: 0.5em;  }
+
+#datepick { text-align: right; width: 100%; }
+.datepick { text-align:center; width: 80px; }
+#form_submit { font-weight: bold; }

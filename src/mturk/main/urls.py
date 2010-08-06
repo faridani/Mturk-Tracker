@@ -29,7 +29,7 @@ from django.views.generic.simple import direct_to_template, redirect_to
 
 urlpatterns = patterns('',
                        url(r'^$', redirect_to, {'url':'/general/'}),
-                       url(r'^general/$','mturk.main.views.general', name='graphs_general'),                       
+                       url(r'^general/$','mturk.main.views.general', name='graphs_general'),                      
                        url(r'^about/$',direct_to_template, {'template':'main/about.html'}, name='about'),
                        url(r'^arrivals/$','mturk.main.views.arrivals', name='graphs_arrivals'),
                        url(r'^completed/$','mturk.main.views.completed', name='graphs_completed'),

@@ -31,7 +31,9 @@ from django.core.urlresolvers import reverse
 from mturk.main.templatetags.graph import text_row_formater
 from django.shortcuts import get_object_or_404
 from mturk.main.models import HitGroupContent
+
 import datetime
+import time
 
 DEFAULT_COLUMNS =  (
                ('date','Date'),
@@ -47,50 +49,89 @@ def data_formater(input):
     for cc in input:
         yield {'date': cc['start_time'], 'row':(str(cc['hits']), str(cc['reward']), str(cc['count']),)}
     return
-
-
+    
 @cache_page(ONE_HOUR)
 def general(request):
     
+    params = {
+        'columns':DEFAULT_COLUMNS,
+        'title': 'General Data'
+    }
+    
+    date_from = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
+    date_to = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+    
+    if request.method == 'GET' and 'date_from' in request.GET and 'date_to' in request.GET:
+        
+        date_from = datetime.datetime(*time.strptime(request.GET['date_from'], '%m/%d/%Y')[:6])
+        date_to = datetime.datetime(*time.strptime(request.GET['date_to'], '%m/%d/%Y')[:6])
+        params['date_from'] = request.GET['date_from']
+        params['date_to'] = request.GET['date_to']
+        
     data = data_formater(query_to_dicts('''
         select reward, hits, projects as "count", start_time 
             from main_crawlagregates 
+            where start_time >= '%s' and start_time <= '%s'
             order by start_time asc    
-    '''))
+    ''' % (date_from,date_to)))
+    
+    params['data'] = data
             
-    return direct_to_template(request, 'main/graphs/timeline.html', {
-                                                                    'data':data, 
-                                                                    'columns':DEFAULT_COLUMNS,
-                                                                    'title': 'General Data'
-    })
+    return direct_to_template(request, 'main/graphs/timeline.html', params)
 
 @cache_page(ONE_DAY)
 def arrivals(request):
     
+    params = {
+        'columns':DEFAULT_COLUMNS,
+        'title': 'New Tasks/HITs/$$$ per day'
+    }
+    
+    date_from = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
+    date_to = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+    
+    if request.method == 'GET' and 'date_from' in request.GET and 'date_to' in request.GET:
+        
+        date_from = datetime.datetime(*time.strptime(request.GET['date_from'], '%m/%d/%Y')[:6])
+        date_to = datetime.datetime(*time.strptime(request.GET['date_to'], '%m/%d/%Y')[:6])
+        params['date_from'] = request.GET['date_from']
+        params['date_to'] = request.GET['date_to']
+        
     data = data_formater(query_to_dicts('''
         select date as "start_time", arrivals_hits as "hits", arrivals_reward as "reward", arrivals_projects as "count"
-            from main_daystats where day_end_hits != 0
-    '''))
+        from main_daystats where day_end_hits != 0 and date >= '%s' and date <= '%s' 
+    ''' % (date_from,date_to)))
     
-    return direct_to_template(request, 'main/graphs/timeline.html', {
-                                                                     'data':data, 
-                                                                     'columns':DEFAULT_COLUMNS, 
-                                                                     'title': 'New Tasks/HITs/$$$ per day'
-    })
+    params['data'] = data
+    
+    return direct_to_template(request, 'main/graphs/timeline.html', params)
     
 @cache_page(ONE_DAY)
 def completed(request):
     
+    params = {
+        'columns': DEFAULT_COLUMNS,
+        'title': 'Tasks/HITs/$$$ completed per day'
+    }
+    
+    date_from = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
+    date_to = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+    
+    if request.method == 'GET' and 'date_from' in request.GET and 'date_to' in request.GET:
+        
+        date_from = datetime.datetime(*time.strptime(request.GET['date_from'], '%m/%d/%Y')[:6])
+        date_to = datetime.datetime(*time.strptime(request.GET['date_to'], '%m/%d/%Y')[:6])
+        params['date_from'] = request.GET['date_from']
+        params['date_to'] = request.GET['date_to']
+    
     data = data_formater(query_to_dicts('''
         select date as "start_time", day_start_hits - day_end_hits as "hits", day_start_reward - day_end_reward as "reward", day_start_projects - day_end_projects as "count"
-            from main_daystats where day_end_hits != 0
-    '''))
+            from main_daystats where day_end_hits != 0 and date >= '%s' and date <= '%s' 
+    ''' % (date_from,date_to)))
     
-    return direct_to_template(request, 'main/graphs/timeline.html', {
-                                                                     'data':data, 
-                                                                     'columns':DEFAULT_COLUMNS, 
-                                                                     'title': 'Tasks/HITs/$$$ completed per day'
-    })
+    params['data'] = data
+    
+    return direct_to_template(request, 'main/graphs/timeline.html', params)
     
 @cache_page(ONE_DAY)
 def top_requesters(request):
