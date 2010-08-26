@@ -227,8 +227,6 @@ class SearchApi(object):
         for tq in query_transformations:
             dct['q'] = tq
             q, params, use_highlighting = self.get_common_search_params(dct)
-            print q
-            print params
             results = self.serialize_search_results(solr.search(q, **params), params, use_highlighting, dct['q'] if 'q' in dct else '')
             if results.objs[0]['results_count'] != 0:
                 return results
