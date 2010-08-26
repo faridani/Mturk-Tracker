@@ -61,6 +61,8 @@ SITE_ID = 1
 USE_I18N = True
 USE_CACHE = True
 
+API_CACHE_TIMEOUT=60*60*24
+
 SOLR_MAIN = "http://localhost:8983/solr/en"
 
 ROOT_URLCONF = PROJECT_NAME + '.urls'
