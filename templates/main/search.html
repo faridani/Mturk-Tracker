@@ -111,8 +111,14 @@
                                         r['description'] + '</div></td></tr>';
                                     if (r['snippet']) response += '<tr><td class="result-snippet"><div class="label">Snippet:</div><div class="content">' +
                                         r['snippet'] + '</div></td></tr>';
-                                    response += '<tr><td class="result-qualifications"><div class="label">Qualifications:</div><div class="content">' +
-                                        r['qualifications'] + '</div></td></tr>';
+
+                                    if (r['qualifications']) {
+                                        response += '<tr><td class="result-qualifications"><div class="label">Qualifications:</div><div class="content">' +
+                                            r['qualifications'] + '</div></td></tr>';
+                                    }
+
+                                    response += '<tr><td class="result-reward"><div class="label">Reward</div><div class="content">$' + r['reward'] +
+                                        '<div/></td></tr>';
 
                                     if (r['keywords'] != 'None') {
                                         response += '<tr><td class="result-keywords">';
@@ -123,7 +129,6 @@
                                         response += '</td></tr>';
                                     }
 
-                                    //response += 'Reward: ' + r['reward'] + '<br/>';
                                     response += '</tbody></table>';
                                 }
 

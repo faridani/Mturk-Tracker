@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SOLR_HOME="/var/www/mturk/solr"
+SOLR_HOME="."
 
 for lib in $SOLR_HOME/lib/*.jar ; do
   LIBS="${LIBS}:$lib"
