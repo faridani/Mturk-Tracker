@@ -30,6 +30,9 @@ import logging
 DATABASE_NAME = 'mturk_crawl'
 DEBUG=False
 
+USE_CACHE=True
+SOLR_MAIN = "http://localhost:8983/solr/en"
+
 LOG_DIRECTORY = '/var/log/mturk/'
 logging.basicConfig(
     level = logging.INFO,
