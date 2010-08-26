@@ -1,0 +1,136 @@
+a {
+    text-decoration: none;
+}
+
+#query {
+	float: left;
+	font-weight: bold;
+	margin-bottom: 1em;
+	text-align: center;
+	width: 100%;
+}
+
+#query_in {
+	margin-left: auto;
+    margin-right: auto;
+	text-align: center;
+	width: 470px;
+}
+
+#query form {
+    /*display: block;
+    float: none;
+    padding: 1.5ex 0 2ex 0;
+    *padding-top: 1.5ex; /* IE6 and IE7 hack */
+}
+
+#query form input.text {
+    border: solid 1px #AAA;
+    width: 350px;
+    height: 25px;
+    font-size: 150%;
+    float: left;
+    padding: 0;
+    margin: 0 0.2em 0 0;
+}
+
+/**html #query input.text 
+    width: 12em;
+}*/
+
+#query form select {
+    height: 26px;
+    font-size: 130%;
+    margin: 0;
+    float: left;
+}
+
+#query form select {
+	font-weight: bold;
+}
+#query form select option {
+	font-weight: bold;
+}
+
+/** Button 'Szukaj' **/
+#query form input.submit {
+    float: left;
+    font-size: 130%;
+    font-weight: bold;
+    height: 26px;
+    margin: 0 0 0 0.2em;
+}
+
+.loading {  
+    float:right;
+    background: url('/s/images/ajax-loader.gif') no-repeat 1px;
+    height:28px;
+    width:28px;
+    display:none;
+}
+
+#response {
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+.metadata-box {
+    float: right;
+    position: relative;
+}
+
+.metadata {
+    border: solid 1px #c6d5e0;
+    margin: .5em 0 .5em 0;
+    padding: 3px 0.5em 0.3em;
+}
+
+.previous_page, .next_page {
+    cursor: pointer;
+}
+
+.nav-button {
+    background-color: #E1E1E1;
+    cursor: pointer;
+}
+
+/*#results {
+    position: relative;
+    top: -45px;
+} */
+
+.result {
+    border: solid 1px #c6d5e0;
+    clear: both;
+    margin: .5em 0 .5em 0;
+    width: 100%;
+}
+
+.result thead td {
+    padding: 3px .5em .3em .5em;
+}
+
+.result .result-header {
+    font-weight: bold;
+    line-height: 1.3em;
+}
+
+.label {
+    float: left;
+    font-weight: bold;
+    width: 10%;
+}
+
+.content {
+    float: right;
+    width: 90%;
+}
+
+.result .result-keywords {
+    border-top: solid 1px #c6d5e0;
+    padding: 0 .5em 0 .5em;
+}
+
+.keyword {
+    cursor: pointer;
+}

@@ -33,6 +33,9 @@ def get_allhit_url(page=1):
 def get_group_url(id):
    return "https://www.mturk.com/mturk/preview?groupId=%s" % id
 
+def get_amazon_review_url(id):
+    return "http://www.amazon.com/review/%s" % id
+
 def grab_error(exc_info):
     return {
                 'type': str(exc_info[0].__name__),

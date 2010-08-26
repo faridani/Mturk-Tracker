@@ -1,0 +1,47 @@
+Szukaj: <input type="text" id="search_q" style="width:350px;"/>
+<select id="category_q">
+	<option value="">-------</option>
+	<option value="publicoffer">publicoffer</option>
+	<option value="publicoffer AND bip">publicoffer and bip</option>
+	<option value="events">events</option>
+	<option value="finances">finances</option>
+	<option value="technology">technology</option>
+	<option value="law">law</option>
+	<option value="blog">blog</option>
+	<option value='"events"'>"events"</option>
+	<option value="(article OR events) -finances -publicoffer -law -technology -bip">NEWSY</option>
+	<option value="(article finances) -events -publicoffer -law -technology -bip">INWESTYCJE</option>
+	<option value="article^10 OR events^5 OR finances^5 OR publicoffer^1000 OR law OR technology OR bip">boost test</option>
+	<option value="article OR events OR finances OR publicoffer OR law OR technology OR bip">no boost test</option>	
+</select>
+
+<select id="type_q">
+	<option value="">-------</option>
+	<option value="snippet">snippet</option>
+	<option value="gis">gis</option>
+	<option value="backoffice">backoffice</option>
+	<option value="bip">bip</option>
+	<option value="article">article</option>
+	<option value="ALL">snippet OR gis OR backoffice OR bip OR article</option>	
+</select>
+
+<select id="lang_q">
+	<option value="pl">pl</option>
+	<option value="en">en</option>
+	<option value="ru">ru</option>
+	<option value="de">de</option>
+</select>
+
+<select id="content_type_q">
+	<option value="">-------</option>
+	<option value="0">html</option>
+	<option value="1">pdf</option>
+	<option value="2">doc</option>
+	<option value="3">xls</option>
+</select>
+
+<a href="#" id="search_get" class="ui-button ui-state-default ui-corner-all">search</a>
+<a href="#" id="geodist_get" class="ui-button ui-state-default ui-corner-all">geodist</a>
+<a href="#" id="boundingbox_get" class="ui-button ui-state-default ui-corner-all">boundingbox</a>
+<a href="#" id="simillar_queries_get" class="ui-button ui-state-default ui-corner-all">simillar_queries</a>
+<a href="#" id="auto_suggest_get" class="ui-button ui-state-default ui-corner-all">auto_suggest</a>

@@ -1,0 +1,43 @@
+<p>
+	<div>
+		location: <input type="text" id="location_q"/>
+	</div>
+	<div>
+		authority: <input type="text" id="authority_q"/>
+	</div>
+	<div>
+		tag: <input type="text" id="tag_q"/>
+	</div>
+	
+	<div>
+		sort:
+		<select id="sort_q">
+			<option value="">------</option>
+  			<option value="dt_indexing">date</option>
+  			<option value="dt_publication">publication date</option>
+		</select>
+	</div>
+	<div>
+		order: 
+		ascending<input type="radio" name="order_q" value="asc" checked/>
+		descending<input type="radio" name="order_q" value="desc"/>
+	</div><br/>
+	<div>
+		rows_per_page: <input type="text" id="rows_q"/>
+	</div>
+	<div>
+		start: <input type="text" id="start_q"/>
+	</div>
+</p>
+<hr/>
+<p>
+	details:
+	<input type="text" id="details_q"/>	
+	<a href="#" id="details_get" class="ui-button ui-state-default ui-corner-all">search</a>
+</p>
+<hr/>
+<p>
+	simillar_queries/auto_suggest:
+	<div>age group:<input type="text" id="age_group" value=""/></div>
+	<div>interests group:<input type="text" id="interests_group" value=""/></div>
+</p>

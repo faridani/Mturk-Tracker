@@ -1,0 +1,45 @@
+<dataConfig>
+    <dataSource name="mturk_crawl"
+                driver="org.postgresql.Driver"
+                url="jdbc:postgresql://localhost/mturk_crawl"
+                user="postgres"
+                password="test12"
+                readOnly="true"
+                autoCommit="false"
+                transactionIsolation="TRANSACTION_READ_COMMITTED"
+                holdability="CLOSE_CURSORS_AT_COMMIT"/>
+    <document>
+        <entity name="hitgroupcontent" dataSource="mturk_crawl" threads="2" transformer="HTMLStripTransformer"
+                
+				query="SELECT group_id, requester_id, requester_name, reward, html, description, title, keywords, 
+						qualifications, occurrence_date, time_alloted
+					FROM main_hitgroupcontent
+					WHERE 1000001 > LENGTH(html)"
+				
+				deltaQuery="
+				SELECT DISTINCT hgc.id FROM main_hitgroupcontent hgc, main_hitgroupstatus hgs, main_crawl c
+				WHERE
+					hgc.group_id = hgs.group_id
+				AND	(SELECT start_time FROM main_crawl WHERE id = hgs.crawl_id) > '${dataimporter.last_index_time}'"
+				
+                deltaImportQuery="SELECT group_id, requester_id, requester_name, reward, html, description, title, keywords, 
+					qualifications, occurrence_date, time_alloted
+				FROM main_hitgroupcontent hgc
+				WHERE hgc.id = ${dataimporter.delta.id}">
+				
+            <field column="group_id" name="group_id"/>
+            <field column="requester_id" name="requester_id"/>
+            <field column="requester_name" name="requester_name"/>
+            <field column="reward" name="reward"/>
+            <field column="html" name="content" stripHTML="true"/>
+            <field column="description" name="description" stripHTML="true"/>
+            <field column="title" name="title"/>
+            <field column="keywords" name="keywords"/>
+            <field column="qualifications" name="qualifications"/>
+            <field column="occurrence_date" name="occurrence_date"/>
+            <field column="time_alloted" name="time_alloted"/>
+      
+		</entity>
+
+    </document>
+</dataConfig>

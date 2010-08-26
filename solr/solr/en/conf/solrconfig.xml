@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config>
+    <abortOnConfigurationError>true</abortOnConfigurationError>
+    <lib dir="../../dist/" regex="apache-solr-cell-\d.*\.jar"/>
+    <lib dir="../../dist/" regex="apache-solr-clustering-\d.*\.jar"/>
+    <lib dir="../../contrib/clustering/lib/downloads/"/>
+    <lib dir="../../contrib/clustering/lib/"/>
+    <lib dir="/total/crap/dir/ignored"/>
+
+    <dataDir>${solr.data.dir:./solr/en/data}</dataDir>
+
+    <indexDefaults>
+        <useCompoundFile>false</useCompoundFile>
+
+        <mergeFactor>10</mergeFactor>
+        <ramBufferSizeMB>32</ramBufferSizeMB>
+        <maxFieldLength>10000</maxFieldLength>
+        <writeLockTimeout>1000</writeLockTimeout>
+        <commitLockTimeout>10000</commitLockTimeout>
+
+        <lockType>native</lockType>
+    </indexDefaults>
+
+    <mainIndex>
+        <useCompoundFile>false</useCompoundFile>
+        <ramBufferSizeMB>32</ramBufferSizeMB>
+        <mergeFactor>10</mergeFactor>
+        <unlockOnStartup>false</unlockOnStartup>
+
+        <reopenReaders>true</reopenReaders>
+
+        <deletionPolicy class="solr.SolrDeletionPolicy">
+            <str name="maxCommitsToKeep">1</str>
+            <str name="maxOptimizedCommitsToKeep">0</str>
+        </deletionPolicy>
+
+        <infoStream file="INFOSTREAM.txt">false</infoStream>
+
+    </mainIndex>
+
+    <jmx/>
+
+    <updateHandler class="solr.DirectUpdateHandler2">
+        <autoCommit>
+            <maxDocs>10000</maxDocs>
+        </autoCommit>
+    </updateHandler>
+
+    <query>
+        <maxBooleanClauses>8192</maxBooleanClauses>
+        <filterCache
+                class="solr.LRUCache"
+                size="1024"
+                initialSize="1024"
+                autowarmCount="0"/>
+
+        <queryResultCache
+                class="solr.LRUCache"
+                size="1024"
+                initialSize="1024"
+                autowarmCount="0"/>
+
+        <documentCache
+                class="solr.LRUCache"
+                size="1024"
+                initialSize="1024"
+                autowarmCount="0"/>
+
+        <enableLazyFieldLoading>true</enableLazyFieldLoading>
+
+        <queryResultWindowSize>20</queryResultWindowSize>
+
+        <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
+
+        <listener event="newSearcher" class="solr.QuerySenderListener">
+            <arr name="queries">
+            </arr>
+        </listener>
+
+        <listener event="firstSearcher" class="solr.QuerySenderListener">
+            <arr name="queries">
+                <lst>
+                    <str name="q">investments</str>
+                </lst>
+            </arr>
+        </listener>
+
+        <useColdSearcher>false</useColdSearcher>
+
+        <maxWarmingSearchers>2</maxWarmingSearchers>
+
+    </query>
+
+    <requestDispatcher handleSelect="true">
+        <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048000"/>
+        <httpCaching lastModifiedFrom="openTime" etagSeed="Solr">
+        </httpCaching>
+    </requestDispatcher>
+
+    <requestHandler name="/import_db_hits" class="org.apache.solr.handler.dataimport.DataImportHandler">
+        <lst name="defaults">
+            <str name="config">import_db_hits.xml</str>
+        </lst>
+    </requestHandler>
+
+    <requestHandler name="standard" class="solr.SearchHandler" default="true">
+        <lst name="defaults">
+            <str name="echoParams">explicit</str>
+            <int name="rows">10</int>
+        </lst>
+        <arr name="last-components"></arr>
+    </requestHandler>
+
+    <!-- A component to return terms and document frequency of those terms.
+This component does not yet support distributed search. -->
+    <searchComponent name="termsComponent" class="org.apache.solr.handler.component.TermsComponent"/>
+
+    <requestHandler name="/terms" class="org.apache.solr.handler.component.SearchHandler">
+        <lst name="defaults">
+            <bool name="terms">true</bool>
+        </lst>
+        <arr name="components">
+            <str>termsComponent</str>
+        </arr>
+    </requestHandler>
+
+
+    <requestHandler name="/update" class="solr.XmlUpdateRequestHandler"/>
+    <requestHandler name="/update/javabin" class="solr.BinaryUpdateRequestHandler"/>
+
+
+    <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers"/>
+
+    <!-- ping/healthcheck -->
+    <requestHandler name="/admin/ping" class="PingRequestHandler">
+        <lst name="defaults">
+            <str name="qt">standard</str>
+            <str name="q">classify</str>
+            <str name="echoParams">all</str>
+        </lst>
+    </requestHandler>
+
+    <highlighting>
+        <fragmenter name="gap" class="org.apache.solr.highlight.GapFragmenter" default="true">
+            <lst name="defaults">
+                <int name="hl.fragsize">250</int>
+            </lst>
+        </fragmenter>
+
+        <fragmenter name="regex" class="org.apache.solr.highlight.RegexFragmenter">
+            <lst name="defaults">
+                <!-- slightly smaller fragsizes work better because of slop -->
+                <int name="hl.fragsize">70</int>
+                <!-- allow 50% slop on fragment sizes -->
+                <float name="hl.regex.slop">0.5</float>
+                <!-- a basic sentence pattern -->
+                <str name="hl.regex.pattern">[-\w ,/\n\"']{20,200}</str>
+            </lst>
+        </fragmenter>
+
+        <!-- Configure the standard formatter -->
+        <formatter name="html" class="org.apache.solr.highlight.HtmlFormatter" default="true">
+            <lst name="defaults">
+                <str name="hl.simple.pre"><![CDATA[<em>]]></str>
+                <str name="hl.simple.post"><![CDATA[</em>]]></str>
+            </lst>
+        </formatter>
+    </highlighting>
+
+    <updateRequestProcessorChain name="dedupe">
+        <processor class="org.apache.solr.update.processor.SignatureUpdateProcessorFactory">
+            <bool name="enabled">true</bool>
+            <str name="signatureField">duplicate_hash</str>
+            <bool name="overwriteDupes">true</bool>
+            <str name="fields">content_en</str>
+            <str name="signatureClass">org.apache.solr.update.processor.Lookup3Signature</str>
+        </processor>
+        <processor class="solr.LogUpdateProcessorFactory"/>
+        <processor class="solr.RunUpdateProcessorFactory"/>
+    </updateRequestProcessorChain>
+
+
+    <queryResponseWriter name="xslt" class="org.apache.solr.request.XSLTResponseWriter">
+        <int name="xsltCacheLifetimeSeconds">5</int>
+    </queryResponseWriter>
+    <admin>
+        <defaultQuery>classify</defaultQuery>
+    </admin>
+
+</config>

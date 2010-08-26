@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% load webdesign %}
+
+{% block head %}
+
+	<link rel="stylesheet" href="{{MEDIA_URL}}css/search.css" type="text/css" />
+	
+	<script>
+
+        var metadataQuery = '';
+        var metadataOffset = -1;
+        var metadataResultsCount = -1;
+        var metadataResultsPP = -1;
+	
+		function submitEnter(field, e) {
+		    var keycode;
+
+		    if (window.event) keycode = window.event.keyCode;
+		    else if (e) keycode = e.which;
+		    else return true;
+
+		    if (keycode == 13) {
+		        $('#form_submit').click();
+		        return false;
+		    }
+		    else return true;
+		}
+
+        function submitForm() {
+            $('#form_submit').click();
+        }
+
+        function nextPageFn() {
+            $('html,body').animate({ scrollTop: 0 }, 'slow');
+            loadResults(metadataQuery, metadataOffset+metadataResultsPP);
+        }
+
+        function previousPageFn() {
+            $('html,body').animate({ scrollTop: 0 }, 'slow');
+            loadResults(metadataQuery, metadataOffset-metadataResultsPP);
+        }
+
+        function keywordFn() {
+            $('html,body').animate({ scrollTop: 0 }, 'slow');
+            $('#form_query').val($(this).text());
+            $('#form_submit').click();    
+        }
+
+        function loadResults(query, offset) {
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/api/1.0/search/search.json',
+                        timeout: 10000,
+                        data: ({
+                            q: query,
+                            start: offset
+                        }),
+                        dataType: "json",
+                        beforeSend:
+                            function (msg) {
+                                if ($('#form_query').val() != '') {
+                                    $('.loading').show();
+                                }
+                            },
+                        error:
+                            function (msg) {
+                                $('.loading').fadeOut('slow');
+                                $('#response').html('Error');
+                            },
+                        success:
+                            function (msg) {
+
+                                $('.loading').fadeOut('slow');
+                                var metadata = msg[0];
+                                var results = metadata['results'];
+
+                                offset = parseInt(metadata['offset']);
+                                results_count = parseInt(metadata['results_count']);
+                                results_pp = parseInt(metadata['results_per_page']);
+
+                                metadataQuery = query;
+                                metadataOffset = offset;
+                                metadataResultsCount = results_count;
+                                metadataResultsPP = results_pp;
+
+                                var response = '';
+
+                                metadataBox = '<div class="metadata-box"><div class="ui-widget-header metadata">' + (offset+results_pp)/results_pp +
+                                    '/' + Math.ceil(results_count/results_pp) + ' <span class="nav-button previous_page">&nbsp;&laquo;&nbsp;</span>' +
+                                    '&nbsp;<span class="nav-button next_page">&nbsp;&raquo;&nbsp;</span></div></div>';
+
+                                //response += metadataBox;
+
+                                response += '<div id="results">';
+
+                                var resultsLength = results.length;
+                                for (var i = 0; i < resultsLength; i++) {
+                                    var r = results[i];
+                                    var keywords = '';
+                                    var keywordsArr = r['keywords'].split(',');
+
+                                    response += '<table class="result"><thead><tr class="ui-widget-header"><td class="result-header"><a href="/hit/' +
+                                        r['group_id'] + '/">' + r['title'] + '</a></td></tr></thead><tbody>';
+                                    response += '<tr><td class="result-date"><div class="label">Date:</div><div class="content">' +
+                                        r['occurrence_date'].substring(0,10) + '</div></td></tr>';
+                                    response += '<tr><td class="result-requester"><div class="label">Requester:</div><div class="content"><a href="/requester_details/' +
+                                        r['requester_id'] + '/">' + r['requester_name'] + '</a></div></td></tr>';
+                                    response += '<tr><td class="result-description"><div class="label">Description:</div><div class="content">' +
+                                        r['description'] + '</div></td></tr>';
+                                    if (r['snippet']) response += '<tr><td class="result-snippet"><div class="label">Snippet:</div><div class="content">' +
+                                        r['snippet'] + '</div></td></tr>';
+                                    response += '<tr><td class="result-qualifications"><div class="label">Qualifications:</div><div class="content">' +
+                                        r['qualifications'] + '</div></td></tr>';
+
+                                    if (r['keywords'] != 'None') {
+                                        response += '<tr><td class="result-keywords">';
+                                        for (var ki = 0; ki < keywordsArr.length; ki++) {
+                                            response += '<a class="keyword">' + keywordsArr[ki] + '</a>';
+                                            if (ki < keywordsArr.length - 1) response += ', ';
+                                        }
+                                        response += '</td></tr>';
+                                    }
+
+                                    //response += 'Reward: ' + r['reward'] + '<br/>';
+                                    response += '</tbody></table>';
+                                }
+
+                                response += '</div>';
+                                response += metadataBox;
+
+                                $('#response').html(response);
+                                $('.keyword').unbind('click').bind('click', keywordFn);
+
+                                if (offset > 0) {
+                                    $('.previous_page').unbind('click').bind('click', previousPageFn);
+                                } else {
+                                    $('.previous_page').css('background-color', '#C8C8C8');
+                                    $('.previous_page').css('cursor', 'auto');
+                                }
+                                if (results_count > offset + results_pp) {
+                                    $('.next_page').bind('click', nextPageFn);
+                                } else {
+                                    $('.next_page').css('background-color', '#C8C8C8');
+                                    $('.next_page').css('cursor', 'auto');
+                                }
+        
+                            }
+                    });
+        }
+		
+		$(document).ready( function() {
+
+            {% if query %}
+                $('#form_query').val('{{query}}');
+                loadResults('{{query}}', 0);       
+            {% endif %}
+
+			$('#form_submit').click( function () {
+				
+				if ($('#form_query').val().length > 0){
+				    query = $('#form_query').val(); 
+				    loadResults(query, 0);
+		        }
+
+				return false;
+			});
+
+
+		});
+	</script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="span-24">
+	<div id="query">
+		<form method="post" action="#" onsubmit="submitForm()">
+			<div id="query_in">
+                <input class="text ui-widget-content ui-corner-all" type="text"
+                    name="query" id="form_query" value="" onkeypress="return submitEnter(this,event)"/>
+                <input class="ui-state-default ui-corner-all submit" type="submit" id="form_submit" value="Search"/>
+                <span class="loading"></span>
+            </div>
+		</form>
+	</div>
+    <br style="clear:both;"/>
+	<div id="response">
+	</div>
+</div>
+
+<div>&nbsp;</div>
+
+{% endblock %}

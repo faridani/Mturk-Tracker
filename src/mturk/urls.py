@@ -28,6 +28,7 @@ from django.conf import settings
 from django.conf.urls.defaults import * #@UnusedWildImport
 
 urlpatterns = patterns('',
+    (r'^api/', include('mturk.api.urls')),
     ('', include('mturk.main.urls')),
 )
 

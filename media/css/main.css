@@ -9,6 +9,11 @@ ul.galleria li{float:left !important;}
 
 #footer{ text-align: center; margin: 1em 0px; padding-top: 0.5em;  }
 
-#datepick { text-align: right; width: 100%; }
-.datepick { text-align:center; width: 80px; }
+#timeline_top { width: 100%; }
+#search_box { float: left; padding-left: 10px }
+#search_in { width: 470px }
+form input.submit { font-size: 130%; font-weight: bold; height: 26px; margin: 0 0 0 0.2em; }
+
+#datepick { float: right }
+.datepick { font-size: 130%; height: 23px; text-align: center; width: 95px; }
 #form_submit { font-weight: bold; }

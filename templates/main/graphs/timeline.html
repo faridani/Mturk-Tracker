@@ -5,44 +5,74 @@
 {% block title %}{{title}}{% endblock %}
 {% block header_text %}{{block.super}}: <span class="desc">{{title}}</span>{% endblock %}
 
+{% block head %}<link rel="stylesheet" href="{{MEDIA_URL}}css/search.css" type="text/css" />{% endblock %}
+
 {% block content %}
 
 <script type='text/javascript'>
+
+    function submitEnter(field, e) {
+		    var keycode;
+
+		    if (window.event) keycode = window.event.keyCode;
+		    else if (e) keycode = e.which;
+		    else return true;
+
+		    if (keycode == 13) {
+		        $('#form_submit').click();
+		        return false;
+		    }
+		    else return true;
+	}
+
 	$(document).ready( function() {
-	
+
 		$.datepicker.setDefaults($.extend(
 			{
 				dateFormat: 'mm/dd/yy',
 				showMonthAfterYear: false
 			}
 		));
-		
+
 		$('.datepick_from').datepicker();
 		$('.datepick_to').datepicker();
-		
+
 		var nowDate = new Date();
 		nowDate.setDate(nowDate.getDate()+1);
-		
+
 		$('.datepick_from').each( function() {
 			{% if not date_from %}$(this).datepicker('setDate', -30);{% endif %}
 			$(this).datepicker('option', 'maxDate', nowDate);
 		});
-		
+
 		$('.datepick_to').each( function() {
 			{% if not date_to %}$(this).datepicker('setDate', nowDate);{% endif %}
 			$(this).datepicker('option', 'maxDate', nowDate);
 		});
-		
+
 	});
 </script>
 
-	<div id="datepick">
-		<form method="get" action="">
-			<input class="datepick datepick_from ui-state-default ui-corner-all" type="text" name="date_from" id="form_date_from" value="{% if date_from %}{{date_from}}{% else %}date from{% endif %}"/>
-			<input class="datepick datepick_to ui-state-default ui-corner-all" type="text" name="date_to" id="form_date_to" value="{% if date_to %}{{date_to}}{% else %}date to{% endif %}"/>
-			<input class="ui-state-default ui-corner-all submit" type="submit" id="form_submit" value="Adjust chart"/>
-		</form>
+	<div id="timeline_top">
+        <div id="search_box">
+                <form method="post" action="/search/" onsubmit="submitForm()">
+                    <div id="search_in">
+                        <input class="text ui-widget-content ui-corner-all" type="text"
+                            name="query" id="form_query" value="" onkeypress="return submitEnter(this,event)"/>
+                        <input class="ui-state-default ui-corner-all submit" type="submit" id="form_submit" value="Search"/>
+                        <span class="loading"></span>
+                    </div>
+                </form>
+        </div>
+        <div id="datepick">
+            <form method="get" action="">
+                <input class="datepick datepick_from ui-state-default ui-corner-all" type="text" name="date_from" id="form_date_from" value="{% if date_from %}{{date_from}}{% else %}date from{% endif %}"/>
+                <input class="datepick datepick_to ui-state-default ui-corner-all" type="text" name="date_to" id="form_date_to" value="{% if date_to %}{{date_to}}{% else %}date to{% endif %}"/>
+                <input class="ui-state-default ui-corner-all submit" type="submit" id="form_submit" value="Adjust chart"/>
+            </form>
+        </div>
 	</div>
+    <div style="clear:both"></div>
 
 	{% google_timeline columns data %}
 

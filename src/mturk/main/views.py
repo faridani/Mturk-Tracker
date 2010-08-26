@@ -229,3 +229,13 @@ def hit_group_details(request, hit_group_id):
     hit = get_object_or_404(HitGroupContent, group_id = hit_group_id)
     
     return direct_to_template(request, 'main/hit_group_details.html', {'hit':hit})
+
+def search(request):
+
+    params = {}
+
+    if request.method == 'POST' and 'query' in request.POST:
+        params['query'] = request.POST['query']
+
+    return direct_to_template(request, 'main/search.html', params)
+
