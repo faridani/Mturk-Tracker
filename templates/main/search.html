@@ -99,7 +99,7 @@
                                 for (var i = 0; i < resultsLength; i++) {
                                     var r = results[i];
                                     var keywords = '';
-                                    var keywordsArr = r['keywords'].split(',');
+                                    var keywordsArr = r['keywords'][0].split(',');
 
                                     response += '<table class="result"><thead><tr class="ui-widget-header"><td class="result-header"><a href="/hit/' +
                                         r['group_id'] + '/">' + r['title'] + '</a></td></tr></thead><tbody>';
@@ -107,12 +107,16 @@
                                         r['occurrence_date'].substring(0,10) + '</div></td></tr>';
                                     response += '<tr><td class="result-requester"><div class="label">Requester:</div><div class="content"><a href="/requester_details/' +
                                         r['requester_id'] + '/">' + r['requester_name'] + '</a></div></td></tr>';
-                                    response += '<tr><td class="result-description"><div class="label">Description:</div><div class="content">' +
-                                        r['description'] + '</div></td></tr>';
+
+                                    if (r['description'] && r['description'].trim() !== 'None') {
+                                        response += '<tr><td class="result-description"><div class="label">Description:</div><div class="content">' +
+                                            r['description'] + '</div></td></tr>';
+                                    }
+
                                     if (r['snippet']) response += '<tr><td class="result-snippet"><div class="label">Snippet:</div><div class="content">' +
                                         r['snippet'] + '</div></td></tr>';
 
-                                    if (r['qualifications']) {
+                                    if (r['qualifications'] && r['qualifications'].trim() !== 'None') {
                                         response += '<tr><td class="result-qualifications"><div class="label">Qualifications:</div><div class="content">' +
                                             r['qualifications'] + '</div></td></tr>';
                                     }
@@ -120,7 +124,7 @@
                                     response += '<tr><td class="result-reward"><div class="label">Reward</div><div class="content">$' + r['reward'] +
                                         '<div/></td></tr>';
 
-                                    if (r['keywords'] != 'None') {
+                                    if (r['keywords'] !== 'None') {
                                         response += '<tr><td class="result-keywords">';
                                         for (var ki = 0; ki < keywordsArr.length; ki++) {
                                             response += '<a class="keyword">' + keywordsArr[ki] + '</a>';

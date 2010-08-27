@@ -82,7 +82,7 @@
 		<field name="content" type="text_en" indexed="true" stored="true" required="false" compressed="true"/>
 		<field name="description" type="textTight" indexed="true" stored="true" required="false"/>
 		<field name="title" type="textTight" indexed="true" stored="true"/>
-		<field name="keywords" type="textTight" indexed="true" stored="true" required="false"/>
+		<field name="keywords" type="text_tags" indexed="true" stored="true" required="false" multiValued="true"/>
 		<field name="qualifications" type="textTight" indexed="true" stored="true"/>
 		<field name="occurrence_date" type="date" indexed="true" stored="true"/>
 		<field name="time_alloted" type="int" indexed="true" stored="true"/>

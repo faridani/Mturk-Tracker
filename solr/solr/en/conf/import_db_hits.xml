@@ -34,7 +34,7 @@
             <field column="html" name="content" stripHTML="true"/>
             <field column="description" name="description" stripHTML="true"/>
             <field column="title" name="title"/>
-            <field column="keywords" name="keywords"/>
+            <field column="keywords" name="keywords" splitBy=","/>
             <field column="qualifications" name="qualifications"/>
             <field column="occurrence_date" name="occurrence_date"/>
             <field column="time_alloted" name="time_alloted"/>
