@@ -145,4 +145,3 @@ class Command(BaseCommand):
                                         )
                 
                 transaction.commit()
-                pid.remove_pid()

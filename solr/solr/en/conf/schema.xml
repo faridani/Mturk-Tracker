@@ -91,9 +91,12 @@
 
     </fields>
     
+    <copyField source="requester_name" dest="search_field"/>
     <copyField source="content" dest="search_field"/>
 	<copyField source="description" dest="search_field"/>
 	<copyField source="title" dest="search_field"/>
+	<copyField source="keywords" dest="search_field"/>
+	<copyField source="qualifications" dest="search_field"/>
 
     <uniqueKey>group_id</uniqueKey>
     <defaultSearchField>search_field</defaultSearchField>
