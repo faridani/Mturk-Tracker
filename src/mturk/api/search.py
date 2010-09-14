@@ -214,6 +214,14 @@ class SearchApi(object):
 
     def search(self,request,dct):
 
+        if 'q' not in dct:
+			return SerializableResponse([{
+            	'results_count': 0,
+            	'offset': 0,
+            	'results_per_page': 10,
+            	'results': list()
+        	}])
+
         original_query          = dct['q']
         query_transformations   = []
 
@@ -230,10 +238,6 @@ class SearchApi(object):
             results = self.serialize_search_results(solr.search(q, **params), params, use_highlighting, dct['q'] if 'q' in dct else '')
             if results.objs[0]['results_count'] != 0:
                 return results
-            
-        """
-        Nie ma wynikow szukamy w indeksie z synonimami 
-        """
         
         return results  
     
