@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% load webdesign %}
-
+{% block title%}{{block.super}}: About{% endblock %}
 {% block head %}
 
 	<link rel="stylesheet" href="{{MEDIA_URL}}css/galleria.css" type="text/css" /> 
