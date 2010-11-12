@@ -1,0 +1,48 @@
+                                       Table "public.main_crawl"
+      Column       |           Type           |                        Modifiers
+-------------------+--------------------------+---------------------------------------------------------
+ errors            | text                     |
+ success           | boolean                  | not null default false
+ start_time        | timestamp with time zone | not null
+ end_time          | timestamp with time zone | not null
+ groups_downloaded | integer                  | not null
+ id                | integer                  | not null default nextval('main_crawl_id_seq'::regclass)
+ old_id            | integer                  |
+ hits_available    | integer                  |
+ hits_downloaded   | integer                  |
+ groups_available  | integer                  |
+
+
+
+                                         Table "public.main_hitgroupstatus"
+        Column        |           Type           |                            Modifiers
+----------------------+--------------------------+------------------------------------------------------------------
+ crawl_id             | integer                  | not null
+ inpage_position      | integer                  | not null
+ hit_group_content_id | integer                  | not null
+ page_number          | integer                  | not null
+ group_id             | character varying(50)    | not null
+ hits_available       | integer                  | not null
+ id                   | integer                  | not null default nextval('main_hitgroupstatus_id_seq'::regclass)
+ hit_expiration_date  | timestamp with time zone | not null
+
+
+
+
+                                      Table "public.main_hitgroupcontent"
+     Column      |           Type           |                             Modifiers
+-----------------+--------------------------+-------------------------------------------------------------------
+ reward          | double precision         | not null
+ description     | text                     | not null
+ title           | character varying(10000) | not null
+ requester_name  | character varying(10000) | not null
+ qualifications  | character varying(10000) |
+ time_alloted    | integer                  | not null
+ html            | text                     | not null
+ keywords        | character varying(10000) |
+ requester_id    | character varying(50)    | not null
+ group_id        | character varying(50)    | not null
+ id              | integer                  | not null default nextval('main_hitgroupcontent_id_seq'::regclass)
+ group_id_hashed | boolean                  | not null default false
+ occurrence_date | timestamp with time zone |
+ first_crawl_id  | integer                  |

@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import os
     import sys
 
     my_path = os.path.dirname(os.path.abspath(__file__))
 
     #Set up PYTHONPATH
-    sys.path = [os.path.join(my_path, 'libs'),
-                os.path.join(my_path, 'src')] + sys.path
+    sys.path = [os.path.join(my_path, "libs"),
+                os.path.join(my_path, "src")] + sys.path
 
     while my_path in sys.path:
         sys.path.remove(my_path)
@@ -16,15 +16,28 @@ if __name__ == '__main__':
     #Set up the DJANGO_SETTINGS_MODULE
     from django.conf import ENVIRONMENT_VARIABLE
 
+    """
+    trying to read settings from env
+    """
     settings_path = os.path.join(my_path, ENVIRONMENT_VARIABLE)
+    if os.path.isfile(settings_path):
+        os.environ[ENVIRONMENT_VARIABLE] = open(settings_path).read().strip()
 
-    if not os.path.isfile(settings_path):
-        raise Exception("%s file is missing, fill it with the name of the desired settings module, for example: 'project.settings.production'" % ENVIRONMENT_VARIABLE)
+    """
+    --settings opt always is important
+    """
+    for opt in sys.argv:
+        if opt.startswith('--settings='):
+            os.environ[ENVIRONMENT_VARIABLE] = opt.replace("--settings=",
+'')
 
-    os.environ[ENVIRONMENT_VARIABLE] = open(settings_path).read()
+    """
+    if all fails settings can still be taken from env
+    """
 
     #Import settings
     try:
+        print 'Settings: %s' % os.environ[ENVIRONMENT_VARIABLE]
         __mod = __import__(os.environ[ENVIRONMENT_VARIABLE], {}, {}, [''])
     except ImportError, e:
         raise ImportError, "Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?): %s" % (os.environ[ENVIRONMENT_VARIABLE], e)
