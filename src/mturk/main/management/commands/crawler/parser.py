@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import datetime
 
 
 _RX_HITS_MAINPAGE = \
@@ -8,25 +9,20 @@ _RX_HITS_MAINPAGE = \
 
 _RX_HITS_LIST = \
     re.compile(r'''
-    (
-        # get expiration date
-        HIT Expiration Date:[^<]*
-        (?:<[^>]+>)*?
-        (?P<exp_date>[\d\w\ ]+?)
-        (?:&nbsp;)?
-        \(
+        HIT\s+Expiration\s+Date
+        .*?
+        <td[^>]*>(?P<expiration_date>[^&]*)&
 
         .*?
+        Reward
+        .{,150}?
+        <td[^>]*>\$(?P<reward>[\.\d]*)</td>
 
-        # get number of available hits
-        (?P<hits>[\d,]+)
-        \s*?
-        HITs
-        </\w+?>
-        \s*?
-        available
-    )*
-    ''', re.M|re.X)
+        .*?
+        HITs\s+Available
+        .*?
+        <td[^>]*>(?P<hits>\d+)</td>
+    ''', re.M|re.X|re.S)
 
 
 
@@ -48,6 +44,14 @@ def available_hits_list(html):
     """
     rx_i = _RX_HITS_LIST.finditer(html)
     for rx in rx_i:
+        if not rx:
+            continue
         res = rx.groupdict()
-        res['hits'] = int(res['hits'].replace(',', ''))
+
+        # convert to python objects
+        res['reward'] = float(res['reward'])
+        res['expiration_date'] = datetime.datetime.strptime(
+                res['expiration_date'], '%b %d, %Y')
+        res['hits'] = int(res['hits'])
+
         yield res
