@@ -44,8 +44,6 @@ def available_hits_list(html):
     """
     rx_i = _RX_HITS_LIST.finditer(html)
     for rx in rx_i:
-        if not rx:
-            continue
         res = rx.groupdict()
 
         # convert to python objects
