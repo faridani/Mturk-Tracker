@@ -23,9 +23,17 @@ def group_url(id):
 def amazon_review_url(id):
     return "http://www.amazon.com/review/%s" % id
 
+def hits_mainpage_total():
+    """Get total available hits from mturk main page"""
+    url = 'https://www.mturk.com/mturk/welcome'
+    html = _read_html(url)
+    return parser.available_hits_mainpage(html)
 
 def hits_list_info(page_nr):
+    """Yield info about every hits group from given page number"""
     url = hitsearch_url(page_nr)
     html = _read_html(url)
+    rows = []
     for info in parser.available_hits_list(html):
-        yield info
+        rows.append((page_nr, info))
+    return rows
