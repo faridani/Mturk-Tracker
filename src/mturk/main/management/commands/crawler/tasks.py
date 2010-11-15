@@ -8,7 +8,7 @@ import urllib2
 import parser
 
 
-MAX_DATA = 1024 * 10
+MAX_DATA = 1024 * 1024 * 8
 
 
 def _get_html(url):
@@ -16,7 +16,7 @@ def _get_html(url):
     return urllib2.urlopen(url).read(MAX_DATA)
 
 def hitsearch_url(page=1):
-    return 'https://www.mturk.com/mturk/viewhits?selectedSearchType=hitgroups&sortType=LastUpdatedTime%3A1&&searchSpec=HITGroupSearch%23T%232%2310%23-1%23T%23!%23!LastUpdatedTime!1!%23!&pageNumber='+str(page)
+    return 'https://www.mturk.com/mturk/viewhits?searchWords=&selectedSearchType=hitgroups&sortType=LastUpdatedTime:1&pageNumber=' + str(page) + '&searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23!%23!LastUpdatedTime!1!%23!'
 
 def group_url(id):
    return "https://www.mturk.com/mturk/preview?groupId=%s" % id

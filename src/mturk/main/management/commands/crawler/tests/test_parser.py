@@ -28,9 +28,10 @@ class TestParserTools(unittest.TestCase):
             ('1 hour', 1 * 60 * 60),
             ('1 minute', 60),
             ('1 second', 1),
+            ('1 week', 7 * 24 * 60 * 60),
             ('1 hour 1 minute 1 second', 1 * 60 * 60 + 60 + 1),
             ('5 hours 1 minute 5 seconds', 5 * 60 * 60 + 60 + 5),
-            ('31 minutes 5 seconds', 31 * 60 + 5),
+            ('31 minutes 5 seconds 4 weeks', 31 * 60 + 5 + 4 * 7 * 24 * 60 * 60),
         )
 
         for human_delta, expected in data:

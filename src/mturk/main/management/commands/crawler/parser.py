@@ -2,6 +2,9 @@
 
 import re
 import datetime
+import logging
+
+log = logging.getLogger('crawler.parser')
 
 
 _RX_WHITECHARS_DUPLICATE = re.compile(r'\s{2,}')
@@ -132,11 +135,13 @@ def human_timedelta_seconds(hd):
     """Convert any human timedelta value to seconds. Human time delta values
     are for example:
         * 1 hour
-        * 30 minutes
+        * 30 minutes 3 weeks
         * 2 hours 1 minute 18 seconds
     """
     def _to_seconds(value, time_type):
         value = int(value)
+        if time_type.startswith('week'):
+            return value * 7 * 24 * 60 * 60
         if time_type.startswith('day'):
             return value * 24 * 60 * 60
         if time_type.startswith('hour'):
@@ -145,6 +150,7 @@ def human_timedelta_seconds(hd):
             return value * 60
         if time_type.startswith('second'):
             return value
+        log.error('Unknown timer type: %s', time_type)
         raise TypeError('Unknown time type: %s' % time_type)
 
     total = 0
@@ -164,6 +170,7 @@ def hits_mainpage(html):
     """
     rx = _RX_HITS_MAINPAGE.search(html, 1)
     if rx is None:
+        log.info('Hits number not found')
         return None
     matched = rx.groups()[0]
     return int(matched.replace(',', ''))
@@ -196,6 +203,7 @@ def hits_group_listinfo(html):
 def hits_group_details(html):
     rx = _RX_HITS_DETAILS.search(html)
     if not rx:
+        logging.info('hits group details not found')
         return {}
     res = rx.groupdict()
     res['duration'] = human_timedelta_seconds(res['duration'])
