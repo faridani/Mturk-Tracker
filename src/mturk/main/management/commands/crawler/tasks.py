@@ -11,7 +11,8 @@ import parser
 MAX_DATA = 1024 * 10
 
 
-def _read_html(url):
+def _get_html(url):
+    """Get page code using given url. Fetch at most MAX_DATA of data"""
     return urllib2.urlopen(url).read(MAX_DATA)
 
 def hitsearch_url(page=1):
@@ -26,14 +27,20 @@ def amazon_review_url(id):
 def hits_mainpage_total():
     """Get total available hits from mturk main page"""
     url = 'https://www.mturk.com/mturk/welcome'
-    html = _read_html(url)
-    return parser.available_hits_mainpage(html)
+    html = _get_html(url)
+    return parser.hits_mainpage(html)
 
-def hits_list_info(page_nr):
-    """Yield info about every hits group from given page number"""
+def hits_groups_info(page_nr):
+    """Return info about every hits group from given page number"""
     url = hitsearch_url(page_nr)
-    html = _read_html(url)
+    html = _get_html(url)
     rows = []
-    for info in parser.available_hits_list(html):
+    for info in parser.hits_group_listinfo(html):
         rows.append((page_nr, info))
     return rows
+
+def hits_group_info(group_id):
+    """Return info about given hits group"""
+    url = group_url(group_id)
+    html = _get_html(url)
+    return parser.hits_group_details(html)

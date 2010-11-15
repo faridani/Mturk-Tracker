@@ -39,13 +39,29 @@ class TestParserTools(unittest.TestCase):
 
 
 class TestParers(ParserTest):
-    def test_total_hits_correct(self):
+    def test_hits_mainpage(self):
         html = self.get_html('mainpage.html')
         expected = 94273
-        result = parser.available_hits_mainpage(html)
+        result = parser.hits_mainpage(html)
         self.assertEqual(result, expected)
 
-    def test_available_hits_list(self):
+    def test_hits_group_details(self):
+        html = self.get_html('hitsgroupdetails.html')
+        expected = {
+            'duration': 420,
+            'iframe_src': 'https://www.proboards.com/mturk/displayHIT.cgi?assignmentId=ASSIGNMENT_ID_NOT_AVAILABLE&hitId=1I3YFA09O0UI2NHWCCS64FSVNR2AVP',
+        }
+        result = parser.hits_group_details(html)
+        self.assertEqual(result, expected)
+
+    def test_hits_group_details_wrong(self):
+        html = '<html>fail html</html>'
+        expected = {}
+        result = parser.hits_group_details(html)
+        self.assertEqual(result, expected)
+
+
+    def test_hits_group_listinfo(self):
         html = self.get_html('hitslist.html')
         expected_results = (
             {'group_id': '1HGJYY1GNL0AO2FW8D5C1A6146R87X', 'description': 'Given a company name and postal adress try to find an email adress for the company and company website', 'title': 'Find the email address for the company and website', 'expiration_date': datetime.datetime(2010, 11, 22, 0, 0), 'qualifications': ['Total approved HITs is greater than 100', 'HIT approval rate (%) is not less than 40'], 'requester': 'Sam GONZALES', 'keywords': ['data', 'collection', 'emails'], 'requester_id': 'A3AFJ33Q00UN6W', 'reward': 0.01, 'hits_available': 27894, 'time_alloted': 1800},
@@ -60,7 +76,7 @@ class TestParers(ParserTest):
             {'group_id': None, 'description': 'The survey takes most workers 10 - 20 minutes to complete. You will also receive a free personality profile generated from your responses, so please answer the questions truthfully for the most accurate results! You will only be able to take this survey once. We will check our records, and if you have already taken the survey, you will not be able to take it again. Thank you!', 'title': 'Consumption and Personality Survey', 'expiration_date': datetime.datetime(2010, 11, 12, 0, 0), 'qualifications': ['Location is US', 'HIT approval rate (%) is not less than 95'], 'requester': 'Researchers', 'keywords': ['survey', 'personality', 'test'], 'requester_id': 'A3AFD0B1CJ7YFS', 'reward': 0.5, 'hits_available': 1993, 'time_alloted': 3000},
         )
 
-        results = parser.available_hits_list(html)
+        results = parser.hits_group_listinfo(html)
         iter = itertools.izip(results, expected_results)
         results_num = 0
         for result, expected in iter:
@@ -69,7 +85,11 @@ class TestParers(ParserTest):
 
         self.assertEqual(results_num, 10)
 
-
+    def test_hits_group_listinfo_wrong(self):
+        html = '<html>wrong html code</html>'
+        expected = []
+        results = list(parser.hits_group_listinfo(html))
+        self.assertEqual(expected, results)
 
 
 if __name__ == '__main__':

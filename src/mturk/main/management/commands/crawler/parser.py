@@ -108,6 +108,26 @@ _RX_HITS_LIST_QUALIFICATIONS = \
         </td>
     ''', re.M|re.X|re.S)
 
+_RX_HITS_DETAILS = \
+        re.compile(r'''
+        Duration
+        .*?
+        <td[^>]*>
+        \s*
+            (?P<duration>.*?)
+        \s*
+        </td>
+
+        .*?
+
+        # get the iframe source url
+        <iframe.*?src="
+            (?P<iframe_src>[^"]+)
+        "[^>]*></iframe>
+    ''', re.M|re.X|re.S)
+
+
+
 def human_timedelta_seconds(hd):
     """Convert any human timedelta value to seconds. Human time delta values
     are for example:
@@ -136,7 +156,7 @@ def rm_dup_whitechas(s, replacer=' '):
     """Replace every two or more whitechars with single space"""
     return _RX_WHITECHARS_DUPLICATE.sub(replacer, s)
 
-def available_hits_mainpage(html):
+def hits_mainpage(html):
     """Return number of available hits fetched from given html (should be
     fetched from https://www.mturk.com/mturk/welcome)
 
@@ -148,7 +168,7 @@ def available_hits_mainpage(html):
     matched = rx.groups()[0]
     return int(matched.replace(',', ''))
 
-def available_hits_list(html):
+def hits_group_listinfo(html):
     """Yield info about every hits group found in given html string
 
     Page should be fetched from
@@ -172,3 +192,11 @@ def available_hits_list(html):
         res['time_alloted'] = human_timedelta_seconds(res['time_alloted'])
 
         yield res
+
+def hits_group_details(html):
+    rx = _RX_HITS_DETAILS.search(html)
+    if not rx:
+        return {}
+    res = rx.groupdict()
+    res['duration'] = human_timedelta_seconds(res['duration'])
+    return res
