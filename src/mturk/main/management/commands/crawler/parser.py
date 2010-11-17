@@ -19,6 +19,15 @@ _RX_HITS_MAINPAGE = \
         available
     ''', re.M|re.X)
 
+_RX_HITS_TOTALGROUPS = \
+    re.compile(r'''
+        of
+        \s+
+        (?P<total_grouphits>\d+)
+        \s+
+        Results
+    ''', re.M|re.X)
+
 _RX_HITS_LIST = \
     re.compile(r'''
         <a\s+class="capsulelink"[^>]*>\s*(?P<title>.*?)\s*</a>
@@ -203,8 +212,16 @@ def hits_group_listinfo(html):
 def hits_group_details(html):
     rx = _RX_HITS_DETAILS.search(html)
     if not rx:
-        logging.info('hits group details not found')
+        log.info('hits group details not found')
         return {}
     res = rx.groupdict()
     res['duration'] = human_timedelta_seconds(res['duration'])
     return res
+
+def hits_group_total(html):
+    rx = _RX_HITS_TOTALGROUPS.search(html, 1)
+    if not rx:
+        log.info('total hits groups number not found')
+        return None
+    res = rx.groupdict()
+    return int(res['total_grouphits'])

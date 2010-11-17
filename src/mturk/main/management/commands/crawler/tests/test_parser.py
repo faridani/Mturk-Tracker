@@ -46,7 +46,7 @@ class TestParers(ParserTest):
         result = parser.hits_mainpage(html)
         self.assertEqual(result, expected)
 
-    def test_hits_group_details(self):
+    def _test_hits_group_details(self):
         html = self.get_html('hitsgroupdetails.html')
         expected = {
             'duration': 420,
@@ -91,6 +91,18 @@ class TestParers(ParserTest):
         expected = []
         results = list(parser.hits_group_listinfo(html))
         self.assertEqual(expected, results)
+
+    def test_hits_group_total(self):
+        html = self.get_html('hitsgroupdetails.html')
+        expected = 1748
+        result = parser.hits_group_total(html)
+        self.assertEqual(result, expected)
+
+    def test_hits_group_total_wrong(self):
+        html = '<html>bad html</html>'
+        expected = None
+        result = parser.hits_group_total(html)
+        self.assertEqual(result, expected)
 
 
 if __name__ == '__main__':

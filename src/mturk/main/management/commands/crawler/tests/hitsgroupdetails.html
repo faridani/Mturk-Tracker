@@ -1,39 +1,72 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
 <html>
 <head>
-    <title>Amazon Mechanical Turk </title>
+    
+         <title>Amazon Mechanical Turk - All HITs</title>
+     
+
     <link rel="shortcut icon" href="/images/favicon.ico" />
     <link rel="icon" type="image/png" href="/images/favicon.png" />
     <LINK rel='stylesheet' type='text/css' href='/css/mturk.css?v=96kfzcBusp6zjcXviANteg--'/>
+
+    
+    
     <SCRIPT type='text/javascript' src='/js/onload.js?v=U0B6xkXHwz2aDMQUJLrQZA--'></SCRIPT>
-    <SCRIPT type='text/javascript' src='/js/timer.js?v=qrqFPScnsZIjAT.DNOtPrw--'></SCRIPT>
-    <SCRIPT type='text/javascript' src='/js/fieldValidator.js?v=EyCD9HhAsvkfRJz*TSrJ7w--'></SCRIPT>
     <SCRIPT type='text/javascript' src='/js/tooltip.js?v=todtuSXhV6SzE7aA3hSZ8g--'></SCRIPT>
-    <SCRIPT type='text/javascript' src='/js/pipeline.js?v=vd9LSzc*hor.jWjc2IygDQ--'></SCRIPT>
-
-
-
-
-
-<script type="text/javascript">
-    var tooltips;
-	if (tooltips == undefined) {
-		tooltips = new Object();
-	}
-	tooltips['requester.tooltip'] = 'The Requester that submitted this HIT.';
-	tooltips['reward.tooltip'] = 'The amount of money you can earn for completing this HIT.';
-    tooltips['number_of_hits.tooltip'] ='The number of HITs in this group.';
-    tooltips['time_left.tooltip'] = 'The amount of time remaining for you to complete this HIT.';
-    tooltips['qualifications.tooltip']= 'The Qualifications required to accept this HIT.';
-
-</script>
-
-    <script type="text/javascript">//<![CDATA[
-
-    //]]></script>
+    <SCRIPT type='text/javascript' src='/js/expandcollapse.js?v=5z4s2qMGHX.0Y0iOF7WSwQ--'></SCRIPT>
+    <script type="text/javascript">
+        var tooltips;
+        if (tooltips == undefined) {
+            tooltips = new Object();
+        }
+        tooltips['requester.tooltip'] = 'The Requester that submitted the HITs in this group.';
+        tooltips['requester_listed.tooltip'] = 'The total number of HITs in the system listed by this Requester.';
+        tooltips['requester_approval.tooltip'] = 'The percentage of submitted HITs approved by this Requester.';
+        tooltips['expiration_date.toolip'] = 'The date these HITs will expire, and will no longer be available.';
+        tooltips['duration_to_complete.tooltip'] = 'The amount of time you have to complete the HIT, from the moment you accept it.';
+        tooltips['reward.tooltip'] = 'The amount of money you can earn for completing each HIT in this group.';
+        tooltips['number_of_hits.tooltip'] = 'The number of HITs in this group.';
+        tooltips['description.tooltip'] =  'A general description of HITs in this group.';
+        tooltips['keywords.tooltip'] = 'Keywords that described the HITs in this group.';
+        tooltips['qualificationsRequired.tooltip'] = 'The Qualifications you must have to accept HITs in this group.';
+        tooltips['qual_requirement.requirement.tooltip'] = 'The Qualification Value you must have to accept HITs in this group.';
+        tooltips['qual_requirement.your_score.tooltip'] = 'Your Value (if any) on this Qualification.';
+        tooltips['private_hit.view_a_HIT_in_group.tooltip'] = 'Your Qualifications do not meet the requirements to view HITs in this group.';    
+    </script>
 </head>
-
 <body onload="OnLoadHandler.onload()">
 
+    
+        
+        
+            
+                
 
 
 
@@ -89,7 +122,7 @@ a.header_links:hover {
     width: auto;
     padding-top: 15px;
     padding-bottom: 15px;
-    border-bottom: 2px #a15037 solid;
+    border-bottom: 2px #a15037 solid;	
 	font: 12px Verdana;
     color: white;
     text-align: center;
@@ -111,14 +144,14 @@ a.header_links:hover {
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
   <tr>
     <td width="30%">
-      <a href="/mturk/welcome?state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl"><img src='https://images-na.ssl-images-amazon.com/images/G/01/webservices/mechanical-turk/logoAI3.gif' width='255' height='42' border="0" alt='Mechanical Turk' class="logo"/></a>
+      <a href="/mturk/welcome?state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--"><img src='https://images-na.ssl-images-amazon.com/images/G/01/webservices/mechanical-turk/logoAI3.gif' width='255' height='42' border="0" alt='Mechanical Turk' class="logo"/></a>
     </td>
     <td valign="bottom" width="40%">
       <table cellspacing="0" cellpadding="0" width="100%" border="0">
         <tr>
           <td width="20%">&nbsp;</td>
           <td width="60%" align="center" valign="bottom">
-
+            
 
 
 
@@ -127,42 +160,42 @@ a.header_links:hover {
 <table cellspacing="0" cellpadding="0" border="0">
     <tr>
         <!-- Welcome Tab -->
-
-
+        
+        
             <td rowspan="2">
-                <a href="/mturk/welcome?state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl"><img src='https://images-na.ssl-images-amazon.com/images/G/01/webservices/mechanical-turk/nav_youraccount_inactive.gif' width='114' height='32' alt='Your Account' border="0"/></a></td>
-
+                <a href="/mturk/welcome?state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--"><img src='https://images-na.ssl-images-amazon.com/images/G/01/webservices/mechanical-turk/nav_youraccount_inactive.gif' width='114' height='32' alt='Your Account' border="0"/></a></td>
+        
 
 
         <!-- HITs Tab -->
-
-
+        
+        
             <td rowspan="2">
-                <a href="/mturk/findhits?state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl&amp;match=false"><img src='https://images-na.ssl-images-amazon.com/images/G/01/webservices/mechanical-turk/nav_hits_active_teal.gif' width='89' height='32' alt='HITs (Active)' border="0"/></a></td>
-
-
+                <a href="/mturk/findhits?state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;match=false"><img src='https://images-na.ssl-images-amazon.com/images/G/01/webservices/mechanical-turk/nav_hits_active_teal.gif' width='89' height='32' alt='HITs (Active)' border="0"/></a></td>
+        
+        
 
 
         <!-- Quals Tab -->
-
-
-
+        
+        
+        
             <td rowspan="2">
-                <a href="/mturk/findquals?requestable=false&amp;state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl&amp;earned=false"><img src='https://images-na.ssl-images-amazon.com/images/G/01/webservices/mechanical-turk/nav_quals_inactive.gif' width='114' height='32' alt='Qualifications' border="0"/></a></td>
-
+                <a href="/mturk/findquals?requestable=false&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;earned=false"><img src='https://images-na.ssl-images-amazon.com/images/G/01/webservices/mechanical-turk/nav_quals_inactive.gif' width='114' height='32' alt='Qualifications' border="0"/></a></td>
+        
     </tr>
 </table>
 
           </td>
           <td width="20%">
-
-
-
+            
+            
+              
                 <span style="font-size: 11px; margin:0 10px; width: 80px; white-space:nowrap;float:left;">
-                  <b style="display:block;color:#CC6600">54,943 HITs</b> available now
+                  <b style="display:block;color:#CC6600">120,595 HITs</b> available now
                 </span>
-
-
+              
+            
           </td>
         </tr>
       </table>
@@ -172,16 +205,16 @@ a.header_links:hover {
         <tr>
           <td align="right" valign="top" nowrap>
             <span class="header_links">
-
-
-
-
-
-
-                      <a href="/mturk/beginsignin?state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl" id="lnkWorkerSignin" class="black_text_bold">Sign In</a>
-
-
-
+              
+              
+                 
+                
+                  
+                    
+                      <a href="/mturk/beginsignin?state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--" id="lnkWorkerSignin" class="black_text_bold">Sign In</a>                
+                                  
+                 
+                            
             </span>
           </td>
         </tr>
@@ -218,12 +251,12 @@ a.header_links:hover {
 	}
 	tooltips['search.qualified.not-signedin.tooltip'] = 'You must be signed in to use this option.';
 	tooltips['search.qualified.signedin.tooltip'] = 'Only include HITs you are qualified to work on.';
-
+	
 </script>
 <style type="text/css">
 
-
-
+    
+    
 .searchbarparts {
 	margin: 0px;
 	white-space: nowrap;
@@ -264,7 +297,7 @@ padding-bottom:1px;
                   <td width="146px" align="left">&nbsp;</td>
                   <td valign="middle">
                       <div class="subtabs" style="
-                        margin: 8px 10px 0px 10px;
+                        margin: 8px 10px 0px 10px;                        
                         white-space: nowrap;
                         font-size: 11px;
                         font-weight: normal;
@@ -274,28 +307,28 @@ padding-bottom:1px;
                         height: 20px;
                         ">
 
+                        
+                        
 
 
-
-
-
-
-
-                            <a href="/mturk/findhits?state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl&amp;match=false" class="subnavclass">All HITs</a>
-
-                            <span class="almostblack_text">&nbsp;|&nbsp;</span>
-
-
-                            <a href="/mturk/findhits?state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl&amp;match=true" class="subnavclass">HITs Available To You</a>
+            
+                        
+                            
+                            <a href="/mturk/findhits?state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;match=false" class="nonboldsubnavclass">All HITs</a>
 
                             <span class="almostblack_text">&nbsp;|&nbsp;</span>
 
-                            <a href="/mturk/myhits?state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl" class="subnavclass">HITs Assigned To You</a>
+                            
+                            <a href="/mturk/findhits?state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;match=true" class="subnavclass">HITs Available To You</a>
+
+                            <span class="almostblack_text">&nbsp;|&nbsp;</span>
+
+                            <a href="/mturk/myhits?state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--" class="subnavclass">HITs Assigned To You</a>
+                        
 
 
-
-
-
+                        
+                            
 
                             &nbsp;
                         </div>
@@ -305,9 +338,9 @@ padding-bottom:1px;
             </table>
         </td>
     </tr>
-
+    
 	<tr class="searchbarparts">
-        <form name="searchForm" id="searchbar_form" method="GET" action="/mturk/searchbar"><input type="hidden" name="state" value="elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl">
+        <form name="searchForm" id="searchbar_form" method="GET" action="/mturk/searchbar"><input type="hidden" name="state" value="WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">
             <td align="left" valign="middle" width="10" style="padding-left: 3em;">
                 <div class="searchbarparts">
                     Search for&nbsp;
@@ -325,17 +358,17 @@ padding-bottom:1px;
             </td>
             <td align="right" valign="middle" >
                 <div class="searchbarparts">
-
+                
                     <span id="hitSearchParameters" style="display:inline;">
-
+                
                             &nbsp;that pay at least $
                             <input type="text" name="minReward" size="5" value="0.00" style="vertical-align: middle;">&nbsp;
-
+                        
                             <a id="search.qualified.not-signedin.tooltip">
                                 for which you are qualified
                                 <input type="checkbox" name="qualifiedFor" value="on" disabled="disabled" style="vertical-align: middle; background: none; border: 0;">
                             </a>
-
+                        
                     </span>
                 </div>
             </td>
@@ -344,538 +377,3033 @@ padding-bottom:1px;
             </td>
         </form>
     </tr>
-
+    
 </table>
 
 
 
 
+            
+            
+        
+        
+    
 
+    
 
+    
 
+ 
 
 
+    <div style="padding: 0.5em 0 1em 0;">
 
+    
+    
 
-    <form name="hitForm" method="GET" action="/mturk/accept" enctype="multipart/form-data" onsubmit="return globalFieldList.validateAll()"><input type="hidden" name="state" value="elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl">
-        <input type="hidden" name="hitId" value="1I3YFA09O0UI2NHWCCS64FSVNR2AVP">
-        <input type="hidden" name="prevHitSubmitted" value="false">
-        <input type="hidden" name="prevRequester" value="ProBoards, Inc.">
-        <input type="hidden" name="requesterId" value="A2P2MT8IK72CVZ">
-        <input type="hidden" name="prevReward" value="USD0.01">
+    
 
 
 
-            <input type="hidden" name="hitAutoAppDelayInSeconds" value="259200">
 
 
-            <input type="hidden" name="groupId" value="1QPDXXE5FOW2P1HV00P7WEO0L4X30A">
 
 
 
-            <input type="hidden" name="iteratorHitsLeft" value="">
 
 
-            <input type="hidden" name="iteratorSearchSpec" value="">
-
-
-
-            <!-- Search Results -->
-
-
-
-
-
-
-        <!-- Pipeline Header -->
-        <table cellSpacing="0" cellPadding="0" width="100%" border="0" style="padding-top: 0px; border: 0;">
-
-            <tr>
-                <td valign="top" style="padding-top: 4px;" width="50%">
-                    <table cellpadding="0" cellspacing="0" border="0">
-                        <tr>
-                            <td align="left" valign="top" class="title_orange_text" nowrap style="padding-left: 5px;">
-
-                                    <b>Timer:</b>
-                                    <span id="theTime" class="title_orange_text" style="text-align: right;">00:00:00</span>
-                                    of
-                                    7 minutes
-
-
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td align="center" valign="top" style="padding-top: 4px;" width="200">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       <table cellspacing="0" cellpadding="0" border="0">
-            <tr>
-                    <td align="center" nowrap>Want to work on this HIT?</td>
-
-                    <td><img src="/images/spacer.gif" width="20" height="8" border="0"></td>
-                    <td align="center" nowrap>Want to see other HITs?</td>
-
-            </tr>
-            <tr>
-                <td valign="top" nowrap height="26" rowspan="2" align="center">
-                        <a>
-
-                                <noscript>
-                                    <img src='/images/accept_hit_disabled.gif' alt='You need javascript and cookies enabled to accept this hit' border="0" />
-                                </noscript>
-                                <!-- evil hack, setting id=name to make IEs getElementsByName happy -->
-                                <div name="javascriptDependentFunctionality" id="javascriptDependentFunctionality" style="display:none">
-                                    <div name="cookieFreeFunctionality" id="cookieFreeFunctionality" style="display:none">
-                                        <img src='/images/accept_hit_disabled.gif' alt='You need javascript and cookies enabled to accept this hit' border="0" />
-                                    </div>
-                                    <div name="cookieDependentFunctionality" id="cookieDependentFunctionality">
-                                        <input type="image" name="/accept" src="/images/accept_hit.gif" border="0">
-                                    </div>
-                                </div>
-
-
-                        </a>
-                </td>
-
-                    <td><img src="/images/spacer.gif" width="20" height="1" border="0"></td>
-                    <td valign="top" nowrap height="26" rowspan="2" align="center">
-                        <a>
-                            <a href="/mturk/preview?groupId=1QPDXXE5FOW2P1HV00P7WEO0L4X30A&amp;iteratorSkipGroup=false&amp;requesterId=&amp;state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl&amp;hitId=1I3YFA09O0UI2NHWCCS64FSVNR2AVP&amp;externalHit=true&amp;canAccept=true"><img src="/images/skip_hit.gif" border="0" /></a>
-                        </a>
-                    </td>
-
-            </tr>
-        </table>
-
-
-
-<script type="text/javascript">
-
-  tooltips['pipeline.submit.iframes.tooltip'] = "Submit this HIT by following the Requester's instructions.";
-
-</script>
-
-                </td>
-                <td width="50%" valign="top" align="right" style="padding-top: 4px;">
-                    <table cellpadding="1" cellspacing="0" border="0" >
-                        <tr>
-                            <td align="right" valign="top"  nowrap class="title_orange_text" >
-                             <b>Total Earned:&nbsp;</b>
-                             </td>
-                             <td style="padding-right:1em" class="title_orange_text">
-
-                                    Unavailable
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right" valign="top" nowrap class="title_orange_text" >
-                             <b>Total HITs Submitted:&nbsp;</b></td>
-                            <td style="padding-right:1em" class="title_orange_text">
-
-                                    0
-
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-
-    </form>
-
-
-
-
-
-
-
-
-
-
-
-<noscript>
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="message error" >
-
-
-
-        <h6><span id="alertboxHeader">Important Message</span></h6>
-
-
-
-
-
-        <p><span id="alertboxMessage">You must have JavaScript and Cookies enabled to accept this hit</span></p>
-
-
-
-</div>
-
-</noscript>
-<!-- Evil hack, setting id=name for IE getElementsByName -->
-<a name="javascriptDependentFunctionality" id="javascriptDependentFunctionality" style="display:none">
-<a name="cookieFreeFunctionality" id="cookieFreeFunctionality" style="display:none">
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="message error" >
-
-
-
-        <h6><span id="alertboxHeader">Important Message</span></h6>
-
-
-
-
-
-        <p><span id="alertboxMessage">You must have JavaScript and Cookies enabled to accept this hit</span></p>
-
-
-
-</div>
-
-</a></a>
-
-
-
-    <form name="hitForm" method="GET" action="/mturk/accept"><input type="hidden" name="state" value="elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl">
-
-        <!-- Create Hidden Link to Use when working on an IFrame -->
-
-
-
-
-
-
-        <div style="display:none" >
-
-                <a href="/mturk/preview?groupId=1QPDXXE5FOW2P1HV00P7WEO0L4X30A&amp;isPreviousIFrame=true&amp;prevRequester=ProBoards%2C+Inc.&amp;state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl&amp;hitId=1I3YFA09O0UI2NHWCCS64FSVNR2AVP" id="hitExternalNextLink"></a>
-                <a href="/mturk/previewandaccept?groupId=1QPDXXE5FOW2P1HV00P7WEO0L4X30A&amp;autoAcceptEnabled=true&amp;isPreviousIFrame=true&amp;prevRequester=ProBoards%2C+Inc.&amp;state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl&amp;hitId=1I3YFA09O0UI2NHWCCS64FSVNR2AVP" id="hitExternalNextAcceptLink"></a>
-
-        </div>
-
-        <!-- Create Hidden Link to Use if HIT Expires -->
-
-
-
-
-        <div style="display:none" >
-
-                <a href="/mturk/preview?groupId=1QPDXXE5FOW2P1HV00P7WEO0L4X30A&amp;isPreviousHitExpired=true&amp;state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl&amp;hitId=1I3YFA09O0UI2NHWCCS64FSVNR2AVP" id="hitExpiredLink"></a>
-
-        </div>
-
-        <div style="width: auto; margin-top: 5px; margin-left: 10px; margin-right: 10px; margin-bottom: 5px;">
-            <div style="margin-top: 5px; margin-bottom: 10px;">
-                <!-- HIT Information Capsule -->
-
-
-
-
-
-
-
-
-
-
-<table cellpadding="0" cellspacing="0" border="0" style="width: auto; margin-left: 10px; margin-right: 10px;">
-    <!-- Top -->
+<table cellpadding="0" cellspacing="0" border="0" style="margin:5px">
     <tr>
-        <!-- Top Left -->
-        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner.gif" width=11 height=21 border=0 alt=""></td>
-        <!-- Top Line -->
-        <td align="center" valign="middle" bgcolor="#336699" height="1" width="100%"></td>
-        <!-- Top Right -->
-        <td align="right" valign="bottom" colspan="2" rowspan="2" height="21"><img src="/images/top_right_corner.gif" width=11 height=21 border=0 alt=""></td>
+        <td class="title_orange_text_bold">
+            
+                All HITs
+             &nbsp;&nbsp;
+        </td>
     </tr>
-    <!-- Top Bar -->
     <tr>
-        <td align="left" valign="middle" bgcolor="#CCDDE9" height="20" width="100%">
+        <td class="title_orange_text" style="white-space: nowrap; padding-top: 1ex;">
+            1-10 of 1748 Results
+        </td>
+    </tr>
+</table>
+
+<table cellpadding="0" cellspacing="0" border="0" style="margin:5px; clear: both;">
+    <tr>
+        <td style="vertical-align: bottom; text-align: left; padding-left: 5px; padding-right: 10px;" nowrap>
+            <form name="hitGroupsForm" id="sortresults_form" method="GET" action="/mturk/sorthits"><input type="hidden" name="state" value="WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">
+                <input type="hidden" name="searchSpec" value="HITGroupSearch#T#1#10#-1#T#!#!NumHITs!1!#!">
+                <input type="hidden" name="selectedSearchType" value="hitgroups">
+                <input type="hidden" name="searchWords" value="">
+                <span class="capsule_black_text" style="vertical-align: middle;">Sort by:&nbsp;</span>
+                <span style="vertical-align: middle;">
+                    
+                    <select name="sortType" size="1"><option value="LastUpdatedTime:0">HIT Creation Date (oldest first)</option>
+                        
+                        
+                            <option value="LastUpdatedTime:1">HIT Creation Date (newest first)</option>
+                        
+                        
+                            <option value="NumHITs:0">HITs Available (fewest first)</option>
+                        
+                        
+                            <option value="NumHITs:1" selected="selected">HITs Available (most first)</option>
+                        
+                        
+                            <option value="Reward:0">Reward Amount (least first)</option>
+                        
+                        
+                            <option value="Reward:1">Reward Amount (most first)</option>
+                        
+                        
+                            <option value="LatestExpiration:0">Expiration Date (soonest first)</option>
+                        
+                        
+                            <option value="LatestExpiration:1">Expiration Date (latest first)</option>
+                        
+                        
+                            <option value="Title:0">Title (A-Z)</option>
+                        
+                        
+                            <option value="Title:1">Title (Z-A)</option>
+                        
+                        
+                            <option value="AssignmentDurationInSeconds:0">Time Allotted (least first)</option>
+                        
+                        
+                            <option value="AssignmentDurationInSeconds:1">Time Allotted (most first)</option></select>
+                </span>
+                <input type="image" name="/sort" src="/images/go-button-gateway.gif" border="0" style="vertical-align:middle">
+            </form>
+        </td>
+        <td width="50%" style="vertical-align: bottom; text-align: center; padding-left: 10px; padding-right: 10px;" nowrap>
+            <script type="text/javascript" >
+               document.write('<div style="text-align: center;" valign="bottom" nowrap><a id="expandall" class="footer_links" href="#">Show all details</a>' +
+                   '&nbsp;&nbsp;<font color="#9ab8ef">|</font>&nbsp;&nbsp;' +
+                   '<a id="collapseall" class="footer_links" href="#">Hide all details</a></div>');
+            </script>
+        </td>
+        <td width="50%" style="vertical-align: bottom; text-align: right; padding-left: 10px; padding-right: 25px;" nowrap>
+            
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+   
+        
+            1
+        
+        
+    
+        
+        
+            <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=2&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21">2</a>
+        
+    
+        
+        
+            <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=3&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21">3</a>
+        
+    
+        
+        
+            <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=4&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21">4</a>
+        
+    
+        
+        
+            <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=5&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21">5</a>
+        
+    
+
+
+    <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=2&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21"><img src="/images/right_arrow.gif" width="16" height="11" border="0">Next</a>
+    <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=175&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21"><img src="/images/right_dbl_arrow.gif" width="16" height="11" border="0">Last</a>
+
+
+        </td>
+    </tr>
+</table>
+                 
+
+    
+    <table cellpadding="0" cellspacing="5" border="0" width="100%">    
+    
+        <tr>
+            <td width="100%">
+                
+
+        
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+    <tr>
+        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+        <td align="center" valign="middle" bgcolor="#336699" height="1"></td>
+        <td colspan="2" rowspan="2" align="right" valign="bottom"><img src="/images/top_right_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="left" valign="middle" bgcolor="#CCCCCC" height="20" width="100%">
             <table cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
-                    <td width="100%" align="left" valign="middle" nowrap class=capsulelink_bold>
-                        <div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            Flag offensive content images (WARNING: This HIT may contain offensive content. Worker discretion is advised.)
-                        </div>
+                    <td align="left" valign="middle" nowrap>
+                        <a class="capsulelink" href="#" id="capsule0-0">
+                            Find the email address for the company and website
+                        </a>
                     </td>
-                    <td align="left" valign="middle"><img src="/images/spacer.gif" width=100% height=1 border=0 alt=""></td>
-                    <td align="right" valign="middle" width="250" nowrap >
-&nbsp;
+                    <td align="left" valign="middle">
+                            <img src="/images/spacer.gif" width="20" height="1" border=0 alt="">
                     </td>
-               </tr>
+                    <td align="right" valign="middle" width="100%" nowrap>
+                        <span class="capsulelink">
+                            
+
+
+
+
+    <a href="/mturk/preview?groupId=1HGJYY1GNL0AO2FW8D5C1A6146R87X&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">View a HIT in this group</a>
+
+
+
+                        </span>
+                    </td>
+                </tr>
             </table>
         </td>
     </tr>
-    <!-- Middle -->
+
     <tr>
-    <!-- Left Line -->
-        <td width="1" height="100%" align="center" valign="middle" bgcolor="#336699"></td>
-        <!-- Left Bar -->
-        <td align="center" valign="middle" bgcolor="#F0F6F9" width="18"></td>
-        <!-- Center -->
-        <td align="left" valign="top" bgcolor="#F0F6F9" width="100%">
+        <td width="1" align="center" valign="middle" bgcolor="#336699"></td>
 
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="18"></td>
 
-            <table cellpadding="0" cellspacing="0" border="0" width="100%" >
+        <td align="left" valign="top" bgcolor="#F1F3EB" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
-                    <td align="left" valign="top" nowrap class="capsule_field_title" width="80">
-				        <a id="requester.tooltip">
-	                        &nbsp;Requester:&nbsp;&nbsp;
-				        </a>
+                    <td valign="top" width="33%">
+                        <table cellspacing="5" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="requester.tooltip--0">
+                                        Requester:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text"  width="100%">
+                                    
+                                    
+                                    <a href="/mturk/searchbar?selectedSearchType=hitgroups&amp;requesterId=A3AFJ33Q00UN6W&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Sam GONZALES</a>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
-                    <td align="left" valign="top" nowrap class="capsule_field_text" width="100%">
-                        ProBoards, Inc.
-                    </td>
-                    <td><img src="/images/spacer.gif" width="25" height="1" border="0" alt=""></td>
-                    <td align="right" valign="top" nowrap class="capsule_field_title">
-					    <a id="reward.tooltip">
-                            Reward:&nbsp;&nbsp;
-					    </a>
-                    </td>
-                    <td align="left" valign="top" nowrap class="capsule_field_text">
-                        $0.01 per HIT
-                    </td>
-                    <td><img src="/images/spacer.gif" width="25" height="1" border="0" alt=""></td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="expiration_date.toolip--0">
+                                        HIT Expiration Date:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">Nov 26, 2010&nbsp;
+                                    
+                                                            (1 week 2 days)
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="duration_to_complete.tooltip--0">
+                                       Time Allotted:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">30 minutes</td>
+                            </tr>
 
-                        <td align="right" valign="top" nowrap class="capsule_field_title" style="white-space: nowrap;">
-                            <a id="number_of_hits.tooltip">
-                                HITs Available:&nbsp;&nbsp;
-					        </a>
-                        </td>
-                        <td align="left" valign="top" nowrap class="capsule_field_text">
-                            2
-                        </td>
-
-
-                    <td><img src="/images/spacer.gif" width="25" height="1" border="0" alt=""></td>
-                    <td align="right" valign="top" nowrap class="capsule_field_title">
-					    <a id="time_left.tooltip">
-                            Duration:&nbsp;&nbsp;
-					    </a>
+                        </table>
                     </td>
-                    <td align="left" valign="top" nowrap class="capsule_field_text">
-                            7 minutes
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="reward.tooltip--0">
+                                        Reward:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">$0.01</td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="number_of_hits.tooltip--0">
+                                        HITs Available:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">40160</td>
+                            </tr>
+                        </table>
                     </td>
-                </tr>
-                <tr>
-                  <td colspan="11">
-                    <table>
-                      <tr>
-                        <td align="left" valign="top" nowrap class="capsule_field_title">
-		                  <a id="qualifications.tooltip">
-	                        Qualifications Required:&nbsp;&nbsp;
-				          </a>
-                        </td>
-                        <td align="left" valign="top" nowrap class="capsule_field_text">
-
-                            HIT approval rate (%) is greater than 95, Adult Content Qualification is 1
-
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
                 </tr>
             </table>
+
+            <div id="capsule0target" class="capsuletarget" width="100%">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="description.tooltip--0">
+                            Description:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">Given a company name and postal adress try to find an email adress for the company and company website</td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="keywords.tooltip--0">
+                            Keywords:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">
+                        
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=data&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">data</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=collection&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">collection</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=emails&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">emails</a>
+                                
+                            
+                        
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" width="100%" valign="top" nowrap>
+                    
+
+
+    
+	<table style="padding: 2px; margin: 0;">
+	  <tr>
+	    <td align="left" valign="top" nowrap class="capsule_field_title">
+	        <a id="qualificationsRequired.tooltip--0">
+	            Qualifications Required:
+	        </a>
+	    </td>
+	    
+	  </tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Total approved HITs   
+				is greater than  				
+				
+					100
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				HIT approval rate (%)   
+				is not less than  				
+				
+					40
+				
+			</td>			
+			
+		</tr>
+	  
+	</table>
+
+
+                    </td>
+                    <td align="right" valign="bottom" style="padding: 5px;" nowrap>
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
         </td>
-        <!-- Second Level Box -->
-        <!-- Right Bar -->
-        <td align="center" valign="middle" bgcolor="#F0F6F9" width="8"></td>
-        <!-- Right Line -->
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="8"></td>
         <td align="center" valign="middle" bgcolor="#336699" width="1"></td>
     </tr>
-    <!-- Bottom -->
+
     <tr>
-        <!-- Bottom Left -->
-        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner.gif" width=11 height=10 border=0 alt=""></td>
-        <!-- Bottom Bar -->
-        <td align="center" valign="top" bgcolor="#F0F6F9" height="9" width="100%"></td>
-        <!-- Bottom Right -->
-        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner.gif" width=11 height=10 border=0 alt=""></td>
+        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+        <td align="center" valign="top" bgcolor="#F1F3EB" height="9" width="100%"></td>
+        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
     </tr>
-    <!-- Bottom Line -->
+
     <tr>
         <td align="center" valign="top" bgcolor="#336699" height="1" width="100%"></td>
     </tr>
 </table>
 
-            </div>
-        </div>
+                
+            </td>
+        </tr>
+    
+        <tr>
+            <td width="100%">
+                
 
+        
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+    <tr>
+        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+        <td align="center" valign="middle" bgcolor="#336699" height="1"></td>
+        <td colspan="2" rowspan="2" align="right" valign="bottom"><img src="/images/top_right_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+    </tr>
 
-
-
-
-
-
-
-
-
-    <style xmlns:eqa="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd" xmlns:qap="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd" xmlns:sunJava="xalan://java.net" xmlns:xalan="http://xml.apache.org/xalan" xmlns:lxslt="http://xml.apache.org/xslt" type="text/css">
-            iframe {
-            border: 1px black solid;
-            margin: 5px 15px 10px 15px;
-            width: 100%;
-            }
-
-            form>iframe {
-            border: 1px black solid;
-            margin: 5px 0 10px 15px;
-            width: 97%;
-            }
-
-
-        </style><iframe height="600" scrolling="auto" frameborder="0" align="center" src="https://www.proboards.com/mturk/displayHIT.cgi?assignmentId=ASSIGNMENT_ID_NOT_AVAILABLE&hitId=1I3YFA09O0UI2NHWCCS64FSVNR2AVP" name="ExternalQuestionIFrame"></iframe>
-
-
-
-    </form>
-
-<form name="hitForm" method="GET" action="/mturk/accept"><input type="hidden" name="state" value="elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl">
-        <input type="hidden" name="hitId" value="1I3YFA09O0UI2NHWCCS64FSVNR2AVP">
-        <input type="hidden" name="prevHitSubmitted" value="false">
-        <input type="hidden" name="prevRequester" value="ProBoards, Inc.">
-        <input type="hidden" name="requesterId" value="A2P2MT8IK72CVZ">
-        <input type="hidden" name="prevReward" value="USD0.01">
-
-
-
-            <input type="hidden" name="hitAutoAppDelayInSeconds" value="259200">
-
-
-            <input type="hidden" name="groupId" value="1QPDXXE5FOW2P1HV00P7WEO0L4X30A">
-
-
-
-            <input type="hidden" name="iteratorHitsLeft" value="">
-
-
-            <input type="hidden" name="iteratorSearchSpec" value="">
-
-
-
-
-
-        <div align="center" style="margin-left: 100px; margin-right: 100px; margin-bottom: 10px;">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       <table cellspacing="0" cellpadding="0" border="0">
-            <tr>
-                    <td align="center" nowrap>Want to work on this HIT?</td>
-
-                    <td><img src="/images/spacer.gif" width="20" height="8" border="0"></td>
-                    <td align="center" nowrap>Want to see other HITs?</td>
-
-            </tr>
-            <tr>
-                <td valign="top" nowrap height="26" rowspan="2" align="center">
-                        <a>
-
-                                <noscript>
-                                    <img src='/images/accept_hit_disabled.gif' alt='You need javascript and cookies enabled to accept this hit' border="0" />
-                                </noscript>
-                                <!-- evil hack, setting id=name to make IEs getElementsByName happy -->
-                                <div name="javascriptDependentFunctionality" id="javascriptDependentFunctionality" style="display:none">
-                                    <div name="cookieFreeFunctionality" id="cookieFreeFunctionality" style="display:none">
-                                        <img src='/images/accept_hit_disabled.gif' alt='You need javascript and cookies enabled to accept this hit' border="0" />
-                                    </div>
-                                    <div name="cookieDependentFunctionality" id="cookieDependentFunctionality">
-                                        <input type="image" name="/accept" src="/images/accept_hit.gif" border="0">
-                                    </div>
-                                </div>
-
-
-                        </a>
-                </td>
-
-                    <td><img src="/images/spacer.gif" width="20" height="1" border="0"></td>
-                    <td valign="top" nowrap height="26" rowspan="2" align="center">
-                        <a>
-                            <a href="/mturk/preview?groupId=1QPDXXE5FOW2P1HV00P7WEO0L4X30A&amp;iteratorSkipGroup=false&amp;requesterId=&amp;state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl&amp;hitId=1I3YFA09O0UI2NHWCCS64FSVNR2AVP&amp;externalHit=true&amp;canAccept=true"><img src="/images/skip_hit.gif" border="0" /></a>
+    <tr>
+        <td align="left" valign="middle" bgcolor="#CCCCCC" height="20" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="middle" nowrap>
+                        <a class="capsulelink" href="#" id="capsule1-0">
+                            Copy and Paste the Address and Phone Number from a URL
                         </a>
                     </td>
-
-            </tr>
-        </table>
-
-
-
-<script type="text/javascript">
-
-  tooltips['pipeline.submit.iframes.tooltip'] = "Submit this HIT by following the Requester's instructions.";
-
-</script>
-
-        </div>
-   </form>
+                    <td align="left" valign="middle">
+                            <img src="/images/spacer.gif" width="20" height="1" border=0 alt="">
+                    </td>
+                    <td align="right" valign="middle" width="100%" nowrap>
+                        <span class="capsulelink">
+                            
 
 
 
 
+    <a href="/mturk/preview?groupId=1PBKK29PUX2XB1E7ZZ2MNTUI5Y383Q&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">View a HIT in this group</a>
+
+
+
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="1" align="center" valign="middle" bgcolor="#336699"></td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="18"></td>
+
+        <td align="left" valign="top" bgcolor="#F1F3EB" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td valign="top" width="33%">
+                        <table cellspacing="5" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="requester.tooltip--1">
+                                        Requester:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text"  width="100%">
+                                    
+                                    
+                                    <a href="/mturk/searchbar?selectedSearchType=hitgroups&amp;requesterId=A2IR7ETVOIULZU&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Dolores Labs</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="expiration_date.toolip--1">
+                                        HIT Expiration Date:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">Nov 24, 2010&nbsp;
+                                    
+                                                            (6 days 20 hours)
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="duration_to_complete.tooltip--1">
+                                       Time Allotted:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">60 minutes</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="reward.tooltip--1">
+                                        Reward:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">$0.04</td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="number_of_hits.tooltip--1">
+                                        HITs Available:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">6898</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="capsule1target" class="capsuletarget" width="100%">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="description.tooltip--1">
+                            Description:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">Go to the website we provide and find the phone number and address. Your work will be used to help people find and learn about stores and businesses on maps.  Use the link we provide to find the business&#39;s address and phone number.</td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="keywords.tooltip--1">
+                            Keywords:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">
+                        
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=mobmerge&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">mobmerge</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=builder&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">builder</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=dolores&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">dolores</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=labs&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">labs</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=crowd&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">crowd</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=flower&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">flower</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=crowdflower&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">crowdflower</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=doloreslabs&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">doloreslabs</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=deloreslabs&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">deloreslabs</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=delores&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">delores</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=dataentry&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">dataentry</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=websites&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">websites</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=url&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">url</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=urls&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">urls</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=addresses&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">addresses</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=address&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">address</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=phone&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">phone</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=phonenumber&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">phonenumber</a>
+                                
+                            
+                        
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" width="100%" valign="top" nowrap>
+                    
+
+
+
+	<table width="100%">
+	  <tr>
+	    <td align="left" valign="top" nowrap class="capsule_field_title">
+	        <a id="qualificationsRequired.tooltip--1">
+	            Qualifications Required:
+	        </a>
+	    </td>
+	    <td width="100%">
+	      None
+	    </td>
+	  </tr>
+	</table>
+
+                    </td>
+                    <td align="right" valign="bottom" style="padding: 5px;" nowrap>
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="8"></td>
+        <td align="center" valign="middle" bgcolor="#336699" width="1"></td>
+    </tr>
+
+    <tr>
+        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+        <td align="center" valign="top" bgcolor="#F1F3EB" height="9" width="100%"></td>
+        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="center" valign="top" bgcolor="#336699" height="1" width="100%"></td>
+    </tr>
+</table>
+
+                
+            </td>
+        </tr>
+    
+        <tr>
+            <td width="100%">
+                
+
+        
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+    <tr>
+        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+        <td align="center" valign="middle" bgcolor="#336699" height="1"></td>
+        <td colspan="2" rowspan="2" align="right" valign="bottom"><img src="/images/top_right_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="left" valign="middle" bgcolor="#CCCCCC" height="20" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="middle" nowrap>
+                        <a class="capsulelink" href="#" id="capsule2-0">
+                            Preference Judgements between Search Engine Results
+                        </a>
+                    </td>
+                    <td align="left" valign="middle">
+                            <img src="/images/spacer.gif" width="20" height="1" border=0 alt="">
+                    </td>
+                    <td align="right" valign="middle" width="100%" nowrap>
+                        <span class="capsulelink">
+                            
+
+
+
+
+    <a href="/mturk/preview?groupId=1NPDKWJGJMDKVT61DIAGBTYNTIY739&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">View a HIT in this group</a>
+
+
+
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="1" align="center" valign="middle" bgcolor="#336699"></td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="18"></td>
+
+        <td align="left" valign="top" bgcolor="#F1F3EB" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td valign="top" width="33%">
+                        <table cellspacing="5" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="requester.tooltip--2">
+                                        Requester:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text"  width="100%">
+                                    
+                                    
+                                    <a href="/mturk/searchbar?selectedSearchType=hitgroups&amp;requesterId=A3H3EZNM8ORYNI&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">jaime arguello</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="expiration_date.toolip--2">
+                                        HIT Expiration Date:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">Nov 26, 2010&nbsp;
+                                    
+                                                            (1 week 2 days)
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="duration_to_complete.tooltip--2">
+                                       Time Allotted:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">5 minutes</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="reward.tooltip--2">
+                                        Reward:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">$0.01</td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="number_of_hits.tooltip--2">
+                                        HITs Available:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">6477</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="capsule2target" class="capsuletarget" width="100%">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="description.tooltip--2">
+                            Description:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">You are given two sets of search engine results for a query.  The task is to identify that set that would best satisfy a user.</td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="keywords.tooltip--2">
+                            Keywords:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">
+                        
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=search&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">search</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=relevance&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">relevance</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=search&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">search</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=engine&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">engine</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=results&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">results</a>
+                                
+                            
+                        
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" width="100%" valign="top" nowrap>
+                    
+
+
+    
+	<table style="padding: 2px; margin: 0;">
+	  <tr>
+	    <td align="left" valign="top" nowrap class="capsule_field_title">
+	        <a id="qualificationsRequired.tooltip--2">
+	            Qualifications Required:
+	        </a>
+	    </td>
+	    
+	  </tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Qualified to provide preference judgements on pairs of search engine results   
+				is greater than  				
+				
+					98
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				HIT approval rate (%)   
+				is greater than  				
+				
+					90
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Location   
+				is  				
+				
+					US
+				
+			</td>			
+			
+		</tr>
+	  
+	</table>
+
+
+                    </td>
+                    <td align="right" valign="bottom" style="padding: 5px;" nowrap>
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="8"></td>
+        <td align="center" valign="middle" bgcolor="#336699" width="1"></td>
+    </tr>
+
+    <tr>
+        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+        <td align="center" valign="top" bgcolor="#F1F3EB" height="9" width="100%"></td>
+        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="center" valign="top" bgcolor="#336699" height="1" width="100%"></td>
+    </tr>
+</table>
+
+                
+            </td>
+        </tr>
+    
+        <tr>
+            <td width="100%">
+                
+
+        
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+    <tr>
+        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+        <td align="center" valign="middle" bgcolor="#336699" height="1"></td>
+        <td colspan="2" rowspan="2" align="right" valign="bottom"><img src="/images/top_right_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="left" valign="middle" bgcolor="#CCCCCC" height="20" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="middle" nowrap>
+                        <a class="capsulelink" href="#" id="capsule3-0">
+                            Analyze cause and effect in blog stories
+                        </a>
+                    </td>
+                    <td align="left" valign="middle">
+                            <img src="/images/spacer.gif" width="20" height="1" border=0 alt="">
+                    </td>
+                    <td align="right" valign="middle" width="100%" nowrap>
+                        <span class="capsulelink">
+                            
+
+
+
+
+    <a href="/mturk/preview?groupId=1KGWDMM672AJJ9VPHRBO6L93PEK017&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">View a HIT in this group</a>
+
+
+
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="1" align="center" valign="middle" bgcolor="#336699"></td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="18"></td>
+
+        <td align="left" valign="top" bgcolor="#F1F3EB" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td valign="top" width="33%">
+                        <table cellspacing="5" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="requester.tooltip--3">
+                                        Requester:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text"  width="100%">
+                                    
+                                    
+                                    <a href="/mturk/searchbar?selectedSearchType=hitgroups&amp;requesterId=A2IR7ETVOIULZU&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Dolores Labs</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="expiration_date.toolip--3">
+                                        HIT Expiration Date:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">Nov 24, 2010&nbsp;
+                                    
+                                                            (6 days 23 hours)
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="duration_to_complete.tooltip--3">
+                                       Time Allotted:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">60 minutes</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="reward.tooltip--3">
+                                        Reward:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">$0.08</td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="number_of_hits.tooltip--3">
+                                        HITs Available:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">4998</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="capsule3target" class="capsuletarget" width="100%">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="description.tooltip--3">
+                            Description:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">In this job you will encounter a series of stories.  Stories have to be coherent to make sense to their readers. Part of what makes a story coherent is that there are causal connections between story events. </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="keywords.tooltip--3">
+                            Keywords:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">
+                        
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=mobmerge&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">mobmerge</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=builder&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">builder</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=dolores&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">dolores</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=labs&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">labs</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=crowd&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">crowd</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=flower&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">flower</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=crowdflower&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">crowdflower</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=doloreslabs&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">doloreslabs</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=deloreslabs&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">deloreslabs</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=delores&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">delores</a>
+                                
+                            
+                        
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" width="100%" valign="top" nowrap>
+                    
+
+
+    
+	<table style="padding: 2px; margin: 0;">
+	  <tr>
+	    <td align="left" valign="top" nowrap class="capsule_field_title">
+	        <a id="qualificationsRequired.tooltip--3">
+	            Qualifications Required:
+	        </a>
+	    </td>
+	    
+	  </tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Location   
+				is  				
+				
+					US
+				
+			</td>			
+			
+		</tr>
+	  
+	</table>
+
+
+                    </td>
+                    <td align="right" valign="bottom" style="padding: 5px;" nowrap>
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="8"></td>
+        <td align="center" valign="middle" bgcolor="#336699" width="1"></td>
+    </tr>
+
+    <tr>
+        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+        <td align="center" valign="top" bgcolor="#F1F3EB" height="9" width="100%"></td>
+        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="center" valign="top" bgcolor="#336699" height="1" width="100%"></td>
+    </tr>
+</table>
+
+                
+            </td>
+        </tr>
+    
+        <tr>
+            <td width="100%">
+                
+
+        
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+    <tr>
+        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+        <td align="center" valign="middle" bgcolor="#336699" height="1"></td>
+        <td colspan="2" rowspan="2" align="right" valign="bottom"><img src="/images/top_right_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="left" valign="middle" bgcolor="#CCCCCC" height="20" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="middle" nowrap>
+                        <a class="capsulelink" href="#" id="capsule4-0">
+                            Web Search Quality (rtgg22). (WARNING: This HIT may contain adult or offensive content. Worker discretion is advised.)
+                        </a>
+                    </td>
+                    <td align="left" valign="middle">
+                            <img src="/images/spacer.gif" width="20" height="1" border=0 alt="">
+                    </td>
+                    <td align="right" valign="middle" width="100%" nowrap>
+                        <span class="capsulelink">
+                            
+
+
+
+
+
+	<a id="private_hit.view_a_HIT_in_group.tooltip--4">
+        View a HIT in this group
+    </a>
+
+
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="1" align="center" valign="middle" bgcolor="#336699"></td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="18"></td>
+
+        <td align="left" valign="top" bgcolor="#F1F3EB" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td valign="top" width="33%">
+                        <table cellspacing="5" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="requester.tooltip--4">
+                                        Requester:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text"  width="100%">
+                                    
+                                    
+                                    <a href="/mturk/searchbar?selectedSearchType=hitgroups&amp;requesterId=A8RMEN71ICE57&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">RelevanceQuest</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="expiration_date.toolip--4">
+                                        HIT Expiration Date:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">Nov 21, 2010&nbsp;
+                                    
+                                                            (4 days 7 hours)
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="duration_to_complete.tooltip--4">
+                                       Time Allotted:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">5 minutes</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="reward.tooltip--4">
+                                        Reward:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">$0.02</td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="number_of_hits.tooltip--4">
+                                        HITs Available:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">4179</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="capsule4target" class="capsuletarget" width="100%">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="description.tooltip--4">
+                            Description:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">Given a search query, evaluate quality of web search results</td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="keywords.tooltip--4">
+                            Keywords:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">
+                        
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=search&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">search</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=engine&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">engine</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=web&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">web</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=relevance&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">relevance</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=quality&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">quality</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=queries&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">queries</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=ranking&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">ranking</a>
+                                
+                            
+                        
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" width="100%" valign="top" nowrap>
+                    
+
+
+    
+	<table style="padding: 2px; margin: 0;">
+	  <tr>
+	    <td align="left" valign="top" nowrap class="capsule_field_title">
+	        <a id="qualificationsRequired.tooltip--4">
+	            Qualifications Required:
+	        </a>
+	    </td>
+	    
+	  </tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Total approved HITs   
+				is not less than  				
+				
+					1000
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Location   
+				is  				
+				
+					US
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				HIT approval rate (%)   
+				is not less than  				
+				
+					95
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Adult Content Qualification   
+				is  				
+				
+					1
+				
+			</td>			
+			
+		</tr>
+	  
+	</table>
+
+
+                    </td>
+                    <td align="right" valign="bottom" style="padding: 5px;" nowrap>
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="8"></td>
+        <td align="center" valign="middle" bgcolor="#336699" width="1"></td>
+    </tr>
+
+    <tr>
+        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+        <td align="center" valign="top" bgcolor="#F1F3EB" height="9" width="100%"></td>
+        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="center" valign="top" bgcolor="#336699" height="1" width="100%"></td>
+    </tr>
+</table>
+
+                
+            </td>
+        </tr>
+    
+        <tr>
+            <td width="100%">
+                
+
+        
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+    <tr>
+        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+        <td align="center" valign="middle" bgcolor="#336699" height="1"></td>
+        <td colspan="2" rowspan="2" align="right" valign="bottom"><img src="/images/top_right_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="left" valign="middle" bgcolor="#CCCCCC" height="20" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="middle" nowrap>
+                        <a class="capsulelink" href="#" id="capsule5-0">
+                            Compare People Records-Bonus Avaliable
+                        </a>
+                    </td>
+                    <td align="left" valign="middle">
+                            <img src="/images/spacer.gif" width="20" height="1" border=0 alt="">
+                    </td>
+                    <td align="right" valign="middle" width="100%" nowrap>
+                        <span class="capsulelink">
+                            
+
+
+
+
+
+	<a id="private_hit.view_a_HIT_in_group.tooltip--5">
+        View a HIT in this group
+    </a>
+
+
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="1" align="center" valign="middle" bgcolor="#336699"></td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="18"></td>
+
+        <td align="left" valign="top" bgcolor="#F1F3EB" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td valign="top" width="33%">
+                        <table cellspacing="5" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="requester.tooltip--5">
+                                        Requester:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text"  width="100%">
+                                    
+                                    
+                                    <a href="/mturk/searchbar?selectedSearchType=hitgroups&amp;requesterId=A2VOCPJKUH05ZS&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Intelius</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="expiration_date.toolip--5">
+                                        HIT Expiration Date:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">Dec 16, 2010&nbsp;
+                                    
+                                                            (4 weeks 1 day)
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="duration_to_complete.tooltip--5">
+                                       Time Allotted:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">3 days</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="reward.tooltip--5">
+                                        Reward:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">$0.02</td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="number_of_hits.tooltip--5">
+                                        HITs Available:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">3763</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="capsule5target" class="capsuletarget" width="100%">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="description.tooltip--5">
+                            Description:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">Determine whether Person 1 is the same as Person 2. Randomly, 20 percentage of the HITs have known answers, so we can give out bonus based on how well each worker scores on these cases. The qualification requirement &#39;AutoQual&#39; will be automatically granted upon request</td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="keywords.tooltip--5">
+                            Keywords:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">
+                        
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=categorize&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">categorize</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=compare&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">compare</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=intelius&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">intelius</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=bonus&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">bonus</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=88A23B16&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">88A23B16</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=0DC730E805C9F420FF38075A4D46707B&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">0DC730E805C9F420FF38075A4D46707B</a>
+                                
+                            
+                        
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" width="100%" valign="top" nowrap>
+                    
+
+
+    
+	<table style="padding: 2px; margin: 0;">
+	  <tr>
+	    <td align="left" valign="top" nowrap class="capsule_field_title">
+	        <a id="qualificationsRequired.tooltip--5">
+	            Qualifications Required:
+	        </a>
+	    </td>
+	    
+	  </tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				AutoQual   
+				is not less than  				
+				
+					1
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Total approved HITs   
+				is not less than  				
+				
+					500
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				HIT approval rate (%)   
+				is greater than  				
+				
+					95
+				
+			</td>			
+			
+		</tr>
+	  
+	</table>
+
+
+                    </td>
+                    <td align="right" valign="bottom" style="padding: 5px;" nowrap>
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="8"></td>
+        <td align="center" valign="middle" bgcolor="#336699" width="1"></td>
+    </tr>
+
+    <tr>
+        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+        <td align="center" valign="top" bgcolor="#F1F3EB" height="9" width="100%"></td>
+        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="center" valign="top" bgcolor="#336699" height="1" width="100%"></td>
+    </tr>
+</table>
+
+                
+            </td>
+        </tr>
+    
+        <tr>
+            <td width="100%">
+                
+
+        
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+    <tr>
+        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+        <td align="center" valign="middle" bgcolor="#336699" height="1"></td>
+        <td colspan="2" rowspan="2" align="right" valign="bottom"><img src="/images/top_right_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="left" valign="middle" bgcolor="#CCCCCC" height="20" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="middle" nowrap>
+                        <a class="capsulelink" href="#" id="capsule6-0">
+                            Tag One Photo
+                        </a>
+                    </td>
+                    <td align="left" valign="middle">
+                            <img src="/images/spacer.gif" width="20" height="1" border=0 alt="">
+                    </td>
+                    <td align="right" valign="middle" width="100%" nowrap>
+                        <span class="capsulelink">
+                            
+
+
+
+
+
+	<a id="private_hit.view_a_HIT_in_group.tooltip--6">
+        View a HIT in this group
+    </a>
+
+
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="1" align="center" valign="middle" bgcolor="#336699"></td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="18"></td>
+
+        <td align="left" valign="top" bgcolor="#F1F3EB" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td valign="top" width="33%">
+                        <table cellspacing="5" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="requester.tooltip--6">
+                                        Requester:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text"  width="100%">
+                                    
+                                    
+                                    <a href="/mturk/searchbar?selectedSearchType=hitgroups&amp;requesterId=A1Q45SAOJDSUMG&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Roger Gutman</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="expiration_date.toolip--6">
+                                        HIT Expiration Date:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">Nov 18, 2010&nbsp;
+                                    
+                                                            (1 day 5 hours)
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="duration_to_complete.tooltip--6">
+                                       Time Allotted:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">10 minutes</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="reward.tooltip--6">
+                                        Reward:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">$0.01</td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="number_of_hits.tooltip--6">
+                                        HITs Available:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">3545</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="capsule6target" class="capsuletarget" width="100%">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="description.tooltip--6">
+                            Description:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">Describe what you see in photos of individuals.</td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="keywords.tooltip--6">
+                            Keywords:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">
+                        
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=photos&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">photos</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=rating&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">rating</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=pictures&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">pictures</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=tags&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">tags</a>
+                                
+                            
+                        
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" width="100%" valign="top" nowrap>
+                    
+
+
+    
+	<table style="padding: 2px; margin: 0;">
+	  <tr>
+	    <td align="left" valign="top" nowrap class="capsule_field_title">
+	        <a id="qualificationsRequired.tooltip--6">
+	            Qualifications Required:
+	        </a>
+	    </td>
+	    
+	  </tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Location   
+				is  				
+				
+					US
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				HIT approval rate (%)   
+				is not less than  				
+				
+					95
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Total approved HITs   
+				is greater than  				
+				
+					50
+				
+			</td>			
+			
+		</tr>
+	  
+	</table>
+
+
+                    </td>
+                    <td align="right" valign="bottom" style="padding: 5px;" nowrap>
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="8"></td>
+        <td align="center" valign="middle" bgcolor="#336699" width="1"></td>
+    </tr>
+
+    <tr>
+        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+        <td align="center" valign="top" bgcolor="#F1F3EB" height="9" width="100%"></td>
+        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="center" valign="top" bgcolor="#336699" height="1" width="100%"></td>
+    </tr>
+</table>
+
+                
+            </td>
+        </tr>
+    
+        <tr>
+            <td width="100%">
+                
+
+        
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+    <tr>
+        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+        <td align="center" valign="middle" bgcolor="#336699" height="1"></td>
+        <td colspan="2" rowspan="2" align="right" valign="bottom"><img src="/images/top_right_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="left" valign="middle" bgcolor="#CCCCCC" height="20" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="middle" nowrap>
+                        <a class="capsulelink" href="#" id="capsule7-0">
+                            Translate Malayalam words into English
+                        </a>
+                    </td>
+                    <td align="left" valign="middle">
+                            <img src="/images/spacer.gif" width="20" height="1" border=0 alt="">
+                    </td>
+                    <td align="right" valign="middle" width="100%" nowrap>
+                        <span class="capsulelink">
+                            
+
+
+
+
+    <a href="/mturk/preview?groupId=1FUCYR49F0IDLBMCIBD6OAA3YJP779&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">View a HIT in this group</a>
+
+
+
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="1" align="center" valign="middle" bgcolor="#336699"></td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="18"></td>
+
+        <td align="left" valign="top" bgcolor="#F1F3EB" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td valign="top" width="33%">
+                        <table cellspacing="5" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="requester.tooltip--7">
+                                        Requester:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text"  width="100%">
+                                    
+                                    
+                                    <a href="/mturk/searchbar?selectedSearchType=hitgroups&amp;requesterId=A32TTE4XXN6MQZ&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Chris Callison-Burch</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="expiration_date.toolip--7">
+                                        HIT Expiration Date:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">Nov 24, 2010&nbsp;
+                                    
+                                                            (6 days 22 hours)
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="duration_to_complete.tooltip--7">
+                                       Time Allotted:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">60 minutes</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="reward.tooltip--7">
+                                        Reward:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">$0.05</td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="number_of_hits.tooltip--7">
+                                        HITs Available:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">3395</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="capsule7target" class="capsuletarget" width="100%">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="description.tooltip--7">
+                            Description:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">Help create a bilingual dictionary by translating Malayalam words</td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="keywords.tooltip--7">
+                            Keywords:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">
+                        
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=translation&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">translation</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=research&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">research</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=wikitrans&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">wikitrans</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=dictionary&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">dictionary</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=English&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">English</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=Malayalam&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Malayalam</a>
+                                
+                            
+                        
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" width="100%" valign="top" nowrap>
+                    
+
+
+    
+	<table style="padding: 2px; margin: 0;">
+	  <tr>
+	    <td align="left" valign="top" nowrap class="capsule_field_title">
+	        <a id="qualificationsRequired.tooltip--7">
+	            Qualifications Required:
+	        </a>
+	    </td>
+	    
+	  </tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				HIT approval rate (%)   
+				is not less than  				
+				
+					85
+				
+			</td>			
+			
+		</tr>
+	  
+	</table>
+
+
+                    </td>
+                    <td align="right" valign="bottom" style="padding: 5px;" nowrap>
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="8"></td>
+        <td align="center" valign="middle" bgcolor="#336699" width="1"></td>
+    </tr>
+
+    <tr>
+        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+        <td align="center" valign="top" bgcolor="#F1F3EB" height="9" width="100%"></td>
+        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="center" valign="top" bgcolor="#336699" height="1" width="100%"></td>
+    </tr>
+</table>
+
+                
+            </td>
+        </tr>
+    
+        <tr>
+            <td width="100%">
+                
+
+        
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+    <tr>
+        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+        <td align="center" valign="middle" bgcolor="#336699" height="1"></td>
+        <td colspan="2" rowspan="2" align="right" valign="bottom"><img src="/images/top_right_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="left" valign="middle" bgcolor="#CCCCCC" height="20" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="middle" nowrap>
+                        <a class="capsulelink" href="#" id="capsule8-0">
+                            Questions on Life Jackets and Vests
+                        </a>
+                    </td>
+                    <td align="left" valign="middle">
+                            <img src="/images/spacer.gif" width="20" height="1" border=0 alt="">
+                    </td>
+                    <td align="right" valign="middle" width="100%" nowrap>
+                        <span class="capsulelink">
+                            
+
+
+
+
+    <a href="/mturk/preview?groupId=160L5EFS2WNGTEY7T5B2D4J8GKS024&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">View a HIT in this group</a>
+
+
+
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="1" align="center" valign="middle" bgcolor="#336699"></td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="18"></td>
+
+        <td align="left" valign="top" bgcolor="#F1F3EB" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td valign="top" width="33%">
+                        <table cellspacing="5" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="requester.tooltip--8">
+                                        Requester:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text"  width="100%">
+                                    
+                                    
+                                    <a href="/mturk/searchbar?selectedSearchType=hitgroups&amp;requesterId=A2SBG16L92F7S4&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Amazon Requester Inc.</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="expiration_date.toolip--8">
+                                        HIT Expiration Date:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">Nov 19, 2010&nbsp;
+                                    
+                                                            (2 days 13 hours)
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="duration_to_complete.tooltip--8">
+                                       Time Allotted:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">4 hours</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="reward.tooltip--8">
+                                        Reward:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">$0.03</td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="number_of_hits.tooltip--8">
+                                        HITs Available:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">2713</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="capsule8target" class="capsuletarget" width="100%">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="description.tooltip--8">
+                            Description:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">Please read the data and answer the questions on Life Jackets and Vests.</td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="keywords.tooltip--8">
+                            Keywords:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">
+                        
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=lifejackets&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">lifejackets</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=amazon&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">amazon</a>
+                                
+                            
+                        
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" width="100%" valign="top" nowrap>
+                    
+
+
+    
+	<table style="padding: 2px; margin: 0;">
+	  <tr>
+	    <td align="left" valign="top" nowrap class="capsule_field_title">
+	        <a id="qualificationsRequired.tooltip--8">
+	            Qualifications Required:
+	        </a>
+	    </td>
+	    
+	  </tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				HIT abandonment rate (%)   
+				is less than  				
+				
+					25
+				
+			</td>			
+			
+		</tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				HIT approval rate (%)   
+				is greater than  				
+				
+					70
+				
+			</td>			
+			
+		</tr>
+	  
+	</table>
+
+
+                    </td>
+                    <td align="right" valign="bottom" style="padding: 5px;" nowrap>
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="8"></td>
+        <td align="center" valign="middle" bgcolor="#336699" width="1"></td>
+    </tr>
+
+    <tr>
+        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+        <td align="center" valign="top" bgcolor="#F1F3EB" height="9" width="100%"></td>
+        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="center" valign="top" bgcolor="#336699" height="1" width="100%"></td>
+    </tr>
+</table>
+
+                
+            </td>
+        </tr>
+    
+        <tr>
+            <td width="100%">
+                
+
+        
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+    <tr>
+        <td height="21" colspan="2" rowspan="2" align="left" valign="bottom"><img src="/images/top_left_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+        <td align="center" valign="middle" bgcolor="#336699" height="1"></td>
+        <td colspan="2" rowspan="2" align="right" valign="bottom"><img src="/images/top_right_corner_grey.gif" width="11" height="21" border="0" alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="left" valign="middle" bgcolor="#CCCCCC" height="20" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="middle" nowrap>
+                        <a class="capsulelink" href="#" id="capsule9-0">
+                            Verify Websites for UK Businesses
+                        </a>
+                    </td>
+                    <td align="left" valign="middle">
+                            <img src="/images/spacer.gif" width="20" height="1" border=0 alt="">
+                    </td>
+                    <td align="right" valign="middle" width="100%" nowrap>
+                        <span class="capsulelink">
+                            
+
+
+
+
+    <a href="/mturk/preview?groupId=1QPDXX7U09HFTC944VP7UEO0M5R035&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">View a HIT in this group</a>
+
+
+
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="1" align="center" valign="middle" bgcolor="#336699"></td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="18"></td>
+
+        <td align="left" valign="top" bgcolor="#F1F3EB" width="100%">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td valign="top" width="33%">
+                        <table cellspacing="5" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="requester.tooltip--9">
+                                        Requester:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text"  width="100%">
+                                    
+                                    
+                                    <a href="/mturk/searchbar?selectedSearchType=hitgroups&amp;requesterId=A2IR7ETVOIULZU&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Dolores Labs</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="expiration_date.toolip--9">
+                                        HIT Expiration Date:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">Nov 23, 2010&nbsp;
+                                    
+                                                            (6 days 14 hours)
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="duration_to_complete.tooltip--9">
+                                       Time Allotted:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">60 minutes</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td valign="top" width="33%">
+                        <table cellpadding="5" cellspacing="0" border="0">
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="reward.tooltip--9">
+                                        Reward:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">$0.08</td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" nowrap class="capsule_field_title">
+                                    <a id="number_of_hits.tooltip--9">
+                                        HITs Available:&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                                <td align="left" valign="top" nowrap class="capsule_field_text">2276</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="capsule9target" class="capsuletarget" width="100%">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="description.tooltip--9">
+                            Description:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">In this job, you will be asked to verify websites for businesses in the UK.</td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" nowrap class="capsule_field_title">
+                        <a id="keywords.tooltip--9">
+                            Keywords:
+                        </a>
+                    </td>
+                    <td colspan="2" align="left" valign="top" class="capsule_field_text" width="100%">
+                        
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=mobmerge&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">mobmerge</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=builder&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">builder</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=dolores&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">dolores</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=labs&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">labs</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=crowd&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">crowd</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=flower&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">flower</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=crowdflower&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">crowdflower</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=doloreslabs&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">doloreslabs</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=deloreslabs&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">deloreslabs</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=delores&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">delores</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=address&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">address</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=business&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">business</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=verification&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">verification</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=research&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">research</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=internet&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">internet</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=web&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">web</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=data_entry&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">data_entry</a>,&nbsp;
+                                
+                            
+                        
+                            
+                                
+                                
+                                
+                                
+                                    <a href="/mturk/searchbar?minReward=0.00&amp;searchWords=dataentry&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">dataentry</a>
+                                
+                            
+                        
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" width="100%" valign="top" nowrap>
+                    
+
+
+    
+	<table style="padding: 2px; margin: 0;">
+	  <tr>
+	    <td align="left" valign="top" nowrap class="capsule_field_title">
+	        <a id="qualificationsRequired.tooltip--9">
+	            Qualifications Required:
+	        </a>
+	    </td>
+	    
+	  </tr>
+	  
+		
+		<tr>
+			<td style="padding-right: 2em; white-space: nowrap;">	 
+				Location   
+				is not  				
+				
+					IN
+				
+			</td>			
+			
+		</tr>
+	  
+	</table>
+
+
+                    </td>
+                    <td align="right" valign="bottom" style="padding: 5px;" nowrap>
+                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </td>
+
+        <td align="center" valign="middle" bgcolor="#F1F3EB" width="8"></td>
+        <td align="center" valign="middle" bgcolor="#336699" width="1"></td>
+    </tr>
+
+    <tr>
+        <td height="10" colspan="2" rowspan="2" align="left" valign="top"><img src="/images/bottom_left_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+        <td align="center" valign="top" bgcolor="#F1F3EB" height="9" width="100%"></td>
+        <td align="right" valign="top" colspan="2" rowspan="2" height="10"><img src="/images/bottom_right_corner_grey.gif" width=11 height=10 border=0 alt=""></td>
+    </tr>
+
+    <tr>
+        <td align="center" valign="top" bgcolor="#336699" height="1" width="100%"></td>
+    </tr>
+</table>
+
+                
+            </td>
+        </tr>
+    
+    </table>
+    
+    
+    <table>
+        <tr>
+          <td style="width: 100%;">
+           
+           
+                <!-- HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21 -->
+           
+          </td>
+          <td style="vertical-align: bottom; text-align: right; padding-left: 10px; padding-right: 25px;" nowrap>
+             
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+        
+            1
+        
+        
+    
+        
+        
+            <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=2&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21">2</a>
+        
+    
+        
+        
+            <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=3&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21">3</a>
+        
+    
+        
+        
+            <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=4&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21">4</a>
+        
+    
+        
+        
+            <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=5&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21">5</a>
+        
+    
+
+
+    <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=2&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21"><img src="/images/right_arrow.gif" width="16" height="11" border="0">Next</a>
+    <a href="/mturk/viewhits?searchWords=&amp;selectedSearchType=hitgroups&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--&amp;sortType=NumHITs%3A1&amp;pageNumber=175&amp;searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23%21%23%21NumHITs%211%21%23%21"><img src="/images/right_dbl_arrow.gif" width="16" height="11" border="0">Last</a>
+
+
+          </td>
+        </tr>
+    </table>
+    <p/>
+
+    
+        
+        
+            
+                
 
 
 
@@ -938,9 +3466,9 @@ padding-bottom:1px;
         <tr class="footer_links">
           <td width="50%"> &nbsp;  </td>
 	      <td align="center" nowrap valign="middle">
-            <a href="/mturk/help?helpPage=main&amp;state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl">FAQ</a>
+            <a href="/mturk/help?helpPage=main&amp;state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">FAQ</a>
             &nbsp;|&nbsp;
-            <a href="/mturk/contactus?state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl">Contact Us</a>
+            <a href="/mturk/contactus?state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Contact Us</a>
             &nbsp;|&nbsp;
             <a href='http://www.amazon.com/careers' target="_blank">Careers at Amazon</a>
             &nbsp;|&nbsp;
@@ -948,7 +3476,7 @@ padding-bottom:1px;
             &nbsp;|&nbsp;
             <a href='http://phx.corporate-ir.net/phoenix.zhtml?c=176060&p=irol-InfoReq' target="_blank">Press</a>
             &nbsp;|&nbsp;
-            <a href="/mturk/policies?state=elJldGVpVFVBdlVWK1JPajRQVnV5TEx5UVNVPTIwMTAxMTE1MDMzOFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl">Policies</a>
+            <a href="/mturk/policies?state=WlZTaGFYN3BLS21vY01WUGhiUG91eTRqaEZzPTIwMTAxMTE3MDUwOVVzZXIudHVya1NlY3VyZX50cnVlJQ--">Policies</a>
           </td>
           <td width="50%"> &nbsp; </td>
         </tr>
@@ -958,17 +3486,23 @@ padding-bottom:1px;
           <td align="left" nowrap width="50%" class="underlined">&nbsp;</td>
           <td align="center" nowrap valign="middle" class="footer_text">
              &copy;2005-2010 Amazon.com, Inc. or its Affiliates
-          </td>
+          </td>	  
           <td width="50%" align="right" valign="bottom">
-
+          
 
           <img src='https://images-na.ssl-images-amazon.com/images/G/01/webservices/mechanical-turk/an_amazon_company-medium.gif' width='160' height='21'>
-          </td>
+          </td>	
         </tr>
     </table>
 </div>
 
 
 
+            
+            
+        
+        
+    
 </body>
+
 </html>

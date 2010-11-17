@@ -43,4 +43,13 @@ def hits_group_info(group_id):
     """Return info about given hits group"""
     url = group_url(group_id)
     html = _get_html(url)
-    return parser.hits_group_details(html)
+    data = parser.hits_group_details(html)
+    # additional fetch of example task
+    data['html'] = _get_html(data['iframe_src'])
+    return data
+
+def hits_groups_total():
+    """Return total number of hits groups or None"""
+    url = "https://www.mturk.com/mturk/findhits?match=false"
+    html = _get_html(url)
+    return parser.hits_group_total(html)

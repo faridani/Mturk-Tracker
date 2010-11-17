@@ -30,7 +30,7 @@ from mturk.fields import JSONField
 import datetime
 
 class Crawl(models.Model):
-    
+
     start_time          = models.DateTimeField('Start Time')
     end_time            = models.DateTimeField('End Time')
     hits_available      = models.IntegerField('All hits avaliable', null=True)
@@ -40,10 +40,10 @@ class Crawl(models.Model):
     success             = models.BooleanField('Successfoul crawl?')
     errors              = JSONField('Errors', blank=True, null=True)
     old_id              = models.IntegerField(null=True,blank=True,unique=True,db_index=True)
-    
+
     def start_day(self):
-        return datetime.date(year= self.start_time.year, 
-                             month= self.start_time.month, 
+        return datetime.date(year= self.start_time.year,
+                             month= self.start_time.month,
                              day= self.start_time.day)
 
     def __str__(self):
@@ -69,7 +69,7 @@ class HitGroupContent(models.Model):
     first_crawl         = models.ForeignKey(Crawl, blank=True, null=True)
 
 class HitGroupStatus(models.Model):
-    
+
     group_id            = models.CharField('Group ID', max_length=50, db_index=True)
     hits_available      = models.IntegerField('Hits Avaliable')
     page_number         = models.IntegerField('Page Number')
@@ -77,44 +77,44 @@ class HitGroupStatus(models.Model):
     hit_expiration_date = models.DateTimeField('Hit expiration Date')
 
     hit_group_content = models.ForeignKey(HitGroupContent)
-    
+
     crawl               = models.ForeignKey(Crawl)
 
 class DayStats(models.Model):
-    
+
     date                = models.DateField('Date', db_index=True)
-    
+
     arrivals_reward     = models.FloatField('Arrivals Reward')
     arrivals_hits       = models.FloatField('Arrivals Hits')
     arrivals_projects   = models.FloatField('Arrivals Projects')
-    
+
     day_start_reward    = models.FloatField('Day Start Reward')
     day_start_hits     = models.FloatField('Day Start Hits')
     day_start_projects  = models.FloatField('Day Start Projects')
-    
+
     day_end_reward      = models.FloatField('Day End Reward')
     day_end_hits        = models.FloatField('Day End Hits')
-    day_end_projects    = models.FloatField('Day End Projects')        
-    
-    
+    day_end_projects    = models.FloatField('Day End Projects')
+
+
 class CrawlAgregates(models.Model):
-    
+
     reward              = models.FloatField()
     hits                = models.IntegerField()
     projects            = models.IntegerField()
     start_time          = models.DateTimeField(db_index=True)
-    
+
     crawl               = models.ForeignKey(Crawl)
-    
+
 class HitGroupFirstOccurences(models.Model):
-    
+
     requester_id        = models.CharField(max_length=50, db_index=True)
     group_id            = models.CharField(max_length=50, db_index=True)
     requester_name      = models.CharField(max_length=500)
     hits_available      = models.IntegerField()
     occurrence_date     = models.DateTimeField(db_index=True)
     reward              = models.FloatField()
-    
+
     crawl               = models.ForeignKey(Crawl)
     group_status        = models.ForeignKey(HitGroupStatus)
     group_content       = models.ForeignKey(HitGroupContent)

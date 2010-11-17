@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import psycopg2
-from psycopg2 import extensions
-from psycopg2.extras import DictCursor
+import logging
 
-import gevent
+from gevent import monkey
+monkey.patch_all()
 from gevent import socket
 
+import psycopg2
+from psycopg2 import extensions
 
-DB_CONF = {}
+from django.conf import settings
+
+
+
+log = logging.getLogger('crawler.db')
 
 
 def wait_callback(conn, timeout=None):
@@ -21,64 +26,53 @@ def wait_callback(conn, timeout=None):
         elif state == extensions.POLL_WRITE:
             socket.wait_write(conn.fileno(), timeout=timeout)
         else:
+            log.error('Psycopg2 driver error. Bad result')
             raise psycopg2.OperationalError(
                 "Bad result from poll: %r" % state)
 
+# make postgresql driver work the async way
 extensions.set_wait_callback(wait_callback)
 
 
-class DbPool(object):
-    def __init__(self, max_cached_connections=100):
-        self.connections = []
-        self.max_cached_connections = max_cached_connections
+class DB(object):
 
-    def get(self):
-        if self.connections:
-            conn = self.connections.pop()
-        else:
-            conn = psycopg2.connect(DB_CONF)
-        return conn
+    def __init__(self):
+        self.conn = psycopg2.connect('dbname=%s user=%s password=%s' % \
+            (settings.DATABASE_NAME, settings.DATABASE_USER, settings.DATABASE_PASSWORD))
+        self.curr = self.conn.cursor()
 
-    def free(self, conn):
-        try:
-            # just in case of junks
-            conn.rollback()
-        except:
-            pass
-        if len(self.connections) > self.max_cached_connections:
-            conn.close()
-        else:
-            self.connections.append(conn)
+    def is_hitgroup_new(self, group_id):
+        """Check if hitgroup with given ID already exists in db. Return True
+        if not, else False
+        """
+        self.curr.execute('''
+            SELECT 1 FROM main_hitgroupcontent WHERE group_id = %s
+        ''', (group_id, ))
+        # if len > 0, the group already exists in database
+        return not bool(len(self.curr.fetchone()))
 
-db_pool = DbPool()
+    def insert_hit_group_content(self, data):
+        self.curr.execute('''
+            INSERT INTO main_hitgroupcontent(
+                reward, description, title, requester_name, qualifications,
+                time_alloted, html, keywords, requester_id, group_id,
+                group_id_hashed, occurrence_date, first_crawl_id
+            )
+            VALUES (
+                %(reward)s, %(description)s, %(title)s, %(requester_name)s,
+                %(qualifications)s, %(time_alloted)s, %(html)s, %(keywords)s,
+                %(requester_id)s, %(group_id)s, %(group_id_hashed)s,
+                %(occurrence_date)s, %(first_crawl_id)s
+            )''', data)
 
-def _fetch(sql_query):
-    q = sql_query
-    conn = db_pool.get()
-    cursor = conn.cursor(cursor_factory=DictCursor)
-    try:
-        cursor.execute(q.sql, q.params)
-        r = getattr(cursor, q.result_action)()
-        q.result = r
-    except:
-        conn.rollback()
-        raise
-    finally:
-        if q.auto_commit:
-            conn.commit()
-        cursor.close()
-        db_pool.free(conn)
-    return q
-
-def fetch(*queries):
-    """Multi DB fetch"""
-    workers = []
-    for sql_query in queries:
-        workers.append(gevent.spawn(_fetch, sql_query))
-    gevent.joinall(workers)
-    results = {}
-    for worker in workers:
-        if worker.value.name in results:
-            raise NameError("SQLQeury name duplicate: %s" % worker.value.name)
-        results[worker.value.name] = worker.value.result
-    return results
+    def insert_hit_group_status(self, data):
+        self.curr.execute('''
+            INSERT INTO main_hitgroupstatus (
+                crawl_id, inpage_position, hit_group_content_id, page_number,
+                group_id, hits_available, hit_expiration_date
+            )
+            VALUES (
+                %(crawl_id)s, %(inpage_position)s, %(hit_group_content_id)s,
+                %(page_number)s, %(group_id)s, %(hits_available)s,
+                %(hit_expiration_date)s
+            )''', data)
