@@ -35,7 +35,7 @@ class Command(BaseCommand):
         logging.basicConfig(filename='/tmp/mturk_crawler.log', level=logging.DEBUG)
 
     def handle(self, *args, **options):
-        start_time = time.time()
+        _start_time = time.time()
         self.setup_logging()
         pid = Pid('mturk_crawler', True)
         log.info('crawler started: %s;;%s', args, options)
@@ -80,7 +80,8 @@ class Command(BaseCommand):
         log.debug('global database commit')
         dbpool.commit()
         dbpool.close()
-        work_time = start_time - time.time()
+        work_time = time.time() - _start_time
+        log.info('processed objects: %s', len(hits))
         log.info('done: %.2f', work_time)
 
     def fetch_hits_list(self):
