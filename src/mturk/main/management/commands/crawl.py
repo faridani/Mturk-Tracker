@@ -63,7 +63,8 @@ class Command(BaseCommand):
         # manage database connections here - should be one for each
         # task working at the same time
         groups_downloaded = 0
-        for hg_pack in self.hits_iter():
+        hitgroups_iter = self.hits_iter(groups_available)
+        for hg_pack in hitgroups_iter:
             groups_downloaded += len(hg_pack)
             jobs = [gevent.spawn(process_group, hg, crawl.id) for hg in hg_pack]
             log.debug('processing pack of hitgroups objects')
@@ -74,6 +75,10 @@ class Command(BaseCommand):
                     log.error('Killing job: %s', job)
                     groups_downloaded -= 1
                     job.kill()
+
+            # amazon does not like too many requests at once, so give them a
+            # quick rest...
+            gevent.sleep(1)
 
         dbpool.closeall()
 
@@ -88,13 +93,17 @@ class Command(BaseCommand):
                 groups_downloaded, groups_available)
         log.info('done: %.2fsec', work_time)
 
-    def hits_iter(self):
+    def hits_iter(self, max_hitgroups=None):
         """Hits group lists generator.
 
         As long as available, return lists of parsed hits group. Because this
         method is using concurent download, number of returned elements on
         each list cannot be greater that maximum number of workers.
+
+        If max_hitgroups is given, break after fetching at least given number
+        of hitgroup informations.
         """
+        fetched_hgs = 0
         counter = count(1, self.maxworkers)
         for i in counter:
             jobs =[gevent.spawn(tasks.hits_groups_info, page_nr) \
@@ -102,16 +111,18 @@ class Command(BaseCommand):
             gevent.joinall(jobs)
 
             # get data from completed tasks & remove empty results
-            hits = []
+            hgs = []
             for job in jobs:
                 if job.value:
-                    hits.extend(job.value)
+                    hgs.extend(job.value)
+
+            fetched_hgs += len(hgs)
 
             # if no data was returned, end - previous page was probably the
             # last one with results
-            if not hits:
+            if not hgs or (max_hitgroups and fetched_hgs > max_hitgroups):
                 break
-            yield hits
+            yield hgs
 
 
 def count(firstval=0, step=1):
