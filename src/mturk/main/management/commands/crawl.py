@@ -21,7 +21,7 @@ from django.core.management.base import BaseCommand
 from tenclouds.pid import Pid
 from crawler import tasks
 from crawler.db import dbpool, DB
-from main.models import Crawl
+from mturk.main.models import Crawl
 
 
 log = logging.getLogger('crawl')

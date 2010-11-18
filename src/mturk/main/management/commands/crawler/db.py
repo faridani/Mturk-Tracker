@@ -24,10 +24,8 @@ def wait_callback(conn, timeout=None):
         if state == extensions.POLL_OK:
             return
         elif state == extensions.POLL_READ:
-            log.debug('wait read')
             socket.wait_read(conn.fileno(), timeout=timeout)
         elif state == extensions.POLL_WRITE:
-            log.debug('wait write')
             socket.wait_write(conn.fileno(), timeout=timeout)
         else:
             log.error('Psycopg2 driver error. Bad result')
