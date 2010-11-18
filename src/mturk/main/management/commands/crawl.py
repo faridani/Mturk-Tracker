@@ -118,7 +118,7 @@ def count(firstval=0, step=1):
         yield firstval
         firstval += step
 
-def process_group(conn, hg, crawl):
+def process_group(hg, crawl):
     """Gevent worker that should process single hitgroup.
 
     This should write some data into database and do not return any important
