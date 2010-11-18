@@ -44,6 +44,7 @@ class DBPool(object):
             conn = self._connections.pop()
         else:
             conn = DB()
+            log.debug('creating new database connection proxy: %s', conn)
         self._given.append(conn)
         return conn
 
@@ -57,6 +58,11 @@ class DBPool(object):
     def commit(self):
         for conn in self._connections:
             conn.commit()
+
+    def close(self):
+        self.free_all_connections_given()
+        for conn in self._connections:
+            conn.close()
 
 
 class DB(object):
@@ -106,3 +112,9 @@ class DB(object):
 
     def commit(self):
         self.conn.commit()
+        self.curr.close()
+        self.curr = self.conn.cursor()
+
+    def close(self):
+        self.curr.close()
+        self.conn.close()
