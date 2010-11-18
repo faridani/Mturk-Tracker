@@ -79,8 +79,10 @@ class Command(BaseCommand):
         crawl.save()
 
         work_time = time.time() - _start_time
-        log.info('processed objects: %s', groups_downloaded)
-        log.info('done: %.2f', work_time)
+        log.info('crawl: %s', crawl.id)
+        log.info('processed hits groups: %s/%s',
+                groups_downloaded, groups_available)
+        log.info('done: %.2fsec', work_time)
 
     def hits_iter(self):
         counter = count(1, self.maxworkers)
@@ -119,14 +121,15 @@ def process_group(hg, crawl_id):
     hg['keywords'] = ', '.join(hg['keywords'])
     # for those hit goups that does not contain hash group, create one and
     # setup apropiate flag
-    hg['group_id_hashed'] = bool(hg.get('group_id', None))
-    if not hg['group_id_hashed']:
+    hg['group_id_hashed'] = not bool(hg.get('group_id', None))
+    if hg['group_id_hashed']:
         composition = ';'.join(map(str, (
             hg['title'], hg['requester_id'], hg['time_alloted'],
             hg['reward'], hg['description'], hg['keywords'],
             hg['qualifications']))) + ';'
         hg['group_id'] = hashlib.md5(composition).hexdigest()
-        log.debug('group_id not found, creating hash: %s', hg['group_id'])
+        log.debug('group_id not found, creating hash: %s  %s',
+                hg['group_id'], composition)
 
     hit_group_content_id = db.hit_group_content_id(hg['group_id'])
     if hit_group_content_id is None:
