@@ -77,17 +77,14 @@ class Command(BaseCommand):
                         log.error('Killing job: %s', job)
                         job.kill()
 
-                dbpool.close_all()
+                dbpool.free_all_connections_given()
                 jobs = []
 
         log.debug('processing last pack of hitgroups objects')
         [j.start() for j in jobs]
         gevent.joinall(jobs)
         dbpool.free_all_connections_given()
-        # commit on each database connection
-        log.debug('global database commit')
-        dbpool.commit_all()
-        dbpool.close_all()
+
         work_time = time.time() - _start_time
         log.info('processed objects: %s', len(hits))
         log.info('done: %.2f', work_time)

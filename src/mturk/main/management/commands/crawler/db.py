@@ -18,6 +18,7 @@ log = logging.getLogger('crawler.db')
 
 def wait_callback(conn, timeout=None):
     while True:
+        log.debug('waiting for poll status info')
         state = conn.poll()
         if state == extensions.POLL_OK:
             return
@@ -37,34 +38,15 @@ extensions.set_wait_callback(wait_callback)
 class DBPool(object):
     def __init__(self):
         self._connections = []
-        self._given = []
 
     def get(self):
-        if self._connections:
-            conn = self._connections.pop()
-        else:
-            conn = DB()
-            log.debug('creating new database connection proxy: %s', conn)
-        self._given.append(conn)
+        conn = DB()
+        self._connections.append(conn)
         return conn
 
-    def free(self, conn):
-        self.connections.append(conn)
-
     def free_all_connections_given(self):
-        self._connections.extend(self._given)
-        self._given = []
-
-    def commit_all(self):
         for conn in self._connections:
-            conn.commit()
-
-    def close_all(self):
-        self.free_all_connections_given()
-        for conn in self._connections:
-            conn.rollback()
             conn.close()
-        self._connections = []
 
 
 class DB(object):
