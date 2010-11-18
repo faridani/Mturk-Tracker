@@ -55,10 +55,11 @@ class DB(object):
                 %(success)s, %(start_time)s, %(end_time)s,
                 %(groups_downloaded)s, %(groups_available)s,
                 %(hits_downloaded)s, %(hits_available)s
+            )
         ''', data)
         # this is inside transaction, so it's quite cool
-        self.curr.execute('SELECT id FROM main_crawl ORDER BY id ASC LIMIT 1')
-        return self.curr.execute()[0]
+        self.curr.execute('SELECT MAX(id) FROM main_crawl')
+        return self.curr.fetchone()[0]
 
     def hit_group_content_id(self, group_id):
         """Return hitgroup content object id related to given group or None if
