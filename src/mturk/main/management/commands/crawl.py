@@ -69,7 +69,13 @@ class Command(BaseCommand):
             jobs.append(gevent.spawn(process_group, db, hg, crawl))
             if len(jobs) >= self.maxworkers:
                 log.debug('processing pack of hitgroups objects')
-                gevent.joinall(jobs)
+                gevent.joinall(jobs, timeout=20)
+                # check if all jobs ended successfully
+                for job in jobs:
+                    if not job.ready():
+                        log.error('Killing job: %s', job)
+                        job.kill()
+
                 dbpool.free_all_connections_given()
                 jobs = []
 

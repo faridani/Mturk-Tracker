@@ -10,14 +10,12 @@ import urllib2
 import parser
 
 
-MAX_DATA = 1024 * 1024 * 8
-
 log = logging.getLogger('crawler.tasks')
 
 
 def _get_html(url):
-    """Get page code using given url. Fetch at most MAX_DATA of data"""
-    return urllib2.urlopen(url).read(MAX_DATA)
+    """Get page code using given url."""
+    return urllib2.urlopen(url).read()
 
 def hitsearch_url(page=1):
     return 'https://www.mturk.com/mturk/viewhits?searchWords=&selectedSearchType=hitgroups&sortType=LastUpdatedTime:1&pageNumber=' + str(page) + '&searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23!%23!LastUpdatedTime!1!%23!'
@@ -63,6 +61,7 @@ def hits_group_info(group_id):
         log.info('iframe src attribute not found: %s', url)
         data['html'] = ''
     else:
+        log.debug('fetching iframe source: %s;;%s', url, iframe_src)
         data['html'] = _get_html(iframe_src)
     return data
 
