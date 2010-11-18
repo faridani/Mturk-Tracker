@@ -3,12 +3,15 @@
 from gevent import monkey
 monkey.patch_all()
 
+import logging
 import urllib2
 
 import parser
 
 
 MAX_DATA = 1024 * 1024 * 8
+
+log = logging.getLogger('crawler.tasks')
 
 
 def _get_html(url):
@@ -30,13 +33,19 @@ def hits_mainpage_total():
     html = _get_html(url)
     return parser.hits_mainpage(html)
 
-def hits_groups_info(page_nr):
+def hits_groups_info(page_nr, retry_if_empty=True):
     """Return info about every hits group from given page number"""
     url = hitsearch_url(page_nr)
     html = _get_html(url)
     rows = []
-    for info in parser.hits_group_listinfo(html):
-        rows.append((page_nr, info))
+    for n, info in enumerate(parser.hits_group_listinfo(html)):
+        info['page_number'] = page_nr
+        info['inpage_position'] = n + 1
+        rows.append(info)
+    log.debug('hits_groups_info done: %s;;%s', page_nr, len(rows))
+    if not rows and retry_if_empty:
+        log.debug('fetch & parsing retry: %s', page_nr)
+        return hits_groups_info(page_nr, False)
     return rows
 
 def hits_group_info(group_id):
@@ -45,7 +54,14 @@ def hits_group_info(group_id):
     html = _get_html(url)
     data = parser.hits_group_details(html)
     # additional fetch of example task
-    data['html'] = _get_html(data['iframe_src'])
+    iframe_src = data.get('iframe_src', None)
+    if iframe_src is None:
+        # if iframe_src url does not exist, we cannot fetch html and because
+        # of that, return empty string
+        log.info('iframe src attribute not found: %s', url)
+        data['html'] = ''
+    else:
+        data['html'] = _get_html(iframe_src)
     return data
 
 def hits_groups_total():

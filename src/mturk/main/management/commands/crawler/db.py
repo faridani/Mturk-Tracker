@@ -34,22 +34,49 @@ def wait_callback(conn, timeout=None):
 extensions.set_wait_callback(wait_callback)
 
 
-class DB(object):
+class DBPool(object):
+    def __init__(self):
+        self._connections = []
+        self._given = []
 
+    def get(self):
+        if self._connections:
+            conn = self._connections.pop()
+        else:
+            conn = DB()
+        self._given.append(conn)
+        return conn
+
+    def free(self, conn):
+        self.connections.append(conn)
+
+    def free_all_connections_given(self):
+        self._connections.extend(self._given)
+        self._given = []
+
+    def commit(self):
+        for conn in self._connections:
+            conn.commit()
+
+
+class DB(object):
     def __init__(self):
         self.conn = psycopg2.connect('dbname=%s user=%s password=%s' % \
             (settings.DATABASE_NAME, settings.DATABASE_USER, settings.DATABASE_PASSWORD))
         self.curr = self.conn.cursor()
 
-    def is_hitgroup_new(self, group_id):
-        """Check if hitgroup with given ID already exists in db. Return True
-        if not, else False
+    def hit_group_content_id(self, group_id):
+        """Return hitgroup content object id related to given group or None if
+        does not exists
         """
         self.curr.execute('''
-            SELECT 1 FROM main_hitgroupcontent WHERE group_id = %s
+            SELECT id FROM main_hitgroupcontent WHERE group_id = %s
         ''', (group_id, ))
         # if len > 0, the group already exists in database
-        return not bool(len(self.curr.fetchone()))
+        result = self.curr.fetchone()
+        if result is None:
+            return result
+        return result[0]
 
     def insert_hit_group_content(self, data):
         self.curr.execute('''
@@ -76,3 +103,6 @@ class DB(object):
                 %(page_number)s, %(group_id)s, %(hits_available)s,
                 %(hit_expiration_date)s
             )''', data)
+
+    def commit(self):
+        self.conn.commit()

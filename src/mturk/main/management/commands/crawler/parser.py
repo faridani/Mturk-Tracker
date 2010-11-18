@@ -44,7 +44,7 @@ _RX_HITS_LIST = \
         <td[^>]*>
             \s*?
                 <a[^>]*requesterId=(?P<requester_id>.*?)(&|")[^>]*>
-                    (?P<requester>.*?)
+                    (?P<requester_name>.*?)
                 </a>
             \s*?
         </td>
@@ -53,7 +53,7 @@ _RX_HITS_LIST = \
         HIT\s+Expiration\s+Date
         .*?
         <td[^>]*>
-            (?P<expiration_date>[^&]*)
+            (?P<hit_expiration_date>[^&]*)
         &
 
         .*?
@@ -196,8 +196,8 @@ def hits_group_listinfo(html):
 
         # make parse result more polite and convert to python objects
         res['reward'] = float(res['reward'])
-        res['expiration_date'] = datetime.datetime.strptime(
-                res['expiration_date'], '%b %d, %Y')
+        res['hit_expiration_date'] = datetime.datetime.strptime(
+                res['hit_expiration_date'], '%b %d, %Y')
         res['hits_available'] = int(res['hits_available'])
         res['keywords'] = _RX_HITS_LIST_KEYWORDS.findall(res['keywords'])
         qualifications = _RX_HITS_LIST_QUALIFICATIONS.findall( res['qualifications'])
