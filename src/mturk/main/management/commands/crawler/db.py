@@ -45,6 +45,21 @@ class DB(object):
         self.conn = conn
         self.curr = self.conn.cursor()
 
+    def insert_crawl(self, data):
+        """Insert crawl into database and return it's id"""
+        self.curr.execute('''
+            INSERT INTO main_crawl(
+                errors, success, start_time, end_time, groups_downloaded,
+                groups_available, hits_downloaded, hits_available
+            ) VALUES(
+                %(errors)s, %(success)s, %(start_time)s, %(end_time)s,
+                %(groups_downloaded)s, %(groups_available)s,
+                %(hits_downloaded)s, %(hits_available)s
+        ''', data)
+        # this is inside transaction, so it's quite cool
+        self.curr.execute('SELECT id FROM main_crawl ORDER BY id ASC LIMIT 1')
+        return self.curr.execute()[0]
+
     def hit_group_content_id(self, group_id):
         """Return hitgroup content object id related to given group or None if
         does not exists

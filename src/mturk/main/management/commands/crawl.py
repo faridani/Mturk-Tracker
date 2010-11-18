@@ -19,9 +19,9 @@ import gevent
 from django.core.management.base import BaseCommand
 
 from tenclouds.pid import Pid
-from mturk.main.models import Crawl
 from crawler import tasks
 from crawler.db import dbpool, DB
+
 
 log = logging.getLogger('crawl')
 
@@ -49,21 +49,25 @@ class Command(BaseCommand):
         log.debug('hit groups info fetched: %s', len(hits))
 
         # create crawl object that will be filled with data later
-        crawl = Crawl.objects.create(
+        conn = dbpool.getconn()
+        db = DB(conn)
+        crawl_id = db.insert_crawl(dict(
                 start_time=start_time,
                 end_time=datetime.datetime.now(),
                 success=True,
                 hits_available=hits_available,
                 hits_downloaded=0,
                 groups_available=groups_available,
-                groups_downloaded=len(hits))
-        log.debug('fresh crawl object created: %s', crawl.id)
+                groups_downloaded=len(hits)))
+        conn.commit()
+        dbpool.putconn(conn)
+        log.debug('fresh crawl object created: %s', crawl_id)
 
         # manage database connections here - should be one for each
         # task working at the same time
         jobs = []
         for hg in hits:
-            jobs.append(gevent.Greenlet(process_group, hg, crawl))
+            jobs.append(gevent.Greenlet(process_group, hg, crawl_id))
             if len(jobs) < self.maxworkers:
                 continue
 
@@ -118,7 +122,7 @@ def count(firstval=0, step=1):
         yield firstval
         firstval += step
 
-def process_group(hg, crawl):
+def process_group(hg, crawl_id):
     """Gevent worker that should process single hitgroup.
 
     This should write some data into database and do not return any important
@@ -142,17 +146,16 @@ def process_group(hg, crawl):
     if hit_group_content_id is None:
         # fresh hitgroup - create group content entry, but first add some data
         # required by hitgroup content table
-        hg['occurrence_date'] = crawl.start_time
-        hg['first_crawl_id'] = crawl.id
+        hg['occurrence_date'] = datetime.datetime.now()
+        hg['first_crawl_id'] = crawl_id
         hg.update(tasks.hits_group_info(hg['group_id']))
-        hg['fist_crawl_id'] = crawl.id
         db.insert_hit_group_content(hg)
         hit_group_content_id = db.hit_group_content_id(hg['group_id'])
         log.info('new hit group content: %s;;%s',
                 hit_group_content_id, hg['group_id'])
 
     hg['hit_group_content_id'] = hit_group_content_id
-    hg['crawl_id'] = crawl.id
+    hg['crawl_id'] = crawl_id
     db.insert_hit_group_status(hg)
     conn.commit()
     dbpool.putconn(conn)
