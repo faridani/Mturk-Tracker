@@ -21,6 +21,7 @@ from django.core.management.base import BaseCommand
 from tenclouds.pid import Pid
 from crawler import tasks
 from crawler.db import dbpool, DB
+from main.models import Crawl
 
 
 log = logging.getLogger('crawl')
@@ -28,7 +29,7 @@ log = logging.getLogger('crawl')
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-            make_option('--workers', dest='workers', type='int', default=5),
+            make_option('--workers', dest='workers', type='int', default=3),
     )
 
     def setup_logging(self):
@@ -46,28 +47,24 @@ class Command(BaseCommand):
         groups_available = tasks.hits_groups_total()
 
         # create crawl object that will be filled with data later
-        conn = dbpool.getconn()
-        db = DB(conn)
-        crawl_id = db.insert_crawl(dict(
+        crawl = Crawl.objects.create(
                 start_time=start_time,
                 end_time=datetime.datetime.now(),
                 success=True,
                 hits_available=hits_available,
                 hits_downloaded=0,
                 groups_available=groups_available,
-                groups_downloaded=hits_available))
-        conn.commit()
-        dbpool.putconn(conn)
-        log.debug('fresh crawl object created: %s', crawl_id)
+                groups_downloaded=hits_available)
+        log.debug('fresh crawl object created: %s', crawl.id)
 
         # manage database connections here - should be one for each
         # task working at the same time
         groups_downloaded = 0
         for hg_pack in self.hits_iter():
             groups_downloaded += len(hg_pack)
-            jobs = [gevent.spawn(process_group, hg, crawl_id) for hg in hg_pack]
+            jobs = [gevent.spawn(process_group, hg, crawl.id) for hg in hg_pack]
             log.debug('processing pack of hitgroups objects')
-            gevent.joinall(jobs, timeout=20)
+            gevent.joinall(jobs, timeout=15)
             # check if all jobs ended successfully
             for job in jobs:
                 if not job.ready():
@@ -76,8 +73,12 @@ class Command(BaseCommand):
 
         dbpool.closeall()
 
+        # update crawler object
+        crawl.groups_downloaded = groups_downloaded
+        crawl.end_time = datetime.datetime.now()
+        crawl.save()
+
         work_time = time.time() - _start_time
-        # TODO - update crawler object
         log.info('processed objects: %s', groups_downloaded)
         log.info('done: %.2f', work_time)
 
@@ -99,6 +100,7 @@ class Command(BaseCommand):
             if not hits:
                 break
             yield hits
+
 
 def count(firstval=0, step=1):
     "Port of itertools.count from python2.7"

@@ -38,7 +38,7 @@ def wait_callback(conn, timeout=None):
 extensions.set_wait_callback(wait_callback)
 
 
-dbpool = ThreadedConnectionPool(5, 20, 'dbname=%s user=%s password=%s' % \
+dbpool = ThreadedConnectionPool(10, 80, 'dbname=%s user=%s password=%s' % \
     (settings.DATABASE_NAME, settings.DATABASE_USER, settings.DATABASE_PASSWORD))
 
 
@@ -47,23 +47,6 @@ class DB(object):
         self.tid = thread.get_ident()
         self.conn = conn
         self.curr = self.conn.cursor()
-
-    def insert_crawl(self, data):
-        """Insert crawl into database and return it's id"""
-        assert self.tid == thread.get_ident()
-        self.curr.execute('''
-            INSERT INTO main_crawl(
-                success, start_time, end_time, groups_downloaded,
-                groups_available, hits_downloaded, hits_available
-            ) VALUES(
-                %(success)s, %(start_time)s, %(end_time)s,
-                %(groups_downloaded)s, %(groups_available)s,
-                %(hits_downloaded)s, %(hits_available)s
-            )
-        ''', data)
-        # this is inside transaction, so it's quite cool
-        self.curr.execute("SELECT currval('main_crawl_id_seq');")
-        return self.curr.fetchone()[0]
 
     def hit_group_content_id(self, group_id):
         """Return hitgroup content object id related to given group or None if
