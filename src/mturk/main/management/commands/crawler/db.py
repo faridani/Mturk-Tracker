@@ -5,7 +5,6 @@ import logging
 from gevent import monkey
 monkey.patch_all()
 from gevent import socket
-from gevent import thread
 
 import psycopg2
 from psycopg2 import extensions
@@ -42,7 +41,6 @@ dbpool = ThreadedConnectionPool(10, 80, 'dbname=%s user=%s password=%s' % \
 
 class DB(object):
     def __init__(self, conn):
-        self.tid = thread.get_ident()
         self.conn = conn
         self.curr = self.conn.cursor()
 
@@ -50,7 +48,6 @@ class DB(object):
         """Return hitgroup content object id related to given group or None if
         does not exists
         """
-        assert self.tid == thread.get_ident()
         self.curr.execute('''
             SELECT id FROM main_hitgroupcontent WHERE group_id = %s LIMIT 1
         ''', (group_id, ))
@@ -61,7 +58,7 @@ class DB(object):
         return result[0]
 
     def insert_hit_group_content(self, data):
-        assert self.tid == thread.get_ident()
+        """Insert row into main_hitgroupcontent table"""
         self.curr.execute('''
             INSERT INTO main_hitgroupcontent(
                 reward, description, title, requester_name, qualifications,
@@ -76,7 +73,7 @@ class DB(object):
             )''', data)
 
     def insert_hit_group_status(self, data):
-        assert self.tid == thread.get_ident()
+        """Insert row into main_hitgroupstatus row"""
         self.curr.execute('''
             INSERT INTO main_hitgroupstatus (
                 crawl_id, inpage_position, hit_group_content_id, page_number,
