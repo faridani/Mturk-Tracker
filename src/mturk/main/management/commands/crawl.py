@@ -45,9 +45,6 @@ class Command(BaseCommand):
         hits_available = tasks.hits_mainpage_total()
         groups_available = tasks.hits_groups_total()
 
-        hits = self.fetch_hits_list()
-        log.debug('hit groups info fetched: %s', len(hits))
-
         # create crawl object that will be filled with data later
         conn = dbpool.getconn()
         db = DB(conn)
@@ -58,21 +55,18 @@ class Command(BaseCommand):
                 hits_available=hits_available,
                 hits_downloaded=0,
                 groups_available=groups_available,
-                groups_downloaded=len(hits)))
+                groups_downloaded=hits_available))
         conn.commit()
         dbpool.putconn(conn)
         log.debug('fresh crawl object created: %s', crawl_id)
 
         # manage database connections here - should be one for each
         # task working at the same time
-        jobs = []
-        for hg in hits:
-            jobs.append(gevent.Greenlet(process_group, hg, crawl_id))
-            if len(jobs) < self.maxworkers:
-                continue
-
+        groups_downloaded = 0
+        for hg_pack in self.hits_iter():
+            groups_downloaded += len(hg_pack)
+            jobs = [gevent.spawn(process_group, hg, crawl_id) for hg in hg_pack]
             log.debug('processing pack of hitgroups objects')
-            [j.start() for j in jobs]
             gevent.joinall(jobs, timeout=20)
             # check if all jobs ended successfully
             for job in jobs:
@@ -80,41 +74,31 @@ class Command(BaseCommand):
                     log.error('Killing job: %s', job)
                     job.kill()
 
-            jobs = []
-
-        log.debug('processing last pack of hitgroups objects')
-        [j.start() for j in jobs]
-        gevent.joinall(jobs)
         dbpool.closeall()
 
         work_time = time.time() - _start_time
-        log.info('processed objects: %s', len(hits))
+        # TODO - update crawler object
+        log.info('processed objects: %s', groups_downloaded)
         log.info('done: %.2f', work_time)
 
-    def fetch_hits_list(self):
-        hits = []
-
+    def hits_iter(self):
         counter = count(1, self.maxworkers)
         for i in counter:
-            jobs = []
-            for page_nr in range(i, i + self.maxworkers):
-                jobs.append(gevent.Greenlet(tasks.hits_groups_info, page_nr))
-            [j.start() for j in jobs]
+            jobs =[gevent.spawn(tasks.hits_groups_info, page_nr) \
+                        for page_nr in range(i, i + self.maxworkers)]
             gevent.joinall(jobs)
 
             # get data from completed tasks & remove empty results
-            data = []
+            hits = []
             for job in jobs:
                 if job.value:
-                    data.extend(job.value)
+                    hits.extend(job.value)
 
             # if no data was returned, end - previous page was probably the
             # last one with results
-            if not data:
+            if not hits:
                 break
-            hits.extend(data)
-
-        return hits
+            yield hits
 
 def count(firstval=0, step=1):
     "Port of itertools.count from python2.7"
