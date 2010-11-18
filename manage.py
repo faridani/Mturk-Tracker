@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 
+
 if __name__ == "__main__":
     import os
     import sys
+
+    # if it's crawl script - monkeypatch!
+    if 'crawl' in sys.argv:
+        from gevent import monkey
+        monkey.patch_all()
 
     my_path = os.path.dirname(os.path.abspath(__file__))
 

@@ -21,7 +21,7 @@ from django.core.management.base import BaseCommand
 from tenclouds.pid import Pid
 from mturk.main.models import Crawl
 from crawler import tasks
-from crawler.db import DB
+from crawler.db import dbpool, DB
 
 log = logging.getLogger('crawl')
 
@@ -123,7 +123,7 @@ def process_group(hg, crawl):
     This should write some data into database and do not return any important
     data.
     """
-    db = DB()
+    db = DB(dbpool.getconn())
     hg['keywords'] = ', '.join(hg['keywords'])
     # for those hit goups that does not contain hash group, create one and
     # setup apropiate flag

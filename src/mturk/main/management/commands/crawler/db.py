@@ -8,6 +8,7 @@ from gevent import socket
 
 import psycopg2
 from psycopg2 import extensions
+from psycopg2.pool import ThreadedConnectionPool
 
 from django.conf import settings
 
@@ -35,10 +36,13 @@ def wait_callback(conn, timeout=None):
 extensions.set_wait_callback(wait_callback)
 
 
+dbpool = ThreadedConnectionPool(5, 20, 'dbname=%s user=%s password=%s' % \
+    (settings.DATABASE_NAME, settings.DATABASE_USER, settings.DATABASE_PASSWORD))
+
+
 class DB(object):
-    def __init__(self):
-        self.conn = psycopg2.connect('dbname=%s user=%s password=%s' % \
-            (settings.DATABASE_NAME, settings.DATABASE_USER, settings.DATABASE_PASSWORD))
+    def __init__(self, conn):
+        self.conn = conn
         self.curr = self.conn.cursor()
 
     def hit_group_content_id(self, group_id):
@@ -46,7 +50,7 @@ class DB(object):
         does not exists
         """
         self.curr.execute('''
-            SELECT id FROM main_hitgroupcontent WHERE group_id = %s
+            SELECT id FROM main_hitgroupcontent WHERE group_id = %s LIMIT 1
         ''', (group_id, ))
         # if len > 0, the group already exists in database
         result = self.curr.fetchone()
