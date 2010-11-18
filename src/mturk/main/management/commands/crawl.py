@@ -21,7 +21,7 @@ from django.core.management.base import BaseCommand
 from tenclouds.pid import Pid
 from mturk.main.models import Crawl
 from crawler import tasks
-from crawler.db import DBPool
+from crawler.db import DB
 
 log = logging.getLogger('crawl')
 
@@ -61,29 +61,26 @@ class Command(BaseCommand):
 
         # manage database connections here - should be one for each
         # task working at the same time
-        dbpool = DBPool()
-
         jobs = []
         for hg in hits:
-            db = dbpool.get()
-            jobs.append(gevent.Greenlet(process_group, db, hg, crawl))
-            if len(jobs) >= self.maxworkers:
-                log.debug('processing pack of hitgroups objects')
-                [j.start() for j in jobs]
-                gevent.joinall(jobs, timeout=20)
-                # check if all jobs ended successfully
-                for job in jobs:
-                    if not job.ready():
-                        log.error('Killing job: %s', job)
-                        job.kill()
+            jobs.append(gevent.Greenlet(process_group, hg, crawl))
+            if len(jobs) < self.maxworkers:
+                continue
 
-                dbpool.free_all_connections_given()
-                jobs = []
+            log.debug('processing pack of hitgroups objects')
+            [j.start() for j in jobs]
+            gevent.joinall(jobs, timeout=20)
+            # check if all jobs ended successfully
+            for job in jobs:
+                if not job.ready():
+                    log.error('Killing job: %s', job)
+                    job.kill()
+
+            jobs = []
 
         log.debug('processing last pack of hitgroups objects')
         [j.start() for j in jobs]
         gevent.joinall(jobs)
-        dbpool.free_all_connections_given()
 
         work_time = time.time() - _start_time
         log.info('processed objects: %s', len(hits))
@@ -120,12 +117,13 @@ def count(firstval=0, step=1):
         yield firstval
         firstval += step
 
-def process_group(db, hg, crawl):
+def process_group(hg, crawl):
     """Gevent worker that should process single hitgroup.
 
     This should write some data into database and do not return any important
     data.
     """
+    db = DB()
     hg['keywords'] = ', '.join(hg['keywords'])
     # for those hit goups that does not contain hash group, create one and
     # setup apropiate flag
@@ -154,4 +152,4 @@ def process_group(db, hg, crawl):
     hg['hit_group_content_id'] = hit_group_content_id
     hg['crawl_id'] = crawl.id
     db.insert_hit_group_status(hg)
-    db.commit()
+    db.commit_close()

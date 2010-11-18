@@ -35,20 +35,6 @@ def wait_callback(conn, timeout=None):
 extensions.set_wait_callback(wait_callback)
 
 
-class DBPool(object):
-    def __init__(self):
-        self._connections = []
-
-    def get(self):
-        conn = DB()
-        self._connections.append(conn)
-        return conn
-
-    def free_all_connections_given(self):
-        for conn in self._connections:
-            conn.close()
-
-
 class DB(object):
     def __init__(self):
         self.conn = psycopg2.connect('dbname=%s user=%s password=%s' % \
@@ -94,16 +80,7 @@ class DB(object):
                 %(hit_expiration_date)s
             )''', data)
 
-    def commit(self):
+    def commit_close(self):
         self.conn.commit()
         self.curr.close()
-        self.curr = self.conn.cursor()
-
-    def close(self):
-        self.curr.close()
         self.conn.close()
-
-    def rollback(self):
-        self.conn.rollback()
-        self.curr.close()
-        self.curr = self.conn.cursor()
