@@ -49,10 +49,10 @@ class DB(object):
         """Insert crawl into database and return it's id"""
         self.curr.execute('''
             INSERT INTO main_crawl(
-                errors, success, start_time, end_time, groups_downloaded,
+                success, start_time, end_time, groups_downloaded,
                 groups_available, hits_downloaded, hits_available
             ) VALUES(
-                %(errors)s, %(success)s, %(start_time)s, %(end_time)s,
+                %(success)s, %(start_time)s, %(end_time)s,
                 %(groups_downloaded)s, %(groups_available)s,
                 %(hits_downloaded)s, %(hits_available)s
         ''', data)
