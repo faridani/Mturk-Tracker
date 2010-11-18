@@ -2,6 +2,7 @@
 
 from gevent import monkey
 monkey.patch_all()
+import gevent
 
 import logging
 import urllib2
@@ -45,6 +46,7 @@ def hits_groups_info(page_nr, retry_if_empty=True):
     log.debug('hits_groups_info done: %s;;%s', page_nr, len(rows))
     if not rows and retry_if_empty:
         log.debug('fetch & parsing retry: %s', page_nr)
+        gevent.sleep(2)
         return hits_groups_info(page_nr, False)
     return rows
 
