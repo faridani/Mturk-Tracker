@@ -5,6 +5,7 @@ import logging
 from gevent import monkey
 monkey.patch_all()
 from gevent import socket
+from gevent import thread
 
 import psycopg2
 from psycopg2 import extensions
@@ -19,7 +20,6 @@ log = logging.getLogger('crawler.db')
 
 def wait_callback(conn, timeout=None):
     while True:
-        log.debug('waiting for poll status info')
         state = conn.poll()
         if state == extensions.POLL_OK:
             return
@@ -42,11 +42,13 @@ dbpool = ThreadedConnectionPool(5, 20, 'dbname=%s user=%s password=%s' % \
 
 class DB(object):
     def __init__(self, conn):
+        self.tid = thread.get_ident()
         self.conn = conn
         self.curr = self.conn.cursor()
 
     def insert_crawl(self, data):
         """Insert crawl into database and return it's id"""
+        assert self.tid == thread.get_ident()
         self.curr.execute('''
             INSERT INTO main_crawl(
                 success, start_time, end_time, groups_downloaded,
@@ -58,13 +60,14 @@ class DB(object):
             )
         ''', data)
         # this is inside transaction, so it's quite cool
-        self.curr.execute('SELECT MAX(id) FROM main_crawl')
+        self.curr.execute("SELECT currval('main_crawl_id_seq');")
         return self.curr.fetchone()[0]
 
     def hit_group_content_id(self, group_id):
         """Return hitgroup content object id related to given group or None if
         does not exists
         """
+        assert self.tid == thread.get_ident()
         self.curr.execute('''
             SELECT id FROM main_hitgroupcontent WHERE group_id = %s LIMIT 1
         ''', (group_id, ))
@@ -75,6 +78,7 @@ class DB(object):
         return result[0]
 
     def insert_hit_group_content(self, data):
+        assert self.tid == thread.get_ident()
         self.curr.execute('''
             INSERT INTO main_hitgroupcontent(
                 reward, description, title, requester_name, qualifications,
@@ -89,6 +93,7 @@ class DB(object):
             )''', data)
 
     def insert_hit_group_status(self, data):
+        assert self.tid == thread.get_ident()
         self.curr.execute('''
             INSERT INTO main_hitgroupstatus (
                 crawl_id, inpage_position, hit_group_content_id, page_number,
