@@ -210,6 +210,7 @@ def hits_group_listinfo(html):
         yield res
 
 def hits_group_details(html):
+    """Get more details info about single group of hits"""
     rx = _RX_HITS_DETAILS.search(html)
     if not rx:
         log.info('hits group details not found')
@@ -219,6 +220,10 @@ def hits_group_details(html):
     return res
 
 def hits_group_total(html):
+    """Return total number of available hits groups.
+
+    This info is being fetched from first mturk search page (pagination info)
+    """
     rx = _RX_HITS_TOTALGROUPS.search(html, 1)
     if not rx:
         log.info('total hits groups number not found')

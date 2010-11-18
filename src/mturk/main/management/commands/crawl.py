@@ -33,6 +33,7 @@ class Command(BaseCommand):
     )
 
     def setup_logging(self):
+        "Basic setup for logging module"
         logging.basicConfig(filename='/tmp/mturk_crawler.log', level=logging.DEBUG)
 
     def handle(self, *args, **options):
@@ -41,6 +42,8 @@ class Command(BaseCommand):
         pid = Pid('mturk_crawler', True)
         log.info('crawler started: %s;;%s', args, options)
         self.maxworkers = options['workers']
+        if self.maxworkers > 9:
+            sys.exit('Too many workers (more than 9). Quit.')
         start_time = datetime.datetime.now()
 
         hits_available = tasks.hits_mainpage_total()
@@ -69,6 +72,7 @@ class Command(BaseCommand):
             for job in jobs:
                 if not job.ready():
                     log.error('Killing job: %s', job)
+                    groups_downloaded -= 1
                     job.kill()
 
         dbpool.closeall()
@@ -85,6 +89,12 @@ class Command(BaseCommand):
         log.info('done: %.2fsec', work_time)
 
     def hits_iter(self):
+        """Hits group lists generator.
+
+        As long as available, return lists of parsed hits group. Because this
+        method is using concurent download, number of returned elements on
+        each list cannot be greater that maximum number of workers.
+        """
         counter = count(1, self.maxworkers)
         for i in counter:
             jobs =[gevent.spawn(tasks.hits_groups_info, page_nr) \

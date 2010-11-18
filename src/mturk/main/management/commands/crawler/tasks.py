@@ -13,10 +13,12 @@ import parser
 log = logging.getLogger('crawler.tasks')
 
 
-def _get_html(url):
-    """Get page code using given url."""
+def _get_html(url, timeout=5):
+    """Get page code using given url. If server won't response in `timeout`
+    seconds, return empty string.
+    """
     try:
-        return urllib2.urlopen(url, timeout=5).read()
+        return urllib2.urlopen(url, timeout=timeout).read()
     except urllib2.URLError:
         log.error('timeout while fetching page: %s', url)
         return ''
@@ -48,7 +50,7 @@ def hits_groups_info(page_nr, retry_if_empty=True):
     log.debug('hits_groups_info done: %s;;%s', page_nr, len(rows))
     if not rows and retry_if_empty:
         log.debug('fetch & parsing retry spawn: %s', page_nr)
-        gevent.sleep(4)
+        gevent.sleep(5)
         return hits_groups_info(page_nr, False)
     return rows
 

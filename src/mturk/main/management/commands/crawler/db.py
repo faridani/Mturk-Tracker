@@ -35,11 +35,17 @@ def wait_callback(conn, timeout=None):
 extensions.set_wait_callback(wait_callback)
 
 
-dbpool = ThreadedConnectionPool(10, 80, 'dbname=%s user=%s password=%s' % \
+dbpool = ThreadedConnectionPool(10, 90, 'dbname=%s user=%s password=%s' % \
     (settings.DATABASE_NAME, settings.DATABASE_USER, settings.DATABASE_PASSWORD))
 
 
 class DB(object):
+    """Simple proxy for psycogp2 connection object that allow to easily insert
+    data into crawler tables.
+
+    Be aware, that this object does not manage connection itself - you have to
+    commit and close it by yourself.
+    """
     def __init__(self, conn):
         self.conn = conn
         self.curr = self.conn.cursor()
