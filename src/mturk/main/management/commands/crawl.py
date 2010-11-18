@@ -43,6 +43,15 @@ class Command(BaseCommand):
         log.info('crawler started: %s;;%s', args, options)
         self.maxworkers = options['workers']
         if self.maxworkers > 9:
+            # If you want to remote this limit, don't forget to change dbpool
+            # object maximum number of connections. Each worker should fetch
+            # 10 hitgroups and spawn single task for every one of them, that
+            # will get private connection instance. So for 9 workers it's
+            # already 9x10 = 90 connections required
+            #
+            # Also, for too many workers, amazon isn't returning valid data
+            # and retrying takes much longer than using smaller amount of
+            # workers
             sys.exit('Too many workers (more than 9). Quit.')
         start_time = datetime.datetime.now()
 
@@ -63,7 +72,7 @@ class Command(BaseCommand):
         # manage database connections here - should be one for each
         # task working at the same time
         groups_downloaded = 0
-        hitgroups_iter = self.hits_iter(groups_available)
+        hitgroups_iter = self.hits_iter()
         for hg_pack in hitgroups_iter:
             groups_downloaded += len(hg_pack)
             jobs = [gevent.spawn(process_group, hg, crawl.id) for hg in hg_pack]
@@ -88,22 +97,18 @@ class Command(BaseCommand):
         crawl.save()
 
         work_time = time.time() - _start_time
-        log.info('crawl: %s', crawl.id)
+        log.info('created crawl id: %s', crawl.id)
         log.info('processed hits groups: %s/%s',
                 groups_downloaded, groups_available)
-        log.info('done: %.2fsec', work_time)
+        log.info('work time: %.2fsec', work_time)
 
-    def hits_iter(self, max_hitgroups=None):
+    def hits_iter(self):
         """Hits group lists generator.
 
         As long as available, return lists of parsed hits group. Because this
         method is using concurent download, number of returned elements on
         each list cannot be greater that maximum number of workers.
-
-        If max_hitgroups is given, break after fetching at least given number
-        of hitgroup informations.
         """
-        fetched_hgs = 0
         counter = count(1, self.maxworkers)
         for i in counter:
             jobs =[gevent.spawn(tasks.hits_groups_info, page_nr) \
@@ -116,11 +121,9 @@ class Command(BaseCommand):
                 if job.value:
                     hgs.extend(job.value)
 
-            fetched_hgs += len(hgs)
-
             # if no data was returned, end - previous page was probably the
             # last one with results
-            if not hgs or (max_hitgroups and fetched_hgs > max_hitgroups):
+            if not hgs:
                 break
             yield hgs
 
