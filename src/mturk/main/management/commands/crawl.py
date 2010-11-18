@@ -81,6 +81,7 @@ class Command(BaseCommand):
         log.debug('processing last pack of hitgroups objects')
         [j.start() for j in jobs]
         gevent.joinall(jobs)
+        dbpool.closeall()
 
         work_time = time.time() - _start_time
         log.info('processed objects: %s', len(hits))
@@ -117,13 +118,14 @@ def count(firstval=0, step=1):
         yield firstval
         firstval += step
 
-def process_group(hg, crawl):
+def process_group(conn, hg, crawl):
     """Gevent worker that should process single hitgroup.
 
     This should write some data into database and do not return any important
     data.
     """
-    db = DB(dbpool.getconn())
+    conn = dbpool.getconn()
+    db = DB(conn)
     hg['keywords'] = ', '.join(hg['keywords'])
     # for those hit goups that does not contain hash group, create one and
     # setup apropiate flag
@@ -152,4 +154,5 @@ def process_group(hg, crawl):
     hg['hit_group_content_id'] = hit_group_content_id
     hg['crawl_id'] = crawl.id
     db.insert_hit_group_status(hg)
-    db.commit_close()
+    conn.commit()
+    dbpool.putconn(conn)

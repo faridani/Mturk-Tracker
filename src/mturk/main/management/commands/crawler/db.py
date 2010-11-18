@@ -83,8 +83,3 @@ class DB(object):
                 %(page_number)s, %(group_id)s, %(hits_available)s,
                 %(hit_expiration_date)s
             )''', data)
-
-    def commit_close(self):
-        self.conn.commit()
-        self.curr.close()
-        self.conn.close()
