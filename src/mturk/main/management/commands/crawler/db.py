@@ -55,14 +55,16 @@ class DBPool(object):
         self._connections.extend(self._given)
         self._given = []
 
-    def commit(self):
+    def commit_all(self):
         for conn in self._connections:
             conn.commit()
 
-    def close(self):
+    def close_all(self):
         self.free_all_connections_given()
         for conn in self._connections:
+            conn.rollback()
             conn.close()
+        self._connections = []
 
 
 class DB(object):
@@ -118,3 +120,8 @@ class DB(object):
     def close(self):
         self.curr.close()
         self.conn.close()
+
+    def rollback(self):
+        self.conn.rollback()
+        self.curr.close()
+        self.curr = self.conn.cursor()

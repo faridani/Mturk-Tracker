@@ -66,9 +66,10 @@ class Command(BaseCommand):
         jobs = []
         for hg in hits:
             db = dbpool.get()
-            jobs.append(gevent.spawn(process_group, db, hg, crawl))
+            jobs.append(gevent.Greenlet(process_group, db, hg, crawl))
             if len(jobs) >= self.maxworkers:
                 log.debug('processing pack of hitgroups objects')
+                [j.start() for j in jobs]
                 gevent.joinall(jobs, timeout=20)
                 # check if all jobs ended successfully
                 for job in jobs:
@@ -76,16 +77,17 @@ class Command(BaseCommand):
                         log.error('Killing job: %s', job)
                         job.kill()
 
-                dbpool.free_all_connections_given()
+                dbpool.close_all()
                 jobs = []
 
         log.debug('processing last pack of hitgroups objects')
+        [j.start() for j in jobs]
         gevent.joinall(jobs)
         dbpool.free_all_connections_given()
         # commit on each database connection
         log.debug('global database commit')
-        dbpool.commit()
-        dbpool.close()
+        dbpool.commit_all()
+        dbpool.close_all()
         work_time = time.time() - _start_time
         log.info('processed objects: %s', len(hits))
         log.info('done: %.2f', work_time)
@@ -97,7 +99,8 @@ class Command(BaseCommand):
         for i in counter:
             jobs = []
             for page_nr in range(i, i + self.maxworkers):
-                jobs.append(gevent.spawn(tasks.hits_groups_info, page_nr))
+                jobs.append(gevent.Greenlet(tasks.hits_groups_info, page_nr))
+            [j.start() for j in jobs]
             gevent.joinall(jobs)
 
             # get data from completed tasks & remove empty results

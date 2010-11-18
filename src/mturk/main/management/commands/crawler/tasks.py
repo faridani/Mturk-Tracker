@@ -43,8 +43,8 @@ def hits_groups_info(page_nr, retry_if_empty=True):
         rows.append(info)
     log.debug('hits_groups_info done: %s;;%s', page_nr, len(rows))
     if not rows and retry_if_empty:
-        log.debug('fetch & parsing retry: %s', page_nr)
-        gevent.sleep(2)
+        log.debug('fetch & parsing retry spawn: %s', page_nr)
+        gevent.sleep(3)
         return hits_groups_info(page_nr, False)
     return rows
 
