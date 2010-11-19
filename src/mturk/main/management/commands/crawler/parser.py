@@ -122,7 +122,7 @@ _RX_HITS_LIST_QUALIFICATIONS = \
 
 _RX_HITS_DETAILS = \
         re.compile(r'''
-        Duration
+        \s+Duration\s+
         .*?
         <td[^>]*>
         \s*

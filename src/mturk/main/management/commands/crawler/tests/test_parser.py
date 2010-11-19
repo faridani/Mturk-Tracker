@@ -46,7 +46,7 @@ class TestParers(ParserTest):
         result = parser.hits_mainpage(html)
         self.assertEqual(result, expected)
 
-    def _test_hits_group_details(self):
+    def test_hits_group_details(self):
         html = self.get_html('hitsgroupdetails.html')
         expected = {
             'duration': 420,

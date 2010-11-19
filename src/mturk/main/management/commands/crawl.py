@@ -52,7 +52,7 @@ class Command(BaseCommand):
         if options.get('debug', False):
             self.setup_debug()
             print 'Current proccess pid: %s' % pid.actual_pid
-            print 'python -c "import os; os.kill(%s, signal.SIGUSR1)" to debug' % \
+            print 'To debug, type: python -c "import os,signal; os.kill(%s, signal.SIGUSR1)"\n' % \
                     pid.actual_pid
 
         self.maxworkers = options['workers']
