@@ -77,7 +77,7 @@ class Command(BaseCommand):
             groups_downloaded += len(hg_pack)
             jobs = [gevent.spawn(process_group, hg, crawl.id) for hg in hg_pack]
             log.debug('processing pack of hitgroups objects')
-            gevent.joinall(jobs, timeout=20)
+            gevent.joinall(jobs, timeout=8)
             # check if all jobs ended successfully
             for job in jobs:
                 if not job.ready():
@@ -167,7 +167,7 @@ def process_group(hg, crawl_id):
             hg.update(tasks.hits_group_info(hg['group_id']))
             db.insert_hit_group_content(hg)
             hit_group_content_id = db.hit_group_content_id(hg['group_id'])
-            log.info('new hit group content: %s;;%s',
+            log.debug('new hit group content: %s;;%s',
                     hit_group_content_id, hg['group_id'])
 
         hg['hit_group_content_id'] = hit_group_content_id
