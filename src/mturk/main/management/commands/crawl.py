@@ -80,7 +80,7 @@ class Command(BaseCommand):
                 hits_available=hits_available,
                 hits_downloaded=0,
                 groups_available=groups_available,
-                groups_downloaded=hits_available)
+                groups_downloaded=groups_available)
         log.debug('fresh crawl object created: %s', crawl.id)
 
         # manage database connections here - should be one for each
@@ -98,6 +98,10 @@ class Command(BaseCommand):
                     log.error('Killing job: %s', job)
                     groups_downloaded -= 1
                     job.kill()
+
+            if groups_downloaded >= groups_available:
+                # there's no need to iterate over empty groups.. break
+                break
 
             # amazon does not like too many requests at once, so give them a
             # quick rest...
