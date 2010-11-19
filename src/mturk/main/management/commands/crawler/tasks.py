@@ -4,6 +4,7 @@ from gevent import monkey
 monkey.patch_all()
 import gevent
 
+import ssl
 import logging
 import urllib2
 
@@ -19,9 +20,9 @@ def _get_html(url, timeout=5):
     """
     try:
         return urllib2.urlopen(url, timeout=timeout).read()
-    except urllib2.URLError:
-        log.error('timeout while fetching page: %s', url)
-        return ''
+    except (urllib2.URLError, ssl.SSLError), e:
+        log.error('%s;;%s;;%s', type(e).__name__, url, e.args)
+    return ''
 
 def hitsearch_url(page=1):
     return 'https://www.mturk.com/mturk/viewhits?searchWords=&selectedSearchType=hitgroups&sortType=LastUpdatedTime:1&pageNumber=' + str(page) + '&searchSpec=HITGroupSearch%23T%231%2310%23-1%23T%23!%23!LastUpdatedTime!1!%23!'
