@@ -64,7 +64,7 @@ class DB(object):
         return result[0]
 
     def insert_hit_group_content(self, data):
-        """Insert row into main_hitgroupcontent table"""
+        """Insert row into main_hitgroupcontent table and return it's id"""
         self.curr.execute('''
             INSERT INTO main_hitgroupcontent(
                 reward, description, title, requester_name, qualifications,
@@ -77,6 +77,8 @@ class DB(object):
                 %(requester_id)s, %(group_id)s, %(group_id_hashed)s,
                 %(occurrence_date)s, %(first_crawl_id)s
             )''', data)
+        self.curr.execute("SELECT currval('main_hitgroupcontent_id_seq')")
+        return self.curr.fetchone()[0]
 
     def insert_hit_group_status(self, data):
         """Insert row into main_hitgroupstatus row"""

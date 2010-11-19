@@ -110,19 +110,17 @@ def process_group(hg, crawl_id):
             hg['occurrence_date'] = datetime.datetime.now()
             hg['first_crawl_id'] = crawl_id
             hg.update(hits_group_info(hg['group_id']))
-            db.insert_hit_group_content(hg)
-            hit_group_content_id = db.hit_group_content_id(hg['group_id'])
+            hit_group_content_id = db.insert_hit_group_content(hg)
             log.debug('new hit group content: %s;;%s',
                     hit_group_content_id, hg['group_id'])
 
         hg['hit_group_content_id'] = hit_group_content_id
         hg['crawl_id'] = crawl_id
         db.insert_hit_group_status(hg)
+        conn.commit()
     except Exception:
         log.exception('process_group fail - rollback')
         conn.rollback()
-    else:
-        conn.commit()
     finally:
         db.curr.close()
         dbpool.putconn(conn, thread.get_ident())
