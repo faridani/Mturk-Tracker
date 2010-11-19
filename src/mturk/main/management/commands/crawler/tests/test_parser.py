@@ -49,8 +49,8 @@ class TestParers(ParserTest):
     def test_hits_group_details(self):
         html = self.get_html('hitsgroupdetails.html')
         expected = {
-            'duration': 420,
-            'iframe_src': 'https://www.proboards.com/mturk/displayHIT.cgi?assignmentId=ASSIGNMENT_ID_NOT_AVAILABLE&hitId=1I3YFA09O0UI2NHWCCS64FSVNR2AVP',
+            'duration': 180,
+            'iframe_src': 'http://ec2-184-72-229-69.compute-1.amazonaws.com/MTurk/?image_guid=c9c60940-94d0-4181-9529-6a576f6057e6&assignmentId=ASSIGNMENT_ID_NOT_AVAILABLE&hitId=1WQ0GX1PFIBMWBTRDVWS06NG9YHH3Z'
         }
         result = parser.hits_group_details(html)
         self.assertEqual(result, expected)
@@ -93,8 +93,8 @@ class TestParers(ParserTest):
         self.assertEqual(expected, results)
 
     def test_hits_group_total(self):
-        html = self.get_html('hitsgroupdetails.html')
-        expected = 1748
+        html = self.get_html('hitslist.html')
+        expected = 2076
         result = parser.hits_group_total(html)
         self.assertEqual(result, expected)
 

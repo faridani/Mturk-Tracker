@@ -33,9 +33,13 @@ class Command(BaseCommand):
             make_option('--debug', dest='debug', action='store_true'),
     )
 
-    def setup_logging(self):
+    def setup_logging(self, loudlog=False):
         "Basic setup for logging module"
-        logging.basicConfig(filename='/tmp/mturk_crawler.log', level=logging.DEBUG)
+        if loudlog:
+            level = logging.DEBUG
+        else:
+            level = logging.INFO
+        logging.basicConfig(filename='/tmp/mturk_crawler.log', level=level)
 
     def setup_debug(self):
         from crawler.debug import debug_listen
@@ -46,8 +50,7 @@ class Command(BaseCommand):
         pid = Pid('mturk_crawler', True)
         log.info('crawler started: %s;;%s', args, options)
 
-        if options.get('loudlog', False):
-            self.setup_logging()
+        self.setup_logging(options.get('loudlog', False))
 
         if options.get('debug', False):
             self.setup_debug()
