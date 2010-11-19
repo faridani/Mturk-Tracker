@@ -67,7 +67,7 @@ def hits_group_info(group_id):
         data['html'] = ''
     else:
         log.debug('fetching iframe source: %s;;%s', url, iframe_src)
-        data['html'] = _get_html(iframe_src)
+        data['html'] = _get_html(iframe_src, 3)
     return data
 
 def hits_groups_total():

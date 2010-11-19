@@ -125,6 +125,8 @@ class Command(BaseCommand):
             # last one with results
             if not hgs:
                 break
+
+            log.debug('yielding hits group: %s', len(hgs))
             yield hgs
 
 
@@ -170,5 +172,6 @@ def process_group(hg, crawl_id):
     hg['hit_group_content_id'] = hit_group_content_id
     hg['crawl_id'] = crawl_id
     db.insert_hit_group_status(hg)
+    log.debug('process_group data insert commit, release db connection')
     conn.commit()
     dbpool.putconn(conn)
