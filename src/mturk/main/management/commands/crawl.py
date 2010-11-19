@@ -30,11 +30,16 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
             make_option('--workers', dest='workers', type='int', default=3),
             make_option('--loudlog', dest='loudlog', action='store_true'),
+            make_option('--debug', dest='debug', action='store_true'),
     )
 
     def setup_logging(self):
         "Basic setup for logging module"
         logging.basicConfig(filename='/tmp/mturk_crawler.log', level=logging.DEBUG)
+
+    def setup_debug(self):
+        from crawler.debug import debug_listen
+        debug_listen()
 
     def handle(self, *args, **options):
         _start_time = time.time()
@@ -43,6 +48,12 @@ class Command(BaseCommand):
 
         if options.get('loudlog', False):
             self.setup_logging()
+
+        if options.get('debug', False):
+            self.setup_debug()
+            print 'Current proccess pid: %s' % pid.actual_pid
+            print 'python -c "import os; os.kill(%s, signal.SIGUSR1)" to debug' % \
+                    pid.actual_pid
 
         self.maxworkers = options['workers']
         if self.maxworkers > 9:
