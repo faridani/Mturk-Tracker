@@ -29,6 +29,7 @@ log = logging.getLogger('crawl')
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
             make_option('--workers', dest='workers', type='int', default=3),
+            make_option('--loudlog', dest='loudlog', action='store_true'),
     )
 
     def setup_logging(self):
@@ -37,9 +38,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         _start_time = time.time()
-        self.setup_logging()
         pid = Pid('mturk_crawler', True)
         log.info('crawler started: %s;;%s', args, options)
+
+        if options.get('loudlog', False):
+            self.setup_logging()
+
         self.maxworkers = options['workers']
         if self.maxworkers > 9:
             # If you want to remote this limit, don't forget to change dbpool
