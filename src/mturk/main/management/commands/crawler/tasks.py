@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from gevent import monkey
-monkey.patch_all()
-import gevent
-
 import ssl
 import logging
 import urllib2
+
+import gevent
 
 import parser
 
