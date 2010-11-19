@@ -16,14 +16,13 @@ from db import dbpool, DB
 log = logging.getLogger('crawler.tasks')
 
 
-MAX_DATAREAD = 1024 ** 6
 
-def _get_html(url, timeout=4):
+def _get_html(url, timeout=5):
     """Get page code using given url. If server won't response in `timeout`
     seconds, return empty string.
     """
     try:
-        return urllib2.urlopen(url, timeout=timeout).read(MAX_DATAREAD)
+        return urllib2.urlopen(url, timeout=timeout).read()
     except (urllib2.URLError, ssl.SSLError), e:
         log.error('%s;;%s;;%s', type(e).__name__, url, e.args)
     return ''
@@ -55,7 +54,7 @@ def hits_groups_info(page_nr, retry_if_empty=True):
     log.debug('hits_groups_info done: %s;;%s', page_nr, len(rows))
     if not rows and retry_if_empty:
         log.debug('fetch & parsing retry spawn: %s', page_nr)
-        gevent.sleep(5)
+        gevent.sleep(6)
         return hits_groups_info(page_nr, False)
     return rows
 
@@ -73,7 +72,7 @@ def hits_group_info(group_id):
         data['html'] = ''
     else:
         log.debug('fetching iframe source: %s;;%s', url, iframe_src)
-        data['html'] = _get_html(iframe_src, 3)
+        data['html'] = _get_html(iframe_src, 4)
     return data
 
 def hits_groups_total():
