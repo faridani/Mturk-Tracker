@@ -3,21 +3,27 @@
 import ssl
 import logging
 import urllib2
+import datetime
+import hashlib
 
 import gevent
+from gevent import thread
 
 import parser
+from db import dbpool, DB
 
 
 log = logging.getLogger('crawler.tasks')
 
+
+MAX_DATAREAD = 1024 ** 6
 
 def _get_html(url, timeout=4):
     """Get page code using given url. If server won't response in `timeout`
     seconds, return empty string.
     """
     try:
-        return urllib2.urlopen(url, timeout=timeout).read()
+        return urllib2.urlopen(url, timeout=timeout).read(MAX_DATAREAD)
     except (urllib2.URLError, ssl.SSLError), e:
         log.error('%s;;%s;;%s', type(e).__name__, url, e.args)
     return ''
@@ -75,3 +81,48 @@ def hits_groups_total():
     url = "https://www.mturk.com/mturk/findhits?match=false"
     html = _get_html(url)
     return parser.hits_group_total(html)
+
+def process_group(hg, crawl_id):
+    """Gevent worker that should process single hitgroup.
+
+    This should write some data into database and do not return any important
+    data.
+    """
+    conn = dbpool.getconn(thread.get_ident())
+    db = DB(conn)
+    try:
+        hg['keywords'] = ', '.join(hg['keywords'])
+        # for those hit goups that does not contain hash group, create one and
+        # setup apropiate flag
+        hg['group_id_hashed'] = not bool(hg.get('group_id', None))
+        if hg['group_id_hashed']:
+            composition = ';'.join(map(str, (
+                hg['title'], hg['requester_id'], hg['time_alloted'],
+                hg['reward'], hg['description'], hg['keywords'],
+                hg['qualifications']))) + ';'
+            hg['group_id'] = hashlib.md5(composition).hexdigest()
+            log.debug('group_id not found, creating hash: %s  %s',
+                    hg['group_id'], composition)
+
+        hit_group_content_id = db.hit_group_content_id(hg['group_id'])
+        if hit_group_content_id is None:
+            # fresh hitgroup - create group content entry, but first add some data
+            # required by hitgroup content table
+            hg['occurrence_date'] = datetime.datetime.now()
+            hg['first_crawl_id'] = crawl_id
+            hg.update(hits_group_info(hg['group_id']))
+            db.insert_hit_group_content(hg)
+            hit_group_content_id = db.hit_group_content_id(hg['group_id'])
+            log.debug('new hit group content: %s;;%s',
+                    hit_group_content_id, hg['group_id'])
+
+        hg['hit_group_content_id'] = hit_group_content_id
+        hg['crawl_id'] = crawl_id
+        db.insert_hit_group_status(hg)
+        conn.commit()
+    except Exception:
+        log.exception('process_group fail - rollback')
+        conn.rollback()
+    finally:
+        db.curr.close()
+        dbpool.putconn(conn, thread.get_ident())

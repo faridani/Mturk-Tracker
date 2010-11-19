@@ -12,7 +12,6 @@ except ImportError:
 import time
 import datetime
 import logging
-import hashlib
 from optparse import make_option
 
 import gevent
@@ -20,8 +19,8 @@ from django.core.management.base import BaseCommand
 
 from tenclouds.pid import Pid
 from crawler import tasks
-from crawler.db import dbpool, DB
 from mturk.main.models import Crawl
+from db import dbpool
 
 
 log = logging.getLogger('crawl')
@@ -75,9 +74,9 @@ class Command(BaseCommand):
         hitgroups_iter = self.hits_iter()
         for hg_pack in hitgroups_iter:
             groups_downloaded += len(hg_pack)
-            jobs = [gevent.spawn(process_group, hg, crawl.id) for hg in hg_pack]
+            jobs = [gevent.spawn(tasks.process_group, hg, crawl.id) for hg in hg_pack]
             log.debug('processing pack of hitgroups objects')
-            gevent.joinall(jobs, timeout=10)
+            gevent.joinall(jobs, timeout=15)
             # check if all jobs ended successfully
             for job in jobs:
                 if not job.ready():
@@ -135,48 +134,3 @@ def count(firstval=0, step=1):
     while True:
         yield firstval
         firstval += step
-
-def process_group(hg, crawl_id):
-    """Gevent worker that should process single hitgroup.
-
-    This should write some data into database and do not return any important
-    data.
-    """
-    conn = dbpool.getconn()
-    db = DB(conn)
-    try:
-        hg['keywords'] = ', '.join(hg['keywords'])
-        # for those hit goups that does not contain hash group, create one and
-        # setup apropiate flag
-        hg['group_id_hashed'] = not bool(hg.get('group_id', None))
-        if hg['group_id_hashed']:
-            composition = ';'.join(map(str, (
-                hg['title'], hg['requester_id'], hg['time_alloted'],
-                hg['reward'], hg['description'], hg['keywords'],
-                hg['qualifications']))) + ';'
-            hg['group_id'] = hashlib.md5(composition).hexdigest()
-            log.debug('group_id not found, creating hash: %s  %s',
-                    hg['group_id'], composition)
-
-        hit_group_content_id = db.hit_group_content_id(hg['group_id'])
-        if hit_group_content_id is None:
-            # fresh hitgroup - create group content entry, but first add some data
-            # required by hitgroup content table
-            hg['occurrence_date'] = datetime.datetime.now()
-            hg['first_crawl_id'] = crawl_id
-            hg.update(tasks.hits_group_info(hg['group_id']))
-            db.insert_hit_group_content(hg)
-            hit_group_content_id = db.hit_group_content_id(hg['group_id'])
-            log.debug('new hit group content: %s;;%s',
-                    hit_group_content_id, hg['group_id'])
-
-        hg['hit_group_content_id'] = hit_group_content_id
-        hg['crawl_id'] = crawl_id
-        db.insert_hit_group_status(hg)
-        conn.commit()
-    except Exception:
-        log.exception('process_group fail - rollback')
-        conn.rollback()
-    finally:
-        db.curr.close()
-        dbpool.putconn(conn)
