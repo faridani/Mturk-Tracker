@@ -50,7 +50,19 @@ class TestParers(ParserTest):
         html = self.get_html('hitsgroupdetails.html')
         expected = {
             'duration': 180,
-            'iframe_src': 'http://ec2-184-72-229-69.compute-1.amazonaws.com/MTurk/?image_guid=c9c60940-94d0-4181-9529-6a576f6057e6&assignmentId=ASSIGNMENT_ID_NOT_AVAILABLE&hitId=1WQ0GX1PFIBMWBTRDVWS06NG9YHH3Z'
+            'iframe_src': 'http://ec2-184-72-229-69.compute-1.amazonaws.com/MTurk/?image_guid=c9c60940-94d0-4181-9529-6a576f6057e6&assignmentId=ASSIGNMENT_ID_NOT_AVAILABLE&hitId=1WQ0GX1PFIBMWBTRDVWS06NG9YHH3Z',
+            'html': None,
+        }
+        result = parser.hits_group_details(html)
+        self.assertEqual(result, expected)
+
+
+    def test_hits_group_details_no_iframe(self):
+        html = self.get_html('hitsgroupdetails2.html')
+        expected = {
+            'duration': 10800,
+            'iframe_src': None,
+            'html': '''<input type="hidden" name="state" value="ckhvUmpaeW9yc3VLZWZ3RnQyU1NVZHp2ZTkwPTIwMTAxMTE5MDY0NFVzZXIuYXV0b0FjY2VwdEVuYWJsZWR.ZmFsc2UlVXNlci50dXJrU2VjdXJlfnRydWUl">\n        <input type="hidden" name="hitId" value="1RKSES4MC85KQQN4479SES2UA1FSS0">\n        <input type="hidden" name="prevHitSubmitted" value="false">\n        <input type="hidden" name="prevRequester" value="NDB">\n        <input type="hidden" name="requesterId" value="AASI85W063U0P">\n        <input type="hidden" name="prevReward" value="USD0.20">\n        \n        \n        \n            <input type="hidden" name="hitAutoAppDelayInSeconds" value="2592000">\n        \n        \n            <input type="hidden" name="groupId" value="1SFXPD3N6SAQFP8VYWHEUZFZWX6251">\n        \n        \n        \n            <input type="hidden" name="iteratorHitsLeft" value="">\n        \n        \n            <input type="hidden" name="iteratorSearchSpec" value="">\n        \n        \n        \n\n    \n        <div align="center" style="margin-left: 100px; margin-right: 100px; margin-bottom: 10px;">\n            \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n     \n   \n       <table cellspacing="0" cellpadding="0" border="0">\n            <tr>\n                    <td align="center" nowrap>Want to work on this HIT?</td>\n                \n            </tr>\n            <tr>\n                <td valign="top" nowrap height="26" rowspan="2" align="center">\n                        <a>\n                            \n                            \n                                <input type="image" name="/accept" src="/images/accept_hit.gif" border="0">\n                            \n                        </a>\n                </td>\n                \n            </tr>\n        </table>\n    \n\n\n<script type="text/javascript">\n \n  tooltips[\'pipeline.submit.iframes.tooltip\'] = "Submit this HIT by following the Requester\'s instructions.";\n\n</script>\n\n        ''',
         }
         result = parser.hits_group_details(html)
         self.assertEqual(result, expected)

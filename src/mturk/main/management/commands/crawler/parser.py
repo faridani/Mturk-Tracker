@@ -133,9 +133,17 @@ _RX_HITS_DETAILS = \
         .*?
 
         # get the iframe source url
-        <iframe.*?src="
-            (?P<iframe_src>[^"]+)
-        "[^>]*></iframe>
+        (?:
+            <iframe.*?src="
+                (?P<iframe_src>[^"]+)
+            "[^>]*></iframe>
+        |
+            <form.*?accept">
+                (?P<html>.*?)
+            </div>
+            \s*?
+            </form>
+        )
     ''', re.M|re.X|re.S)
 
 

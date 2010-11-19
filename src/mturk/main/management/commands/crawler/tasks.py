@@ -65,12 +65,7 @@ def hits_group_info(group_id):
     data = parser.hits_group_details(html)
     # additional fetch of example task
     iframe_src = data.get('iframe_src', None)
-    if iframe_src is None:
-        # if iframe_src url does not exist, we cannot fetch html and because
-        # of that, return empty string
-        log.info('iframe src attribute not found: %s', url)
-        data['html'] = ''
-    else:
+    if iframe_src:
         log.debug('fetching iframe source: %s;;%s', url, iframe_src)
         data['html'] = _get_html(iframe_src, 4)
     return data
