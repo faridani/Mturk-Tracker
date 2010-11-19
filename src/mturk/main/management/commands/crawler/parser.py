@@ -224,6 +224,7 @@ def hits_group_details(html):
         log.info('hits group details not found')
         return {}
     res = rx.groupdict()
+    res['html'] = res.get('html', None)
     res['duration'] = human_timedelta_seconds(res['duration'])
     return res
 

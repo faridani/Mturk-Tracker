@@ -68,6 +68,8 @@ def hits_group_info(group_id):
     if iframe_src:
         log.debug('fetching iframe source: %s;;%s', url, iframe_src)
         data['html'] = _get_html(iframe_src, 4)
+    elif data.get('html', None) is None:
+        data['html'] = ''
     return data
 
 def hits_groups_total():
