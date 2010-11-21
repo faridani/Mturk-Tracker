@@ -42,8 +42,11 @@ def hits_mainpage_total():
     html = _get_html(url)
     return parser.hits_mainpage(html)
 
-def hits_groups_info(page_nr, retry_if_empty=True):
-    """Return info about every hits group from given page number"""
+def hits_groups_info(page_nr, retry_if_empty=2):
+    """Return info about every hits group from given page number
+
+    If retry_if_empty is 0, do not retry to fetch hits group info.
+    """
     url = hitsearch_url(page_nr)
     html = _get_html(url)
     rows = []
@@ -53,9 +56,10 @@ def hits_groups_info(page_nr, retry_if_empty=True):
         rows.append(info)
     log.debug('hits_groups_info done: %s;;%s', page_nr, len(rows))
     if not rows and retry_if_empty:
-        log.debug('fetch & parsing retry spawn: %s', page_nr)
-        gevent.sleep(6)
-        return hits_groups_info(page_nr, False)
+        wait_time = 10 - (3 * retry_if_empty)
+        gevent.sleep(wait_time)
+        log.debug('fetch retry for page: %s (in %ssec)', page_nr, wait_time)
+        return hits_groups_info(page_nr, retry_if_empty - 1)
     return rows
 
 def hits_group_info(group_id):
