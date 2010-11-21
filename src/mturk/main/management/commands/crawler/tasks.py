@@ -57,8 +57,8 @@ def hits_groups_info(page_nr, retry_if_empty=2):
     log.debug('hits_groups_info done: %s;;%s', page_nr, len(rows))
     if not rows and retry_if_empty:
         wait_time = 10 - (3 * retry_if_empty)
+        log.debug('fetch retry for page: %s (in %ss)', page_nr, wait_time)
         gevent.sleep(wait_time)
-        log.debug('fetch retry for page: %s (in %ssec)', page_nr, wait_time)
         return hits_groups_info(page_nr, retry_if_empty - 1)
     return rows
 
