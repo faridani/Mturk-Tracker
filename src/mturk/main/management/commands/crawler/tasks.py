@@ -91,6 +91,7 @@ def process_group(hg, crawl_id):
         # for those hit goups that does not contain hash group, create one and
         # setup apropiate flag
         hg['group_id_hashed'] = not bool(hg.get('group_id', None))
+        hg['qualifications'] = ', '.join(hg['qualifications'])
         if hg['group_id_hashed']:
             composition = ';'.join(map(str, (
                 hg['title'], hg['requester_id'], hg['time_alloted'],
