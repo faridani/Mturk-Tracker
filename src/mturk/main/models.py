@@ -69,16 +69,15 @@ class HitGroupContent(models.Model):
     first_crawl         = models.ForeignKey(Crawl, blank=True, null=True)
 
 class HitGroupStatus(models.Model):
-
     group_id            = models.CharField('Group ID', max_length=50, db_index=True)
     hits_available      = models.IntegerField('Hits Avaliable')
     page_number         = models.IntegerField('Page Number')
     inpage_position     = models.IntegerField('In Page Position')
     hit_expiration_date = models.DateTimeField('Hit expiration Date')
-
     hit_group_content = models.ForeignKey(HitGroupContent)
-
     crawl               = models.ForeignKey(Crawl)
+    is_public = models.BooleanField(default=True)
+
 
 class DayStats(models.Model):
 
