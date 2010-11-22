@@ -149,7 +149,7 @@ _RX_HITS_DETAILS = \
 
 
 def human_timedelta_seconds(hd):
-    """Convert any human timedelta value to seconds. Human time delta values
+    """Convert any human timedelta value to minutes. Human time delta values
     are for example:
         * 1 hour
         * 30 minutes 3 weeks
@@ -158,15 +158,15 @@ def human_timedelta_seconds(hd):
     def _to_seconds(value, time_type):
         value = int(value)
         if time_type.startswith('week'):
-            return value * 7 * 24 * 60 * 60
+            return value * 7 * 24 * 60
         if time_type.startswith('day'):
-            return value * 24 * 60 * 60
+            return value * 24 * 60
         if time_type.startswith('hour'):
-            return value * 60 * 60
-        if time_type.startswith('minute'):
             return value * 60
-        if time_type.startswith('second'):
+        if time_type.startswith('minute'):
             return value
+        if time_type.startswith('second'):
+            return int(value / 60.0)
         log.error('Unknown timer type: %s', time_type)
         raise TypeError('Unknown time type: %s' % time_type)
 
