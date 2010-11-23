@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import datetime
 
 from django.views.generic.simple import direct_to_template
@@ -6,10 +8,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-
 from tenclouds.sql import query_to_tuples
 from mturk.main.templatetags.graph import text_row_formater
 from models import RequesterProfile, HitGroupContent
+
 
 @login_required
 def top_requesters(request):

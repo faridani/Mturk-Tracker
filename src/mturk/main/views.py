@@ -136,7 +136,6 @@ def completed(request):
     return direct_to_template(request, 'main/graphs/timeline.html', params)
 
 def top_requesters(request):
-    #if request.is_superuser:
     if request.user.is_superuser:
         return admin.top_requesters(request)
 
