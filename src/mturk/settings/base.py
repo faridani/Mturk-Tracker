@@ -49,7 +49,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
-    'django.middleware.gzip.GZipMiddleware',    
+    'django.middleware.gzip.GZipMiddleware',
 )
 
 TEMPLATE_DIRS = (
@@ -63,7 +63,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-    
+
     'mturk.tabs_context_processor.tabs'
 )
 
@@ -75,7 +75,7 @@ INSTALLED_APPS = (
     'django.contrib.webdesign',
     'south',
     'mturk.main',
-    'mturk.importer'    
+    'mturk.importer'
 )
 
 AUTHENTICATION_BACKENDS = (
