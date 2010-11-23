@@ -82,7 +82,7 @@ def hits_groups_total():
     html = _get_html(url)
     return parser.hits_group_total(html)
 
-def process_group(hg, crawl_id):
+def process_group(hg, crawl_id, requesters):
     """Gevent worker that should process single hitgroup.
 
     This should write some data into database and do not return any important
@@ -107,6 +107,14 @@ def process_group(hg, crawl_id):
 
         hit_group_content_id = db.hit_group_content_id(hg['group_id'])
         if hit_group_content_id is None:
+            # check if there's profile for current requester and if does
+            # exists with non-public status, then setup non public status for
+            # current hitsgroup content
+            profile = requesters.get(hg['requester_id'], None)
+            if profile and profile.is_public is False:
+                hg['is_public'] = False
+            else:
+                hg['is_public'] = True
             # fresh hitgroup - create group content entry, but first add some data
             # required by hitgroup content table
             hg['occurrence_date'] = datetime.datetime.now()

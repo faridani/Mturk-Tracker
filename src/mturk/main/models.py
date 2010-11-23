@@ -50,7 +50,6 @@ class Crawl(models.Model):
         return 'Crawl: ' + str(self.start_time) + ' ' + str(self.end_time)
 
 class HitGroupContent(models.Model):
-
     group_id            = models.CharField('Group ID', max_length=50, db_index=True, unique=True)
     group_id_hashed     = models.BooleanField(default=False)
     requester_id        = models.CharField('Requester ID', max_length=50, db_index=True)
@@ -67,6 +66,8 @@ class HitGroupContent(models.Model):
     '''
     time_alloted        = models.IntegerField('Time alloted')
     first_crawl         = models.ForeignKey(Crawl, blank=True, null=True)
+    is_public = models.BooleanField(default=True)
+
 
 class HitGroupStatus(models.Model):
     group_id            = models.CharField('Group ID', max_length=50, db_index=True)
@@ -76,7 +77,6 @@ class HitGroupStatus(models.Model):
     hit_expiration_date = models.DateTimeField('Hit expiration Date')
     hit_group_content = models.ForeignKey(HitGroupContent)
     crawl               = models.ForeignKey(Crawl)
-    is_public = models.BooleanField(default=True)
 
 
 class DayStats(models.Model):
@@ -117,3 +117,22 @@ class HitGroupFirstOccurences(models.Model):
     crawl               = models.ForeignKey(Crawl)
     group_status        = models.ForeignKey(HitGroupStatus)
     group_content       = models.ForeignKey(HitGroupContent)
+
+
+class RequesterProfileManager(models.Manager):
+    def all_as_dict(self):
+        """Return all related objects as dictionary, where keys are
+        `requester_id` values. Cached.
+        """
+        # TODO - memcache?
+        data = tuple((p.requester_id, p) for p in self.all())
+        # dicts are mutable, so cache tuple and generate fresh dict with every
+        # call
+        return dict(data)
+
+
+class RequesterProfile(models.Model):
+    requester_id = models.CharField(max_length=64, primary_key=True)
+    is_public = models.BooleanField(default=True)
+
+    objects = RequesterProfileManager()

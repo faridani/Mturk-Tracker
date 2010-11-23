@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<script type='text/javascript'> 
+<script type='text/javascript'>
 	google.load('visualization', '1', {'packages':['table']});
 	google.setOnLoadCallback(drawTable);
 
@@ -18,20 +18,19 @@
 		{% for type,name in columns %}
 		data.addColumn('{{type}}', '{{name}}');
 		{% endfor %}
-		
+
     	{% for row in data %}
     	data.addRow({{row|safe}});
     	{% endfor %}
-	
+
         var table = new google.visualization.Table(document.getElementById('table_div'));
 
         var formatter = new google.visualization.TableBarFormat({width: 50, showValue: true});
-		formatter.format(data, 4);         
-        table.draw(data, {showRowNumber: true, allowHtml: true, page: 'enable', pageSize: 25, width: '100%', alternatingRowStyle: true});		
-	}	
-      
+		formatter.format(data, 4);
+        table.draw(data, {showRowNumber: true, allowHtml: true, page: 'enable', pageSize: 25, width: '100%', alternatingRowStyle: true});
+	}
+
 </script>
 
 <div id="table_div"></div>
-
 {% endblock %}

@@ -20,7 +20,7 @@ from django.core.management.base import BaseCommand
 from tenclouds.pid import Pid
 from crawler import tasks
 from crawler.db import dbpool
-from mturk.main.models import Crawl
+from mturk.main.models import Crawl, RequesterProfile
 
 
 log = logging.getLogger('crawl')
@@ -86,13 +86,20 @@ class Command(BaseCommand):
                 groups_downloaded=groups_available)
         log.debug('fresh crawl object created: %s', crawl.id)
 
+        # fetch those requester profiles so we could decide if their hitgroups
+        # are public or not
+        reqesters = RequesterProfile.objects.all_as_dict()
+
         # manage database connections here - should be one for each
         # task working at the same time
         groups_downloaded = 0
         hitgroups_iter = self.hits_iter()
         for hg_pack in hitgroups_iter:
             groups_downloaded += len(hg_pack)
-            jobs = [gevent.spawn(tasks.process_group, hg, crawl.id) for hg in hg_pack]
+            jobs = []
+            for hg in hg_pack:
+                j = gevent.spawn(tasks.process_group, hg, crawl.id, reqesters)
+                jobs.append(j)
             log.debug('processing pack of hitgroups objects')
             gevent.joinall(jobs, timeout=20)
             # check if all jobs ended successfully

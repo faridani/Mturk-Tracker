@@ -6,12 +6,13 @@ from mturk.main.models import *
 class Migration:
 
     def forwards(self, orm):
-        db.add_column('main_hitgroupstatus', 'is_public',
-                orm['main.hitgroupstatus:is_public'])
+        "Write your forwards migration here"
+        db.add_column('main_hitgroupcontent', 'is_public', orm['main.hitgroupcontent:is_public'])
 
 
     def backwards(self, orm):
-        db.delete_column('main_hitgroupstatus', 'is_public')
+        "Write your backwards migration here"
+        db.delete_column('main_hitgroupcontent', 'is_public')
 
 
     models = {
@@ -23,7 +24,6 @@ class Migration:
             'hits_available': ('django.db.models.fields.IntegerField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'inpage_position': ('django.db.models.fields.IntegerField', [], {}),
-            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
             'page_number': ('django.db.models.fields.IntegerField', [], {})
         },
         'main.hitgroupcontent': {
@@ -33,6 +33,7 @@ class Migration:
             'group_id_hashed': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'html': ('django.db.models.fields.TextField', [], {'max_length': '100000000'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
             'keywords': ('django.db.models.fields.CharField', [], {'max_length': '10000', 'null': 'True', 'blank': 'True'}),
             'occurrence_date': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             'qualifications': ('django.db.models.fields.CharField', [], {'max_length': '10000', 'null': 'True', 'blank': 'True'}),
@@ -74,6 +75,10 @@ class Migration:
             'projects': ('django.db.models.fields.IntegerField', [], {}),
             'reward': ('django.db.models.fields.FloatField', [], {}),
             'start_time': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True'})
+        },
+        'main.requesterprofile': {
+            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
+            'requester_id': ('django.db.models.fields.CharField', [], {'max_length': '64', 'primary_key': 'True'})
         },
         'main.crawl': {
             'end_time': ('django.db.models.fields.DateTimeField', [], {}),
