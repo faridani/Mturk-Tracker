@@ -7,13 +7,26 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 
 from tenclouds.sql import query_to_tuples
 from mturk.main.templatetags.graph import text_row_formater
 from models import RequesterProfile, HitGroupContent
 
 
+
+def no_cache(view):
+    """Decorator that disables any cache for view
+
+    Instead of setting headers and other boring stuff, use django decorator
+    with 0 cache timeout
+    """
+    wrapper = cache_page(0)
+    return wrapper(view)
+
+
 @login_required
+@no_cache
 def top_requesters(request):
 
     def row_formatter(input):
@@ -69,6 +82,7 @@ def top_requesters(request):
     return direct_to_template(request, 'main/graphs/table.html', ctx)
 
 @login_required
+@no_cache
 def toggle_requester_status(request, id):
     """Toggle given requester private/public status"""
     rp, created = RequesterProfile.objects.get_or_create(requester_id=id)
@@ -77,6 +91,7 @@ def toggle_requester_status(request, id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required
+@no_cache
 def requester_details(request, requester_id):
     def row_formatter(input):
         for cc in input:
@@ -128,6 +143,7 @@ def requester_details(request, requester_id):
     return direct_to_template(request, 'main/requester_details.html', ctx)
 
 @login_required
+@no_cache
 def toggle_hitgroup_status(request, id):
     """Toggle given hitgroup public/private status, where id is the amazon hash key)
     """
