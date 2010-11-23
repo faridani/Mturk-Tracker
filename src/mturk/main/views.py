@@ -144,49 +144,47 @@ def top_requesters(request):
     def _top_requesters(request):
 
         def row_formatter(input):
-
             for cc in input:
                 row = []
                 row.append('<a href="%s">%s</a>' % (reverse('requester_details',kwargs={'requester_id':cc[0]}) ,cc[1]))
-
                 row.append('<a href="https://www.mturk.com/mturk/searchbar?requesterId=%s" target="_mturk">%s</a> (<a href="http://feed.crowdsauced.com/r/req/%s">RSS</a>)'
                            % (cc[0],cc[0],cc[0]) )
                 row.extend(cc[2:6])
-
                 yield row
 
         data = row_formatter(query_to_tuples('''
-                                                select
-                                                    h.requester_id,
-                                                    h.requester_name,
-                                                    count(*) as "projects",
-                                                    sum(h.hits_available) as "hits",
-                                                    sum(h.hits_available*reward) as "reward",
-                                                    max(h.occurrence_date) as "last_posted"
-                                                from
-                                                    main_hitgroupfirstoccurences h
-                                                        LEFT JOIN main_requesterprofile p ON h.requester_id = p.requester_id
-                                                where
-                                                    h.occurrence_date > TIMESTAMP '%s'
-                                                group by h.requester_id, h.requester_name
-                                                order by sum(h.hits_available*reward) desc
-                                                limit 1000;
-    ''' % ( (datetime.date.today() - datetime.timedelta(days=30)).isoformat() )
-    ))
+                SELECT
+                    h.requester_id,
+                    h.requester_name,
+                    count(*) as "projects",
+                    sum(h.hits_available) as "hits",
+                    sum(h.hits_available*reward) as "reward",
+                    max(h.occurrence_date) as "last_posted"
+                FROM
+                    main_hitgroupfirstoccurences h
+                        LEFT JOIN main_requesterprofile p ON h.requester_id = p.requester_id
+                WHERE
+                    h.occurrence_date > %s
+                    AND coalesce(p.is_public, true) = true
+                group by h.requester_id, h.requester_name
+                order by sum(h.hits_available*reward) desc
+                limit 1000;
+        ''', datetime.date.today() - datetime.timedelta(days=30)))
 
-        columns = (('string','Requester ID'),
-                   ('string','Requester'),
-                   ('number','#Task'),
-                   ('number','#HITs'),
-                   ('number','Rewards'),
-                   ('datetime', 'Last Posted On'))
-
-        return direct_to_template(request, 'main/graphs/table.html', {
-                                                                      'data':data,
-                                                                      'columns':columns,
-                                                                      'title':'Top-1000 Recent Requesters'
-                                                                      })
-        return _top_requesters(request)
+        columns = (
+            ('string','Requester ID'),
+            ('string','Requester'),
+            ('number','#Task'),
+            ('number','#HITs'),
+            ('number','Rewards'),
+            ('datetime', 'Last Posted On')
+        )
+        ctx = {
+            'data': data,
+            'columns': columns,
+            'title': 'Top-1000 Recent Requesters',
+        }
+        return direct_to_template(request, 'main/graphs/table.html', ctx)
 
     return _top_requesters(request)
 
