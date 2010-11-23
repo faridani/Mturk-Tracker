@@ -121,4 +121,3 @@ def toggle_hitgroup_status(request, id):
     hg.is_public = not hg.is_public
     hg.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
