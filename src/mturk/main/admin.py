@@ -24,16 +24,6 @@ from html import strip_tags
 log = logging.getLogger('mturk.main.admin')
 
 
-def _sorl_delete_hitgroup(solr_conn, group_id, commit=True):
-    """pysolr.Solr connection object does not support objects remove by other
-    key than `id`. Out index does not contain `id` attribute, only `group_id`,
-    so here's the custom version of `delete()` method
-    """
-    m = '<delete><group_id>%s</group_id></delete>' % group_id
-    response = solr_conn._update(m)
-    if commit:
-        solr_conn.commit()
-
 def _hitgroup_content_to_sorl_dt(hg):
     """Convert given HitGroupContent object into valid solr dictionary, that
     can be added to index using at least pysolr.Solr connection
@@ -136,7 +126,7 @@ def toggle_requester_status(request, id):
     else:
         # remove hitgroups from solr index
         for hg in hitgroups:
-            _sorl_delete_hitgroup(solr, group_id=hg.group_id, commit=False)
+            solr.delete(q='group_id:%s' % hg.group_id, commit=False)
         log.debug('deleting HitGroupContent objects from solr index: %s',
                 [hg.group_id for hg in hitgroups])
         solr.commit()
@@ -211,7 +201,7 @@ def toggle_hitgroup_status(request, id):
     else:
         # remove from solr
         log.debug('removing HitGroupContent from solr index: %s', hg.group_id)
-        _sorl_delete_hitgroup(solr, group_id=hg.group_id)
+        solr.delete(q='group_id:%s' % hg.group_id)
     hg.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
