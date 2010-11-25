@@ -5,9 +5,11 @@ import datetime
 from django.views.generic.simple import direct_to_template
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_page
+from django.template import RequestContext
+from django.contrib import auth
 
 from tenclouds.sql import query_to_tuples
 from mturk.main.templatetags.graph import text_row_formater
@@ -151,3 +153,12 @@ def toggle_hitgroup_status(request, id):
     hg.is_public = not hg.is_public
     hg.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def main_page(request):
+    ctx = RequestContext(request)
+    return render_to_response('_admin/main.html', ctx)

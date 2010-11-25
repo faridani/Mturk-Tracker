@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+        <h2> You're logged as <em>{{ user.username }}</em></h2>
+        <ul>
+            <li>
+                <a href="{% url admin-logout %}">logout</a>
+            </li>
+        </ul>
+    {% else %}
+        <h2> You're currently not logged</h2>
+        <ul>
+            <li>
+                <a href="{% url admin-login %}">login</a>
+            </li>
+        </ul>
+    {% endif %}
+
+
+{% endblock %}

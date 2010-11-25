@@ -43,5 +43,8 @@ urlpatterns = patterns('',
 
                        url(r'^_admin/requester/status/toggle/(?P<id>[^/]*)/$',  'mturk.main.admin.toggle_requester_status', name='admin-toggle-requester-status'),
                        url(r'^_admin/hitgroup/status/toggle/(?P<id>[^/]*)/$',  'mturk.main.admin.toggle_hitgroup_status', name='admin-toggle-hitgroup-status'),
-                       url(r'^_admin/login/',     'django.contrib.auth.views.login', {'template_name': 'login.html'}),
+
+                       url(r'^_admin/$', 'mturk.main.admin.main_page', name='admin-main-page'),
+                       url(r'^_admin/logout/$', 'mturk.main.admin.logout', name='admin-logout'),
+                       url(r'^_admin/login/$', 'django.contrib.auth.views.login', {'template_name': '_admin/login.html'}, name='admin-login'),
 )
