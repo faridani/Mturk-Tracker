@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import logging
 
 from django.views.generic.simple import direct_to_template
 from django.core.urlresolvers import reverse
@@ -10,12 +11,47 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_page
 from django.template import RequestContext
 from django.contrib import auth
+from django.conf import settings
+
+from pythonsolr import  pysolr
 
 from tenclouds.sql import query_to_tuples
 from mturk.main.templatetags.graph import text_row_formater
 from models import RequesterProfile, HitGroupContent
+from html import strip_tags
 
 
+log = logging.getLogger('mturk.main.admin')
+
+
+def _sorl_delete_hitgroup(solr_conn, group_id, commit=True):
+    """pysolr.Solr connection object does not support objects remove by other
+    key than `id`. Out index does not contain `id` attribute, only `group_id`,
+    so here's the custom version of `delete()` method
+    """
+    m = '<delete><group_id>%s</group_id></delete>' % group_id
+    response = solr_conn._update(m)
+    if commit:
+        solr_conn.commit()
+
+def _hitgroup_content_to_sorl_dt(hg):
+    """Convert given HitGroupContent object into valid solr dictionary, that
+    can be added to index using at least pysolr.Solr connection
+    """
+    doc = {
+        'group_id': hg.group_id,
+        'requester_id': hg.requester_id,
+        'requster_name': hg.requster_name,
+        'reward': hg.reward,
+        'html': strip_tags(hg.context),
+        'description': strip_tags(hg.description),
+        'title': hg.title,
+        'keywords': [k.strip() for k in hg.keywords.split(',')],
+        'qualifications': hg.qualifications,
+        'occurrence_date': hg.occurrence_date,
+        'time_alloted': hg.time_alloted,
+    }
+    return doc
 
 def no_cache(view):
     """Decorator that disables any cache for view
@@ -89,6 +125,21 @@ def toggle_requester_status(request, id):
     """Toggle given requester private/public status"""
     rp, created = RequesterProfile.objects.get_or_create(requester_id=id)
     rp.is_public = not rp.is_public
+    hitgroups = HitGroupContent.objects.filter(requester_id=rp.requester_id)
+
+    solr = pysolr.Solr(settings.SOLR_MAIN)
+    if rp.is_public:
+        # add hitgroups to solr index
+        log.debug('adding HitGroupContent objects to solr index: %s',
+                [hg.group_id for hg in hitgroups])
+        solr.add([_hitgroup_content_to_sorl_dt(hg) for hg in hitgroups])
+    else:
+        # remove hitgroups from solr index
+        for hg in hitgroups:
+            _sorl_delete_hitgroup(solr, group_id=hg.group_id, commit=False)
+        log.debug('deleting HitGroupContent objects from solr index: %s',
+                [hg.group_id for hg in hitgroups])
+        solr.commit()
     rp.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
@@ -151,6 +202,16 @@ def toggle_hitgroup_status(request, id):
     """
     hg = get_object_or_404(HitGroupContent, group_id=id)
     hg.is_public = not hg.is_public
+    solr = pysolr.Solr(settings.SOLR_MAIN)
+    if hg.is_public:
+        # add object to solr index
+        doc = _hitgroup_content_to_sorl_dt(hg)
+        log.debug('adding HitGroupContent to solr index: %s', doc)
+        solr.add([doc])
+    else:
+        # remove from solr
+        log.debug('removing HitGroupContent from solr index: %s', hg.group_id)
+        _sorl_delete_hitgroup(solr, group_id=hg.group_id)
     hg.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
