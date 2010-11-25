@@ -40,7 +40,7 @@ dbpool = ThreadedConnectionPool(10, 90, 'dbname=%s user=%s password=%s' % \
 
 
 class DB(object):
-    """Simple proxy for psycogp2 connection object that allow to easily insert
+    """Simple proxy for psycopg2 connection object that allow to easily insert
     data into crawler tables.
 
     Be aware, that this object does not manage connection itself - you have to
@@ -64,20 +64,35 @@ class DB(object):
         return result[0]
 
     def insert_hit_group_content(self, data):
-        """Insert row into main_hitgroupcontent table and return it's id"""
-        self.curr.execute('''
-            INSERT INTO main_hitgroupcontent(
-                reward, description, title, requester_name, qualifications,
-                time_alloted, html, keywords, requester_id, group_id,
-                group_id_hashed, occurrence_date, first_crawl_id
-            )
-            VALUES (
-                %(reward)s, %(description)s, %(title)s, %(requester_name)s,
-                %(qualifications)s, %(time_alloted)s, %(html)s, %(keywords)s,
-                %(requester_id)s, %(group_id)s, %(group_id_hashed)s,
-                %(occurrence_date)s, %(first_crawl_id)s
-            )''', data)
-        self.curr.execute("SELECT currval('main_hitgroupcontent_id_seq')")
+        """Insert row into main_hitgroupcontent table and return it's id
+
+        main_hitgroupcontent table contains UNIQUE contstaint on group_id
+        column and because of that, inserting data with group_id that already
+        exists it that table causes IntegrityError. When that happens, instead
+        of throwing an exception, return id of already existing row.
+        """
+        try:
+            self.curr.execute('''
+                INSERT INTO main_hitgroupcontent(
+                    reward, description, title, requester_name, qualifications,
+                    time_alloted, html, keywords, requester_id, group_id,
+                    group_id_hashed, occurrence_date, first_crawl_id
+                )
+                VALUES (
+                    %(reward)s, %(description)s, %(title)s, %(requester_name)s,
+                    %(qualifications)s, %(time_alloted)s, %(html)s, %(keywords)s,
+                    %(requester_id)s, %(group_id)s, %(group_id_hashed)s,
+                    %(occurrence_date)s, %(first_crawl_id)s
+                )''', data)
+            self.curr.execute("SELECT currval('main_hitgroupcontent_id_seq')")
+        except psycopg2.IntegrityError, e:
+            # this exception was caused because  hitgroupcontent with given
+            # group_id already exists. Because of that, we do not have to
+            # insert given data - just return id of already existing data row
+            log.error('HitGroupConent insert IntegrityError, returning id: %s', data)
+            self.curr.execute('''
+                SELECT id FROM main_hitgroupcontent WHERE group_id = %s LIMIT 1
+            ''', (data['group_id'], ))
         return self.curr.fetchone()[0]
 
     def insert_hit_group_status(self, data):
