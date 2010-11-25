@@ -40,8 +40,8 @@ def _hitgroup_content_to_sorl_dt(hg):
     """
     doc = {
         'group_id': hg.group_id,
-        'requester_id': hg.requester_id,
-        'requster_name': hg.requster_name,
+        'reqeuester_id': hg.requester_id,
+        'reqeuster_name': hg.requester_name,
         'reward': hg.reward,
         'html': strip_tags(hg.context),
         'description': strip_tags(hg.description),
@@ -156,13 +156,13 @@ def requester_details(request, requester_id):
             row.append('<a href="%s">%s</a>' % (url, cc[6] and 'public' or 'private'))
             yield row
 
-    requster_name = HitGroupContent.objects.filter(requester_id=requester_id)
-    requster_name = requster_name.values_list('requester_name',flat=True).distinct()
+    requester_name = HitGroupContent.objects.filter(requester_id=requester_id)
+    requseter_name = requester_name.values_list('requester_name',flat=True).distinct()
 
-    if requster_name:
-        requster_name = requster_name[0]
+    if requester_name:
+        requester_name = requester_name[0]
     else:
-        requster_name = requester_id
+        requester_name = requester_id
 
     date_from = datetime.date.today() - datetime.timedelta(days=30)
     data = query_to_tuples("""
