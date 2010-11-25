@@ -40,10 +40,10 @@ def _hitgroup_content_to_sorl_dt(hg):
     """
     doc = {
         'group_id': hg.group_id,
-        'reqeuester_id': hg.requester_id,
-        'reqeuster_name': hg.requester_name,
+        'requester_id': hg.requester_id,
+        'requester_name': hg.requester_name,
         'reward': hg.reward,
-        'html': strip_tags(hg.context),
+        'content': strip_tags(hg.html),
         'description': strip_tags(hg.description),
         'title': hg.title,
         'keywords': [k.strip() for k in hg.keywords.split(',')],
@@ -190,7 +190,7 @@ def requester_details(request, requester_id):
     ctx = {
         'data': text_row_formater(row_formatter(data)),
         'columns': tuple(columns),
-        'title': 'Last 100 Tasks posted by %s' % requster_name,
+        'title': 'Last 100 Tasks posted by %s' % requester_name,
         'user': request.user,
     }
     return direct_to_template(request, 'main/requester_details.html', ctx)
