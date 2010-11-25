@@ -115,21 +115,19 @@ def toggle_requester_status(request, id):
     """Toggle given requester private/public status"""
     rp, created = RequesterProfile.objects.get_or_create(requester_id=id)
     rp.is_public = not rp.is_public
-    hitgroups = HitGroupContent.objects.filter(requester_id=rp.requester_id)
 
     solr = pysolr.Solr(settings.SOLR_MAIN)
     if rp.is_public:
         # add hitgroups to solr index
+        hitgroups = HitGroupContent.objects.filter(requester_id=rp.requester_id)
         log.debug('adding HitGroupContent objects to solr index: %s',
                 [hg.group_id for hg in hitgroups])
         solr.add([_hitgroup_content_to_sorl_dt(hg) for hg in hitgroups])
     else:
         # remove hitgroups from solr index
-        for hg in hitgroups:
-            solr.delete(q='group_id:%s' % hg.group_id, commit=False)
+        solr.delete(q='requester_id:"%s"' % rp.requester_id)
         log.debug('deleting HitGroupContent objects from solr index: %s',
-                [hg.group_id for hg in hitgroups])
-        solr.commit()
+                hg.requester_id)
     rp.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
@@ -201,10 +199,9 @@ def toggle_hitgroup_status(request, id):
     else:
         # remove from solr
         log.debug('removing HitGroupContent from solr index: %s', hg.group_id)
-        solr.delete(q='group_id:%s' % hg.group_id)
+        solr.delete(q='group_id:"%s"' % hg.group_id)
     hg.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
 
 def logout(request):
     auth.logout(request)
