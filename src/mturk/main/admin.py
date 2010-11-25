@@ -127,7 +127,7 @@ def toggle_requester_status(request, id):
         # remove hitgroups from solr index
         solr.delete(q='requester_id:"%s"' % rp.requester_id)
         log.debug('deleting HitGroupContent objects from solr index: %s',
-                hg.requester_id)
+                rp.requester_id)
     rp.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
