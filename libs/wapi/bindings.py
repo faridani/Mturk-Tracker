@@ -39,13 +39,13 @@ import hashlib
 from django.utils.cache import patch_response_headers
 
 def build_api_cache_key(method_name, request):
-    
+
     params = [ method_name, request.method ]
 
     for k,v in request.REQUEST.items():
         params.extend([k,v])
 
-    return hashlib.md5(':'.join(params).encode('utf-8')).hexdigest() 
+    return hashlib.md5(':'.join(params).encode('utf-8')).hexdigest()
 
 class Binding(object):
     """Base class for all Wapi bindings"""
@@ -113,7 +113,7 @@ class RestBinding(Binding):
                 data = copy(request.POST)
             else:
                 data = copy(request.GET)
-            
+
             if settings.USE_CACHE:
                 cache_key = build_api_cache_key(method_name, request)
                 func_val = cache.get(cache_key)
@@ -122,7 +122,7 @@ class RestBinding(Binding):
                     cache.set(cache_key, func_val, settings.API_CACHE_TIMEOUT)
             else:
                 func_val = method(request, data)
-                
+
             response = func_val
         except ApiLoginRequired:
             return self.auth.login_required(request)
@@ -131,9 +131,9 @@ class RestBinding(Binding):
 
         response.kwargs['request'] = request
         ret = response.transform(response_cls)
-        
-        if settings.USE_CACHE:
-            patch_response_headers(ret, settings.API_CACHE_TIMEOUT)            
 
-        
+        if settings.USE_CACHE:
+            patch_response_headers(ret, settings.API_CACHE_TIMEOUT)
+
+
         return ret
