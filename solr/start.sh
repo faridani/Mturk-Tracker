@@ -11,5 +11,10 @@ for lib in $SOLR_HOME/*.jar ; do
 done
 
 #-Dsolr.clustering.enabled=true
-java -Xmx512m -Dfile.encoding=UTF-8 -cp $LIBS org.mortbay.start.Main
-
+java \
+    -Xmx512m \
+    -Dfile.encoding=UTF-8 \
+    -cp $LIBS \
+    org.mortbay.start.Main &> /tmp/java.solr.log &
+# echo that java intance pid
+echo $!

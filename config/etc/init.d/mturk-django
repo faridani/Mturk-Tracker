@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PID_FILE=/tmp/mturk.pid
+PORT=8002
+PROJECT_ROOT=/var/www/mturk/
+USER=nginx
+
+case $1 in
+    start)
+        cd  $PROJECT_ROOT
+        exec sudo -u $USER python manage.py runfcgi host=127.0.0.1 port=$PORT pidfile=$PID_FILE daemonize=false &
+        ;;
+    stop)
+        kill `cat $PID_FILE` ;;
+    restart)
+        kill `cat $PID_FILE`
+        cd  $PROJECT_ROOT
+        exec sudo -u $USER python manage.py runfcgi host=127.0.0.1 port=$PORT pidfile=$PID_FILE daemonize=false &
+        ;;
+    *)
+        echo "usage: mturk-django {start|stop}" ;;
+esac
+exit 0

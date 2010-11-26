@@ -1,0 +1,37 @@
+#!/bin/sh
+
+. /etc/rc.d/init.d/functions
+
+SOLR_HOME="/var/www/mturk/solr"
+SOLR_PID="/var/run/solr.pid"
+SOLR_LOCK="/var/lock/subsys/solr"
+SOLR_SCRIPT="$SOLR_HOME/start.sh"
+LOG_FILE=/tmp/mturk.solr.log
+
+case "$1" in
+    start)
+        echo -n $"Starting Solr: "
+        cd $SOLR_HOME
+        exec sudo -u $USER $SOLR_SCRIPT > $SOLR_PID
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && touch $SOLR_LOCK
+        ;;
+    stop)
+        echo -n $"Stopping Solr: "
+        if [[ `ps -p $(cat $SOLR_PID) -o comm= | wc -l` -gt 0 ]]
+        then
+            kill `cat $SOLR_PID`
+            echo "done"
+            exit 0
+        fi
+        echo " not running"
+        exit 1
+        ;;
+    restart)
+        $0 stop
+        $0 start
+        ;;
+esac
+
+exit $RETVAL
