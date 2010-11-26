@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# chkconfig: 2345 95 20
+# description: Some description
+# processname: python
+# pidfile: /tmp/mturk.pid
 
 PID_FILE=/tmp/mturk.pid
 PORT=8002

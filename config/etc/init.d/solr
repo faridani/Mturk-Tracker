@@ -1,4 +1,9 @@
-#!/bin/sh
+#!/bin/bash
+#
+# chkconfig: 2345 95 20
+# description: Some description
+# processname: java
+# pidfile: /var/run/solr.pid
 
 . /etc/rc.d/init.d/functions
 
