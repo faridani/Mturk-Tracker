@@ -4,45 +4,45 @@
 {% block title%}{{block.super}}: About{% endblock %}
 {% block head %}
 
-	<link rel="stylesheet" href="{{MEDIA_URL}}css/galleria.css" type="text/css" /> 
+	<link rel="stylesheet" href="{{MEDIA_URL}}css/galleria.css" type="text/css" />
 	<script type="text/javascript" src="{{MEDIA_URL}}js/jquery.galleria.js"></script>
-	
-	<script> 
+
+	<script>
 		jQuery(function($) {
 			$('ul.galleria').galleria({
-				history   : false, 
+				history   : false,
 				clickNext : true,
 				onImage   : function(image,caption,thumb) { // let's add some image effects for demonstration purposes
- 
+
 								// fade in the image & caption
 								if(! ($.browser.mozilla && navigator.appVersion.indexOf("Win")!=-1) ) { // FF/Win fades large images terribly slow
 									image.css('display','none').fadeIn(1000);
 								}
 								caption.css('display','none').fadeIn(1000);
- 
+
 								// fetch the thumbnail container
 								var _li = thumb.parents('li');
- 
+
 								// fade out inactive thumbnail
 								_li.siblings().children('img.selected').fadeTo('fast',0.8);
- 
+
 								// fade in active thumbnail
 								thumb.fadeTo('fast',1).addClass('selected');
- 
+
 								// add a title for the clickable image
 								image.attr('title','Next image >>');
 							},
 							onThumb : function(thumb) { // thumbnail effects goes here
- 
+
 								// fetch the thumbnail container
 								var _li = thumb.parents('li');
- 
+
 								// if thumbnail is active, fade all the way.
 								var _fadeTo = _li.is('.active') ? '1' : '0.8';
- 
+
 								// fade in the thumbnail when finnished loading
 								thumb.css({display:'none',opacity:_fadeTo}).fadeIn(1500);
- 
+
 								// hover effects
 								thumb.hover(
 									function() { thumb.fadeTo('fast',1); },
@@ -52,8 +52,8 @@
 			});
 			$.galleria.activate('{{MEDIA_URL}}images/general.jpg');
 		})
-		
-	</script>  
+
+	</script>
 
 {% endblock %}
 
@@ -64,7 +64,7 @@
 		<h2>How does it work?</h2>
 		<p>
 			We use a web crawler written in python to gather all avaliable information from Amazon Mechanical Turk, we store that information PostgreSQL and everything is working on Amazon EC2 instances.
-			We crawl Mechanical Turk each hour, and compute daily statistics for new projects and completed tasks once a day. 
+			We crawl Mechanical Turk each hour, and compute daily statistics for new projects and completed tasks once a day.
 		</p>
 		<h2>What type of graphs?</h2>
 		<ul>
@@ -72,20 +72,19 @@
 			<li><a href="{%url graphs_top_requesters%}" title="Top requesters">Top 1000 requesters</a> - sorted according to cumulative rewards</li>
 			<li><a href="{%url graphs_top_requesters%}" title="Top requesters">Top 1000 requesters</a> - sorted according to cumulative rewards</li>
 			<li><a href="{%url graphs_arrivals%}" title="Arrivals">Arrivals</a> - number of new projects, available hits and rewards computed on daily basis</li>
-			<li><a href="{%url graphs_completed%}" title="Completed">Completed</a> - number of completed projects, hits and rewards computed on daily basis</li>
 		</ul>
 
 	</div>
-	
+
 	<div class="span-11 last">
-	
-		<ul class="galleria"> 
+
+		<ul class="galleria">
 			<li><img src="{{MEDIA_URL}}images/general.jpg" title="General data" alt="General data"></img></li>
-			<li><img src="{{MEDIA_URL}}images/requesters.jpg" title="Top 1000 requesters" alt="Top 1000 requesters"></img></li>  			
+			<li><img src="{{MEDIA_URL}}images/requesters.jpg" title="Top 1000 requesters" alt="Top 1000 requesters"></img></li>
 			<li><img src="{{MEDIA_URL}}images/requester_details.jpg" title="Requester details" alt="Requester details"></img></li>
-		</ul> 	
-		
-	</div>	
+		</ul>
+
+	</div>
 </div>
 
 <br style="clear:both;"/>
