@@ -9,9 +9,11 @@ except ImportError:
     sys.exit('Gevent library is required: http://www.gevent.org/')
 
 
+import os
 import time
 import datetime
 import logging
+from logging.config import fileConfig
 from optparse import make_option
 
 import gevent
@@ -29,17 +31,16 @@ log = logging.getLogger('crawl')
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
             make_option('--workers', dest='workers', type='int', default=3),
-            make_option('--loudlog', dest='loudlog', action='store_true'),
+            make_option('--logconf', dest='logconf', metavar='FILE'),
             make_option('--debug', dest='debug', action='store_true'),
     )
 
-    def setup_logging(self, loudlog=False):
+    def setup_logging(self, conf_fname):
         "Basic setup for logging module"
-        if loudlog:
-            level = logging.DEBUG
-        else:
-            level = logging.INFO
-        logging.basicConfig(filename='/tmp/mturk_crawler.log', level=level)
+        fileConfig(conf_fname)
+        if not os.path.isfile(conf_fname):
+            raise IOError('File not found: %s' % conf_fname)
+        log.info('logging conf: %s', conf_fname)
 
     def setup_debug(self):
         from crawler.debug import debug_listen
@@ -50,7 +51,8 @@ class Command(BaseCommand):
         pid = Pid('mturk_crawler', True)
         log.info('crawler started: %s;;%s', args, options)
 
-        self.setup_logging(options.get('loudlog', False))
+        if options.get('logconf', None):
+            self.setup_logging(options['logconf'])
 
         if options.get('debug', False):
             self.setup_debug()
