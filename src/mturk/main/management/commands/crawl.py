@@ -103,7 +103,7 @@ class Command(BaseCommand):
             for hg in hg_pack:
                 j = gevent.spawn(tasks.process_group, hg, crawl.id, reqesters)
                 jobs.append(j)
-                total_reward += hg.get('reward', 0)
+                total_reward += hg['reward'] * hg['hits_available']
             log.debug('processing pack of hitgroups objects')
             gevent.joinall(jobs, timeout=20)
             # check if all jobs ended successfully
