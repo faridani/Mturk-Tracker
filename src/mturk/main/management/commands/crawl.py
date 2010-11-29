@@ -93,6 +93,7 @@ class Command(BaseCommand):
         # manage database connections here - should be one for each
         # task working at the same time
         groups_downloaded = 0
+        total_reward = 0
         hitgroups_iter = self.hits_iter()
         for hg_pack in hitgroups_iter:
             groups_downloaded += len(hg_pack)
@@ -100,6 +101,7 @@ class Command(BaseCommand):
             for hg in hg_pack:
                 j = gevent.spawn(tasks.process_group, hg, crawl.id, reqesters)
                 jobs.append(j)
+                total_reward += hg.get('reward', 0)
             log.debug('processing pack of hitgroups objects')
             gevent.joinall(jobs, timeout=20)
             # check if all jobs ended successfully
@@ -126,8 +128,9 @@ class Command(BaseCommand):
 
         work_time = time.time() - _start_time
         log.info('created crawl id: %s', crawl.id)
-        log.info('processed hits groups: %s/%s',
-                groups_downloaded, groups_available)
+        log.info('total reward value: %s', total_reward)
+        log.info('processed hits groups downloaded: %s', groups_downloaded)
+        log.info('processed hits groups available: %s', groups_available)
         log.info('work time: %.2fsec', work_time)
 
     def hits_iter(self):
