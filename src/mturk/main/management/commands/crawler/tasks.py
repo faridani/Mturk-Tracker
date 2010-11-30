@@ -82,29 +82,34 @@ def hits_groups_total():
     html = _get_html(url)
     return parser.hits_group_total(html)
 
-def process_group(hg, crawl_id, requesters):
+def process_group(hg, crawl_id, requesters, processed_groups):
     """Gevent worker that should process single hitgroup.
 
     This should write some data into database and do not return any important
     data.
     """
+    hg['keywords'] = ', '.join(hg['keywords'])
+    # for those hit goups that does not contain hash group, create one and
+    # setup apropiate flag
+    hg['group_id_hashed'] = not bool(hg.get('group_id', None))
+    hg['qualifications'] = ', '.join(hg['qualifications'])
+    if hg['group_id_hashed']:
+        composition = ';'.join(map(str, (
+            hg['title'], hg['requester_id'], hg['time_alloted'],
+            hg['reward'], hg['description'], hg['keywords'],
+            hg['qualifications']))) + ';'
+        hg['group_id'] = hashlib.md5(composition).hexdigest()
+        log.debug('group_id not found, creating hash: %s  %s',
+                hg['group_id'], composition)
+
+    if hg['group_id'] in processed_groups:
+        # this higroup was already processed
+        log.info('duplicated group: %s;;%s', crawl_id, hg['group_id'])
+        return False
+
     conn = dbpool.getconn(thread.get_ident())
     db = DB(conn)
     try:
-        hg['keywords'] = ', '.join(hg['keywords'])
-        # for those hit goups that does not contain hash group, create one and
-        # setup apropiate flag
-        hg['group_id_hashed'] = not bool(hg.get('group_id', None))
-        hg['qualifications'] = ', '.join(hg['qualifications'])
-        if hg['group_id_hashed']:
-            composition = ';'.join(map(str, (
-                hg['title'], hg['requester_id'], hg['time_alloted'],
-                hg['reward'], hg['description'], hg['keywords'],
-                hg['qualifications']))) + ';'
-            hg['group_id'] = hashlib.md5(composition).hexdigest()
-            log.debug('group_id not found, creating hash: %s  %s',
-                    hg['group_id'], composition)
-
         hit_group_content_id = db.hit_group_content_id(hg['group_id'])
         if hit_group_content_id is None:
             # check if there's profile for current requester and if does
@@ -134,3 +139,4 @@ def process_group(hg, crawl_id, requesters):
     finally:
         db.curr.close()
         dbpool.putconn(conn, thread.get_ident())
+    return True

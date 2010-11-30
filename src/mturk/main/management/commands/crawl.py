@@ -95,13 +95,17 @@ class Command(BaseCommand):
         # manage database connections here - should be one for each
         # task working at the same time
         groups_downloaded = 0
+        # collection of group_ids that were already processed - this should
+        # protect us from duplicating data
+        processed_groups = set()
         total_reward = 0
         hitgroups_iter = self.hits_iter()
         for hg_pack in hitgroups_iter:
             groups_downloaded += len(hg_pack)
             jobs = []
             for hg in hg_pack:
-                j = gevent.spawn(tasks.process_group, hg, crawl.id, reqesters)
+                j = gevent.spawn(tasks.process_group,
+                        hg, crawl.id, reqesters, processed_groups)
                 jobs.append(j)
                 total_reward += hg['reward'] * hg['hits_available']
             log.debug('processing pack of hitgroups objects')
