@@ -124,7 +124,10 @@ def process_group(hg, crawl_id, requesters, processed_groups):
             # required by hitgroup content table
             hg['occurrence_date'] = datetime.datetime.now()
             hg['first_crawl_id'] = crawl_id
-            hg.update(hits_group_info(hg['group_id']))
+            if not hg['group_id_hashed']:
+                # if group_id is hashed, we cannot fetch details because we
+                # don't know what the real hash is
+                hg.update(hits_group_info(hg['group_id']))
             hit_group_content_id = db.insert_hit_group_content(hg)
             log.debug('new hit group content: %s;;%s',
                     hit_group_content_id, hg['group_id'])
