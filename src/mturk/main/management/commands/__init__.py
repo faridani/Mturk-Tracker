@@ -110,13 +110,15 @@ def update_mviews():
                     NOT exists(SELECT group_id FROM hits_mv h WHERE h.group_id = p.group_id)
                     AND p.crawl_id IN (%s);
             """, (crawl_id, ))
-            connection._commit()
+            connection.commit()
             log.info("missing crawl inserted: %s", crawl_id)
         except psycopg2.IntegrityError:
             # we cannot check if query will fail before running it, but
             # afai-googled it, it's ok to write query that will fail
             log.info("missing crawl duplicate fail: %s", crawl_id)
-            connection._rollback()
+            connection.rollback()
+
+        cursor.close()
 
 def update_first_occured_agregates():
 
