@@ -109,7 +109,7 @@ def update_mviews():
                 WHERE
                     NOT exists(SELECT group_id FROM hits_mv h WHERE h.group_id = p.group_id)
                     AND p.crawl_id IN (%s);
-            """, crawl_id)
+            """, (crawl_id, ))
             connection.commit()
             log.info("missing crawl inserted: %s", crawl_id)
         except psycopg2.IntegrityError:
