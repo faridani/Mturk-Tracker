@@ -142,4 +142,6 @@ def process_group(hg, crawl_id, requesters, processed_groups):
     finally:
         db.curr.close()
         dbpool.putconn(conn, thread.get_ident())
+
+    processed_groups.add(hg['group_id'])
     return True
