@@ -90,6 +90,7 @@ class DB(object):
             # group_id already exists. Because of that, we do not have to
             # insert given data - just return id of already existing data row
             log.error('HitGroupConent insert IntegrityError, returning id: %s', data)
+            self.conn.rollback()
             self.curr.execute('''
                 SELECT id FROM main_hitgroupcontent WHERE group_id = %s LIMIT 1
             ''', (data['group_id'], ))
