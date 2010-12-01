@@ -114,8 +114,7 @@ def update_mviews():
         WHERE
             NOT exists(select group_id from hits_mv where group_id=h.group_id and crawl_id = (h.crawl_id + 1))
             AND exists(select group_id from hits_mv where group_id=h.group_id and crawl_id = (h.crawl_id + 2))
-            AND (hits_available * reward) > 430
-            AND crawl_id IN %s
+            AND (hits_available * reward) > 350
             AND start_time > now() - interval '2 days'
         ;
     """)
