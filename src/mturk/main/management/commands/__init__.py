@@ -166,12 +166,23 @@ def update_crawl_agregates(commit_threshold=10, only_new = True):
 
         for i, row in enumerate(results):
 
-            execute_sql("""insert into main_crawlagregates
-    select sum(hits_available) as "hits", start_time, sum(reward*hits_available) as "reward", crawl_id, nextval('main_crawlagregates_id_seq'), count(*) as "count"
-        from hits_mv p
-        where crawl_id = %s
-        group by crawl_id, start_time
-            """ % row['id'])
+            execute_sql("""
+            INSERT INTO
+                main_crawlagregates
+            SELECT
+                sum(hits_available) as "hits",
+                start_time,
+                sum(reward * hits_available) as "reward",
+                crawl_id,
+                nextval('main_crawlagregates_id_seq'),
+                count(*) as "count"
+            FROM
+                (SELECT DISTINCT ON (group_id) * FROM hits_mv) AS p
+            WHERE
+                crawl_id = %s
+            GROUP BY
+                crawl_id, start_time
+            """, row['id'])
 
             if i % commit_threshold == 0:
                 logging.debug( 'commited after %s crawls' % i )
