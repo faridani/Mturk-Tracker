@@ -82,7 +82,7 @@ def general(request):
 
     def _is_anomaly(a, b, c):
         mid = (int(a['row'][0]) - int(c['row'][0])) / 2
-        return abs(mid - int(b['row'][0])) > 500
+        return abs(mid - int(b['row'][0])) > 5000
 
     params['data'] = plot.repair(data, _is_anomaly)
 

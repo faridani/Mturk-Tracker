@@ -13,9 +13,13 @@ def repair(data, is_anomaly):
     you shouldn't care for large amount of data anyway.
     """
     # zip 3 values from list sorder by indexes: [i, i+1, i+2]
-    iter = itertools.izip(data, itertools.islice(data, 1, None),
-            itertools.islice(data, 2, None))
+    iter = itertools.izip(
+            itertools.islice(data, 1, None), itertools.islice(data, 2, None))
 
-    for a, b, c in iter:
+    a = data[0]
+    for b, c in iter:
         if not is_anomaly(a, b, c):
+            # if `b` is not anomaly, the assign it to `a`, because it's what
+            # it would be during next iteration
+            a = b
             yield b
