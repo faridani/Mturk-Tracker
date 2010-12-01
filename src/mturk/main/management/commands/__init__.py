@@ -176,9 +176,7 @@ def update_crawl_agregates(commit_threshold=10, only_new = True):
                 nextval('main_crawlagregates_id_seq'),
                 count(*) as "count"
             FROM
-                (SELECT DISTINCT ON (group_id) * FROM hits_mv) AS p
-            WHERE
-                crawl_id = %s
+                (SELECT DISTINCT ON (group_id) * FROM hits_mv WHERE crawl_id = %s) AS p
             GROUP BY
                 crawl_id, start_time
             """, row['id'])
