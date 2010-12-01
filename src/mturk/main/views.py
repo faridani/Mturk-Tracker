@@ -36,6 +36,7 @@ import datetime
 import time
 
 import admin
+import plot
 
 DEFAULT_COLUMNS =  (
                ('date','Date'),
@@ -77,7 +78,11 @@ def general(request):
             order by start_time asc
     ''' % (date_from,date_to)))
 
-    params['data'] = data
+    def _is_anomaly(a, b, c):
+        mid = (a['row']['hits'] - c['row']['hits']) / 2
+        return abs(mid - b['row']['hits']) > 500
+
+    params['data'] = plot.repair(data, _is_anomaly)
 
     return direct_to_template(request, 'main/graphs/timeline.html', params)
 
