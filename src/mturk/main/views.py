@@ -50,8 +50,10 @@ ONE_HOUR = 60 * 60
 
 def data_formater(input):
     for cc in input:
-        yield {'date': cc['start_time'], 'row':(str(cc['hits']), str(cc['reward']), str(cc['count']),)}
-    return
+        yield {
+                'date': cc['start_time'],
+                'row':(cc['hits'], cc['reward'], cc['count']),
+        }
 
 @cache_page(ONE_HOUR)
 def general(request):
