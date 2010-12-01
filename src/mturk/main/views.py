@@ -80,11 +80,11 @@ def general(request):
             order by start_time asc
     ''' % (date_from,date_to)))
 
-    def _is_anomaly(a, b, c):
-        mid = (int(a['row'][0]) + int(c['row'][0])) / 2
-        return abs(mid - int(b['row'][0])) > 5000
+    def _is_anomaly(a, others):
+        mid = sum(map(lambda e: int(e['row'][0]), others)) / len(others)
+        return abs(mid - int(a['row'][0])) > 7000
 
-    params['data'] = plot.repair(data, _is_anomaly)
+    params['data'] = plot.repair(data, _is_anomaly, 2)
 
     return direct_to_template(request, 'main/graphs/timeline.html', params)
 
