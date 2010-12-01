@@ -52,7 +52,7 @@ def data_formater(input):
     for cc in input:
         yield {
                 'date': cc['start_time'],
-                'row':(cc['hits'], cc['reward'], cc['count']),
+                'row': (str(cc['hits']), str(cc['reward']), str(cc['count'])),
         }
 
 @cache_page(ONE_HOUR)
@@ -81,8 +81,8 @@ def general(request):
     ''' % (date_from,date_to)))
 
     def _is_anomaly(a, b, c):
-        mid = (a['row']['hits'] - c['row']['hits']) / 2
-        return abs(mid - b['row']['hits']) > 500
+        mid = (int(a['row'][0]) - int(c['row'][0])) / 2
+        return abs(mid - int(b['row'][0])) > 500
 
     params['data'] = plot.repair(data, _is_anomaly)
 
