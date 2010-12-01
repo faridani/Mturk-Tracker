@@ -24,11 +24,16 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
+import sys
+import time
+import logging
+
 from tenclouds.sql import query_to_dicts, execute_sql, query_to_tuples
 from mturk.main.management.commands.crawler_common import grab_error
-import sys
-import datetime
-import logging
+
+log = logging.getLogger('__init__')
+
+
 def clean_duplicates():
 
     ids = query_to_dicts("select group_id from main_hitgroupcontent group by group_id having count(*) > 1;")
@@ -72,8 +77,6 @@ def calculate_first_crawl_id():
     execute_sql('commit;')
 
 def update_mviews():
-
-    missing_crawls_ids = []
     missing_crawls = query_to_tuples("""select id from main_crawl p where p.success = true and not exists (select id from main_crawlagregates where crawl_id = p.id )""")
 
     for row in missing_crawls:
@@ -93,29 +96,33 @@ def update_mviews():
             WHERE
                 p.crawl_id IN ( %s );
         """ % crawl_id)
-
-        # insert missing higroups info
-        # TODO - timedelta query condition, so we won't process whole table
-        # each time
-        execute_sql("""
-            INSERT INTO
-                hits_mv (crawl_id, status_id, content_id, group_id, start_time,
-                requester_id, hits_available, page_number, inpage_position,
-                hit_expiration_date, reward, time_alloted)
-            SELECT
-                h.crawl_id + 1, h.status_id, h.content_id, h.group_id, h.start_time,
-                h.requester_id, h.hits_available, h.page_number, h.inpage_position,
-                h.hit_expiration_date, h.reward, h.time_alloted
-            FROM
-                hits_mv h
-            WHERE
-                not exists(select group_id from hits_mv where group_id=h.group_id and crawl_id = (h.crawl_id + 1))
-                and exists(select group_id from hits_mv where group_id=h.group_id and crawl_id = (h.crawl_id + 2))
-                and (hits_available * reward) > 430
-            ;
-        """)
-
         execute_sql('commit;')
+
+    # insert missing higroups info for the last two days
+    start_time = time.time()
+    execute_sql("""
+        INSERT INTO
+            hits_mv (crawl_id, status_id, content_id, group_id, start_time,
+            requester_id, hits_available, page_number, inpage_position,
+            hit_expiration_date, reward, time_alloted)
+        SELECT
+            h.crawl_id + 1, h.status_id, h.content_id, h.group_id, h.start_time,
+            h.requester_id, h.hits_available, h.page_number, h.inpage_position,
+            h.hit_expiration_date, h.reward, h.time_alloted
+        FROM
+            hits_mv h
+        WHERE
+            NOT exists(select group_id from hits_mv where group_id=h.group_id and crawl_id = (h.crawl_id + 1))
+            AND exists(select group_id from hits_mv where group_id=h.group_id and crawl_id = (h.crawl_id + 2))
+            AND (hits_available * reward) > 430
+            AND crawl_id IN %s
+            AND start_time > now() - interval '2 days'
+        ;
+    """)
+    execute_sql('commit;')
+    work_time = time.time() - start_time
+    log.debug('missing higroup info insert: %.2fsec', work_time)
+
 
 
 def update_first_occured_agregates():
