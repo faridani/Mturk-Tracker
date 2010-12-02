@@ -54,20 +54,25 @@ def text_row_formater(input):
             elif isinstance(el, datetime.date):
                 row.append("new Date(%s,%s,%s)" % (el.year, el.month-1, el.day))
             elif isinstance(el, float):
-                row.append("%.2f" % el)                
+                row.append("%.2f" % el)
             elif isinstance(el, datetime.timedelta):
                 row.append("%.2f" % ( el.days + (float(el.seconds)/(60*60*24) ) ))
             else:
                 row.append(simplejson.dumps(el))
-        
+
         yield "["+','.join(row)+"]"
 
 @register.simple_tag
-def google_timeline(context, columns, data):
+def google_timeline(context, columns, data, multirow=False):
     '''
     http://code.google.com/apis/visualization/documentation/gallery/annotatedtimeline.html
     '''
-    return {'data':row_formater(data), 'columns':columns}
+    ctx = {
+            'data': row_formater(data),
+            'columns': columns,
+            'multichart': context.get('multichart', False),
+        }
+    return ctx
 
 @register.simple_tag
 def google_table(context, columns, data):

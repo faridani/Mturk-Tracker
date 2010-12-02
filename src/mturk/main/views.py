@@ -55,10 +55,11 @@ def data_formater(input):
                 'row': (str(cc['hits']), str(cc['reward']), str(cc['count'])),
         }
 
-@cache_page(ONE_HOUR)
+@cache_page(0)
 def general(request):
 
     params = {
+        'multichart': True,
         'columns':DEFAULT_COLUMNS,
         'title': 'General Data'
     }

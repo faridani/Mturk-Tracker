@@ -17,3 +17,5 @@ form input.submit { font-size: 130%; font-weight: bold; height: 26px; margin: 0 
 #datepick { float: right }
 .datepick { font-size: 130%; height: 23px; text-align: center; width: 95px; }
 #form_submit { font-weight: bold; }
+
+#charts h2 { margin: 0; padding: 30px 10px 0 10px; }

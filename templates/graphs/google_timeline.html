@@ -1,56 +1,96 @@
- <script type='text/javascript'>
-google.load('visualization', '1', {'packages':['annotatedtimeline']});
-$(function () {
-    var charts = [
-        {DOMobj: document.getElementById('chart_div_hits'), dataType: 'hits'},
-        {DOMobj: document.getElementById('chart_div_rewards'), dataType: 'rewards'},
-        {DOMobj: document.getElementById('chart_div_projects'), dataType: 'projects'}
-    ]
+{% if multichart %}
+     <script type='text/javascript'>
+    google.load('visualization', '1', {'packages':['annotatedtimeline']});
+    $(function () {
+        var charts = [
+            {DOMobj: document.getElementById('chart_div_hits'), dataType: 'hits', color: 'blue'},
+            {DOMobj: document.getElementById('chart_div_rewards'), dataType: 'rewards', color: 'red'},
+            {DOMobj: document.getElementById('chart_div_projects'), dataType: 'projects', color: 'green'}
+        ]
 
-	google.setOnLoadCallback(function () {
-        var dataBox = [];
-        var columns = [];
+        google.setOnLoadCallback(function () {
+            var dataBox = [];
+            var columns = [];
 
-        {% for column in columns %}
-            columns.push(['{{ column.0 }}', '{{ column.1 }}']);
-        {% endfor %}
+            {% for column in columns %}
+                columns.push(['{{ column.0 }}', '{{ column.1 }}']);
+            {% endfor %}
 
-        for (var i=1; i<columns.length; ++i) {
-            var data = new google.visualization.DataTable();
-            data.addColumn.apply(data, columns[0]);
-            data.addColumn.apply(data, columns[i]);
-            dataBox.push(data);
-        }
-
-        {% for row in data %}
-            var row = {{ row }};
-            for (i=1; i<=charts.length; ++i) {
-                dataBox[i - 1].addRow([row[0], row[i]]);
+            for (var i=1; i<columns.length; ++i) {
+                var data = new google.visualization.DataTable();
+                data.addColumn.apply(data, columns[0]);
+                data.addColumn.apply(data, columns[i]);
+                dataBox.push(data);
             }
-        {% endfor %}
 
-		/* List data from the last week */
-		var currentdate = new Date();
-		var pastdate = new Date();
-		pastdate.setDate(currentdate.getDate() - 7);
+            {% for row in data %}
+                var row = {{ row }};
+                for (i=1; i<=charts.length; ++i) {
+                    dataBox[i - 1].addRow([row[0], row[i]]);
+                }
+            {% endfor %}
 
-        $.each(charts, function (i, conf) {
-            var chart = new google.visualization.AnnotatedTimeLine(conf.DOMobj);
-            var data = dataBox[i];
-            chart.draw(data, {
-                    displayAnnotations: false,
-                    scaleColumns: [0, 1],
-                    scaleType: 'allfixed',
-                    legendPosition: 'newRow',
-                    wmode: 'transparent',
-                    zoomEndTime: currentdate,
-                    zoomStartTime: pastdate
-                });
+            /* List data from the last week */
+            var currentdate = new Date();
+            var pastdate = new Date();
+            pastdate.setDate(currentdate.getDate() - 7);
+
+            $.each(charts, function (i, conf) {
+                var chart = new google.visualization.AnnotatedTimeLine(conf.DOMobj);
+                var data = dataBox[i];
+                chart.draw(data, {
+                        displayAnnotations: false,
+                        scaleColumns: [0, 1],
+                        scaleType: 'allfixed',
+                        wmode: 'transparent',
+                        zoomEndTime: currentdate,
+                        zoomStartTime: pastdate,
+                        colors: [conf.color]
+                    });
+            });
         });
     });
-});
-</script>
+    </script>
 
-<div id="chart_div_hits" style="height: 300px;"></div>
-<div id="chart_div_rewards" style="height: 300px; margin: 5px;"></div>
-<div id="chart_div_projects" style="height: 300px;"></div>
+    <div id="charts">
+        <h2>Hits</h2>
+        <div id="chart_div_hits" style="height: 300px;"></div>
+        <h2>Rewards</h2>
+        <div id="chart_div_rewards" style="height: 300px;"></div>
+        <h2>Projects</h2>
+        <div id="chart_div_projects" style="height: 300px;"></div>
+    </div>
+
+{% else %}
+
+     <script type='text/javascript'>
+            google.load('visualization', '1', {'packages':['annotatedtimeline']});
+            google.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+
+                    var data = new google.visualization.DataTable();
+
+                    {% for type,name in columns %}
+                    data.addColumn('{{type}}', '{{name}}');
+                    {% endfor %}
+
+            {% for row in data %}
+            data.addRow({{row}});
+            {% endfor %}
+
+                    /* List data from the last week */
+                    var currentdate = new Date();
+                    var pastdate = new Date();
+                    pastdate.setDate(currentdate.getDate()-7);
+
+            var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
+            chart.draw(data, {displayAnnotations: false, scaleColumns: [0, 1], scaleType: 'allfixed', legendPosition: 'newRow', wmode: 'transparent', zoomEndTime:  currentdate, zoomStartTime:  pastdate });
+
+            }
+
+    </script>
+
+    <div id="chart_div" style="height: 600px;"></div>
+
+{% endif %}
