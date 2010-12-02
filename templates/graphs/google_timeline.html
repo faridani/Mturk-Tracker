@@ -24,7 +24,7 @@ $(function () {
 
         {% for row in data %}
             var row = {{ row }};
-            for (i=1; i<charts.length; ++i) {
+            for (i=1; i<=charts.length; ++i) {
                 dataBox[i - 1].addRow([row[0], row[i]]);
             }
         {% endfor %}
@@ -36,6 +36,7 @@ $(function () {
 
         $.each(charts, function (i, conf) {
             var chart = new google.visualization.AnnotatedTimeLine(conf.DOMobj);
+            var data = dataBox[i];
             chart.draw(data, {
                     displayAnnotations: false,
                     scaleColumns: [0, 1],
@@ -50,6 +51,6 @@ $(function () {
 });
 </script>
 
-<div id="chart_div_hits" style="height: 400px;"></div>
-<div id="chart_div_rewards" style="height: 400px;"></div>
-<div id="chart_div_projects" style="height: 400px;"></div>
+<div id="chart_div_hits" style="height: 300px;"></div>
+<div id="chart_div_rewards" style="height: 300px; margin: 5px;"></div>
+<div id="chart_div_projects" style="height: 300px;"></div>
