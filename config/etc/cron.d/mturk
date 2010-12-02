@@ -1,7 +1,7 @@
 APP_PATH=/var/www/mturk
 MAILTO="michal.klujszo@10clouds.com"
 
-*/10    *       *       *       *       root    cd $APP_PATH && python manage.py cral --workers=8
+*/10    *       *       *       *       root    cd $APP_PATH && python manage.py crawl --workers=8
 15      *       *       *       *       root    cd $APP_PATH && python manage.py db_refresh_mviews
 25      1       *       *       *       root    cd $APP_PATH && python manage.py db_calculate_daily_stats
 
