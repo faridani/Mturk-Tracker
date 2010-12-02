@@ -1,29 +1,55 @@
- <script type='text/javascript'> 
-	google.load('visualization', '1', {'packages':['annotatedtimeline']});
-	google.setOnLoadCallback(drawChart);
+ <script type='text/javascript'>
+google.load('visualization', '1', {'packages':['annotatedtimeline']});
+$(function () {
+    var charts = [
+        {DOMobj: document.getElementById('chart_div_hits'), dataType: 'hits'},
+        {DOMobj: document.getElementById('chart_div_rewards'), dataType: 'rewards'},
+        {DOMobj: document.getElementById('chart_div_projects'), dataType: 'projects'}
+    ]
 
-	function drawChart() {
+	google.setOnLoadCallback(function () {
+        var dataBox = [];
+        var columns = [];
 
-		var data = new google.visualization.DataTable();
+        {% for column in columns %}
+            columns.push(['{{ column.0 }}', '{{ column.1 }}']);
+        {% endfor %}
 
-		{% for type,name in columns %}
-		data.addColumn('{{type}}', '{{name}}');
-		{% endfor %}
-		
-    	{% for row in data %}
-    	data.addRow({{row}});
-    	{% endfor %}
-	
+        for (var i=1; i<columns.length; ++i) {
+            var data = new google.visualization.DataTable();
+            data.addColumn.apply(data, columns[0]);
+            data.addColumn.apply(data, columns[i]);
+            dataBox.push(data);
+        }
+
+        {% for row in data %}
+            var row = {{ row }};
+            for (i=1; i<charts.length; ++i) {
+                dataBox[i - 1].addRow(row[0], row[i]);
+            }
+        {% endfor %}
+
 		/* List data from the last week */
 		var currentdate = new Date();
 		var pastdate = new Date();
-		pastdate.setDate(currentdate.getDate()-7);
-		 
-        var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
-        chart.draw(data, {displayAnnotations: false, scaleColumns: [0, 1], scaleType: 'allfixed', legendPosition: 'newRow', wmode: 'transparent', zoomEndTime:  currentdate, zoomStartTime:  pastdate });
-        		
-	}	
-      
+		pastdate.setDate(currentdate.getDate() - 7);
+
+        $.each(charts, function (i, conf) {
+            var chart = new google.visualization.AnnotatedTimeLine(conf.DOMobj);
+            chart.draw(data, {
+                    displayAnnotations: false,
+                    scaleColumns: [0, 1],
+                    scaleType: 'allfixed',
+                    legendPosition: 'newRow',
+                    wmode: 'transparent',
+                    zoomEndTime: currentdate,
+                    zoomStartTime: pastdate
+                });
+        });
+    });
+});
 </script>
 
-<div id="chart_div" style="height: 600px;"></div>
+<div id="chart_div_hits" style="height: 400px;"></div>
+<div id="chart_div_rewards" style="height: 400px;"></div>
+<div id="chart_div_projects" style="height: 400px;"></div>
