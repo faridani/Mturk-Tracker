@@ -1,7 +1,7 @@
 import itertools
 
 
-def repair(data, is_anomaly, depth=1):
+def repair(data, is_anomaly, fixer=None, depth=1):
     """Return iterator to repaired list of given data
 
     If any data is considered broken, remove it from the iterated list.
@@ -21,11 +21,13 @@ def repair(data, is_anomaly, depth=1):
     iterators = []
     for i in range(depth * 2 + 1):
         iterators.append(itertools.islice(data, i, None))
-    iter = itertools.izip(*iterators)
+    items_iter = itertools.izip(*iterators)
 
-    for items in iter:
+    for items in items_iter:
         mid = items[depth]
-        if not is_anomaly(mid, items[:depth] + items[depth + 1:]):
-            # if `b` is not anomaly, the assign it to `a`, because it's what
-            # it would be during next iteration
+        other = items[:depth] + items[depth + 1:]
+        if is_anomaly(mid, other):
+            if fixer is not None:
+                yield fixer(mid, other)
+        else:
             yield mid

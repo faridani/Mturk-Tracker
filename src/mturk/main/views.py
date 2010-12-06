@@ -85,7 +85,12 @@ def general(request):
         mid = sum(map(lambda e: int(e['row'][0]), others)) / len(others)
         return abs(mid - int(a['row'][0])) > 7000
 
-    params['data'] = plot.repair(data, _is_anomaly, 2)
+    def _fixer(a, others):
+        val = sum(map(lambda e: int(e['row'][0]), others)) / len(others)
+        a['row'] = (val, a['row'][1], a['row'][2])
+        return a
+
+    params['data'] = plot.repair(data, _is_anomaly, _fixer, 2)
 
     return direct_to_template(request, 'main/graphs/timeline.html', params)
 
