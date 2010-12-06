@@ -19,18 +19,18 @@ html, body {
     font-size: 85%;
 }
 
-body { 
-    font-family: Verdana, sans; 
-    font-size: 85%; 
-    line-height: 1.5em; 
+body {
+    font-family: Verdana, sans;
+    font-size: 85%;
+    line-height: 1.5em;
 }
 
-a { 
-    color: gray; 
-    font-weight: bold; 
+a {
+    color: gray;
+    font-weight: bold;
     text-decoration: none;
 }
 
-.clear { 
-    clear: both; 
+.clear {
+    clear: both;
 }
