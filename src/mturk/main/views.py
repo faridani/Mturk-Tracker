@@ -87,7 +87,7 @@ def general(request):
 
     def _fixer(a, others):
         val = sum(map(lambda e: int(e['row'][0]), others)) / len(others)
-        a['row'] = (val, a['row'][1], a['row'][2])
+        a['row'] = (str(val), a['row'][1], a['row'][2])
         return a
 
     params['data'] = plot.repair(data, _is_anomaly, _fixer, 2)
