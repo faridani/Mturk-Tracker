@@ -136,3 +136,26 @@ class RequesterProfile(models.Model):
     is_public = models.BooleanField(default=True)
 
     objects = RequesterProfileManager()
+
+
+class RequestersIndexQueue(models.Model):
+    """List of requesters that required solr reindexing.
+
+
+    Because there might be huge amount of HitGroupContent objects for single
+    requester, it's impossible to index all of them during single request
+    using django ORM.
+    Solr is using DataImportHandler to import data directly from PostgreSQL -
+    this has no timeouts.
+
+    So, adding reference to requester in this table will force
+    DataImportHandler to reindex all HitGroupContent objects related to given
+    requester_id once again.
+
+    Do not know how to delete old rows from that table using DataImportHandler
+    (even if it's possible or not), so instead of cleaning that table, cration
+    date token is being used to decide if RequestersIndexQueue instance is
+    still valid.
+    """
+    requester_id = models.CharField(max_length=64)
+    created = models.DateTimeField(auto_now_add=True)

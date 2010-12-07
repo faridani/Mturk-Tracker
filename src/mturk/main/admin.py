@@ -17,7 +17,7 @@ from pythonsolr import  pysolr
 
 from tenclouds.sql import query_to_tuples
 from mturk.main.templatetags.graph import text_row_formater
-from models import RequesterProfile, HitGroupContent
+from models import RequesterProfile, HitGroupContent, RequestersIndexQueue
 from html import strip_tags
 
 
@@ -119,10 +119,14 @@ def toggle_requester_status(request, id):
     solr = pysolr.Solr(settings.SOLR_MAIN)
     if rp.is_public:
         # add hitgroups to solr index
-        hitgroups = HitGroupContent.objects.filter(requester_id=rp.requester_id)
-        log.debug('adding HitGroupContent objects to solr index: %s',
-                [hg.group_id for hg in hitgroups])
-        solr.add([_hitgroup_content_to_sorl_dt(hg) for hg in hitgroups])
+        RequestersIndexQueue.objects.create(requester_id=rp.requester_id)
+
+        # indexing large amount of data during single request might not be the
+        # best idea...
+        #hitgroups = HitGroupContent.objects.filter(requester_id=rp.requester_id)
+        #log.debug('adding HitGroupContent objects to solr index: %s',
+        #        [hg.group_id for hg in hitgroups])
+        #solr.add([_hitgroup_content_to_sorl_dt(hg) for hg in hitgroups])
     else:
         # remove hitgroups from solr index
         solr.delete(q='requester_id:"%s"' % rp.requester_id)
@@ -145,7 +149,7 @@ def requester_details(request, requester_id):
             yield row
 
     requester_name = HitGroupContent.objects.filter(requester_id=requester_id)
-    requseter_name = requester_name.values_list('requester_name',flat=True).distinct()
+    requester_name = requester_name.values_list('requester_name',flat=True).distinct()
 
     if requester_name:
         requester_name = requester_name[0]
