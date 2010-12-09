@@ -151,7 +151,7 @@ class IndexQueueManager(models.Manager):
             FROM
                 main_hitgroupcontent
             WHERE
-                hgc.requester_id = %s
+                requester_id = %s
         ''', (requester_id, ))
         transaction.commit_unless_managed()
 
