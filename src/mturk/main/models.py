@@ -25,7 +25,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
 # -*- coding: utf-8 -*-
-from django.db import models
+from django.db import models, connection, transaction
+
 from mturk.fields import JSONField
 import datetime
 
@@ -140,7 +141,19 @@ class RequesterProfile(models.Model):
 
 class IndexQueueManager(models.Manager):
     def add_requester(self, requester_id):
-        pass
+        cursor = connection.cursor()
+        cursor.execute('''
+            INSERT INTO main_indexqueue (
+                hitgroupcontent_id, requester_id, created
+            )
+            SELECT
+                id, requester_id, now()
+            FROM
+                main_hitgroupcontent
+            WHERE
+                hgc.requester_id = %s
+        ''', (requester_id, ))
+        transaction.commit_unless_managed()
 
     def del_requester(self, requester_id):
         self.filter(requester_id=requester_id).delete()
