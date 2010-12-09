@@ -138,24 +138,26 @@ class RequesterProfile(models.Model):
     objects = RequesterProfileManager()
 
 
-class RequestersIndexQueue(models.Model):
-    """List of requesters that required solr reindexing.
+class IndexQueueManager(models.Manager):
+    def add_requester(self, requester_id):
+        pass
+
+    def del_requester(self, requester_id):
+        self.filter(requester_id=requester_id).delete()
+
+    def del_hitgroupcontent(self, hitgroupcontent_id):
+        self.filter(group_id=hitgroupcontent_id).delete()
 
 
-    Because there might be huge amount of HitGroupContent objects for single
-    requester, it's impossible to index all of them during single request
-    using django ORM.
-    Solr is using DataImportHandler to import data directly from PostgreSQL -
-    this has no timeouts.
+class IndexQueue(models.Model):
+    """List of ids that should be indexed in sold.
 
-    So, adding reference to requester in this table will force
-    DataImportHandler to reindex all HitGroupContent objects related to given
-    requester_id once again.
-
-    Do not know how to delete old rows from that table using DataImportHandler
-    (even if it's possible or not), so instead of cleaning that table, cration
-    date token is being used to decide if RequestersIndexQueue instance is
-    still valid.
+    Because we don't have to be 100% sure that given hitgroupcontent_id exists
+    in HitGroupContent table, instead of using ForeignKey, simple Integer was
+    used.
     """
+    hitgroupcontent_id = models.IntegerField()
     requester_id = models.CharField(max_length=64)
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = IndexQueueManager()

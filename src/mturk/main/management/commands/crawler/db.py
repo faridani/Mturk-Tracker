@@ -108,3 +108,12 @@ class DB(object):
                 %(page_number)s, %(group_id)s, %(hits_available)s,
                 %(hit_expiration_date)s
             )''', data)
+
+        # add related hitgroupcontent id to index queue
+        self.curr.execute('''
+            INSERT INTO main_indexqueue (
+                hitgroupcontent_id, requester_id, created
+            )
+            VALUES (
+                %(hit_group_content_id)s, %(requester_id)s, now()
+            )''', data)

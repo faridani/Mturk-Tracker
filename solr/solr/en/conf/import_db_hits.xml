@@ -21,21 +21,11 @@
 
 				deltaQuery="
                 SELECT DISTINCT
-                    hgc.id
+                    hitgroupcontent_id as id
                 FROM
-                    main_hitgroupcontent hgc,
-                    main_hitgroupstatus hgs,
-                    main_crawl c
-                LEFT OUTER JOIN
-                    main_requestersindexqueue riq ON (hgc.requester_id = riq.requester_id)
+                    main_indexqueue
 				WHERE
-                    hgc.group_id = hgs.group_id
-                    AND hgc.is_public = true AND
-                    AND (
-                            (SELECT start_time FROM main_crawl WHERE id = hgs.crawl_id) > '${dataimporter.last_index_time}'
-                        OR
-                            (riq.requester_id AND riq.created > '${dataimporter.last_index_time}')
-                    )
+                    created > '${dataimporter.last_index_time}'
                 "
 
                 deltaImportQuery="SELECT group_id, requester_id, requester_name, reward, html, description, title, keywords,

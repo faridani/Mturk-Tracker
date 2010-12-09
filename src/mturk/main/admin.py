@@ -17,7 +17,7 @@ from pythonsolr import  pysolr
 
 from tenclouds.sql import query_to_tuples
 from mturk.main.templatetags.graph import text_row_formater
-from models import RequesterProfile, HitGroupContent, RequestersIndexQueue
+from models import RequesterProfile, HitGroupContent, IndexQueue
 from html import strip_tags
 
 
@@ -119,7 +119,7 @@ def toggle_requester_status(request, id):
     solr = pysolr.Solr(settings.SOLR_MAIN)
     if rp.is_public:
         # add hitgroups to solr index
-        RequestersIndexQueue.objects.create(requester_id=rp.requester_id)
+        IndexQueue.objects.add_requester(rp.requester_id)
 
         # indexing large amount of data during single request might not be the
         # best idea...
@@ -130,6 +130,7 @@ def toggle_requester_status(request, id):
     else:
         # remove hitgroups from solr index
         solr.delete(q='requester_id:"%s"' % rp.requester_id)
+        IndexQueue.objects.del_requester(rp.requester_id)
         log.debug('deleting HitGroupContent objects from solr index: %s',
                 rp.requester_id)
     rp.save()
@@ -203,6 +204,7 @@ def toggle_hitgroup_status(request, id):
     else:
         # remove from solr
         log.debug('removing HitGroupContent from solr index: %s', hg.group_id)
+        IndexQueue.objects.del_hitgroupcontent(hg.group_id)
         solr.delete(q='group_id:"%s"' % hg.group_id)
     hg.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
