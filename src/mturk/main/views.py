@@ -55,7 +55,7 @@ def data_formater(input):
                 'row': (str(cc['hits']), str(cc['reward']), str(cc['count'])),
         }
 
-@cache_page(0)
+@cache_page(ONE_HOUR)
 def general(request):
 
     params = {
