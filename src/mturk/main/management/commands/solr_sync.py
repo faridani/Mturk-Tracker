@@ -3,6 +3,7 @@
 
 import urllib2
 import logging
+import datetime
 from optparse import make_option
 
 from django.conf import settings
@@ -17,6 +18,7 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
             make_option('--verbose', dest='verbose', action='store_true'),
             make_option('--clean-queue', dest='clean_queue', action='store_true'),
+            make_option('--older-than', dest='older_than', type='int', default=2),
     )
 
     def handle(self, *args, **options):
@@ -30,7 +32,9 @@ class Command(BaseCommand):
 
         if options.get('clean_queue', False):
             # remove rows from index queue and quit
-            IndexQueue.objects.all().delete()
+            now = datetime.datetime.now()
+            older_than = now - datetime.timedelta(days=options['older_than'])
+            IndexQueue.objects.filter(created__lte=older_than).delete()
             return
 
         log.info('solr delta sync started')
