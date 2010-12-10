@@ -90,7 +90,7 @@ def general(request):
         a['row'] = (str(val), a['row'][1], a['row'][2])
         return a
 
-    params['data'] = plot.repair(data, _is_anomaly, _fixer, 2)
+    params['data'] = plot.repair(list(data), _is_anomaly, _fixer, 2)
 
     return direct_to_template(request, 'main/graphs/timeline.html', params)
 
