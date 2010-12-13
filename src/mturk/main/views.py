@@ -103,6 +103,7 @@ def general(request):
 def arrivals(request):
 
     params = {
+        'multichart': True,
         'columns':DEFAULT_COLUMNS,
         'title': 'New Tasks/HITs/$$$ per day'
     }
