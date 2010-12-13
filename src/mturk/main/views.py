@@ -64,22 +64,27 @@ def general(request):
         'title': 'General Data'
     }
 
-    date_from = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
-    date_to = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+    if 'date_from' in request.GET:
+        date_from = datetime.datetime(
+                *time.strptime(request.GET['date_from'], '%m/%d/%Y')[:6])
+    else:
+        date_from = datetime.datetime.now() - datetime.timedelta(days=7)
 
-    if request.method == 'GET' and 'date_from' in request.GET and 'date_to' in request.GET:
+    if 'date_to' in request.GET:
+        date_to = datetime.datetime(
+                *time.strptime(request.GET['date_to'], '%m/%d/%Y')[:6])
+    else:
+        date_to = datetime.datetime.now()
 
-        date_from = datetime.datetime(*time.strptime(request.GET['date_from'], '%m/%d/%Y')[:6])
-        date_to = datetime.datetime(*time.strptime(request.GET['date_to'], '%m/%d/%Y')[:6])
-        params['date_from'] = request.GET['date_from']
-        params['date_to'] = request.GET['date_to']
+    params['date_from'] = date_from.strftime('%m/%d/%Y')
+    params['date_to'] = date_to.strftime('%m/%d/%Y')
 
     data = data_formater(query_to_dicts('''
         select reward, hits, projects as "count", start_time
             from main_crawlagregates
-            where start_time >= '%s' and start_time <= '%s'
+            where start_time >= %s and start_time <= %s
             order by start_time asc
-    ''' % (date_from,date_to)))
+        ''', date_from, date_to))
 
     def _is_anomaly(a, others):
         mid = sum(map(lambda e: int(e['row'][0]), others)) / len(others)

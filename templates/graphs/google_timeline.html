@@ -30,10 +30,9 @@
                 }
             {% endfor %}
 
-            /* List data from the last week */
             var currentdate = new Date();
             var pastdate = new Date();
-            pastdate.setDate(currentdate.getDate() - 7);
+            pastdate.setDate(currentdate.getDate() - 1);
 
             $.each(charts, function (i, conf) {
                 var chart = new google.visualization.AnnotatedTimeLine(conf.DOMobj);
@@ -76,27 +75,32 @@
             google.setOnLoadCallback(drawChart);
 
             function drawChart() {
+                var data = new google.visualization.DataTable();
 
-                    var data = new google.visualization.DataTable();
-
-                    {% for type,name in columns %}
+                {% for type,name in columns %}
                     data.addColumn('{{type}}', '{{name}}');
-                    {% endfor %}
+                {% endfor %}
 
-            {% for row in data %}
-            data.addRow({{row}});
-            {% endfor %}
+                {% for row in data %}
+                    data.addRow({{row}});
+                {% endfor %}
 
-                    /* List data from the last week */
-                    var currentdate = new Date();
-                    var pastdate = new Date();
-                    pastdate.setDate(currentdate.getDate()-7);
+                /* List data from the last week */
+                var currentdate = new Date();
+                var pastdate = new Date();
+                pastdate.setDate(currentdate.getDate() - 7);
 
-            var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
-            chart.draw(data, {displayAnnotations: false, scaleColumns: [0, 1], scaleType: 'allfixed', legendPosition: 'newRow', wmode: 'transparent', zoomEndTime:  currentdate, zoomStartTime:  pastdate });
-
+                var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
+                chart.draw(data, {
+                    displayAnnotations: false,
+                    scaleColumns: [0, 1]l
+                    scaleType: 'allfixed',
+                    legendPosition: 'newRow',
+                    wmode: 'transparent',
+                    zoomEndTime: currentdate,
+                    zoomStartTime: pastdate
+                });
             }
-
     </script>
 
     <div id="chart_div" style="height: 600px;"></div>
