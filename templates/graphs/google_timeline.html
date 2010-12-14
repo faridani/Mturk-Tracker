@@ -32,7 +32,7 @@
 
             var currentdate = new Date();
             var pastdate = new Date();
-            pastdate.setDate(currentdate.getDate() - 1);
+            pastdate.setDate(currentdate.getDate() - {{ default_show_days|default:"5" }});
 
             $.each(charts, function (i, conf) {
                 var chart = new google.visualization.AnnotatedTimeLine(conf.DOMobj);
@@ -88,7 +88,7 @@
                 /* List data from the last week */
                 var currentdate = new Date();
                 var pastdate = new Date();
-                pastdate.setDate(currentdate.getDate() - 7);
+                pastdate.setDate(currentdate.getDate() - {{ default_show_days|default:"7" }});
 
                 var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
                 chart.draw(data, {

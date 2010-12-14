@@ -61,7 +61,8 @@ def general(request):
     params = {
         'multichart': True,
         'columns':DEFAULT_COLUMNS,
-        'title': 'General Data'
+        'title': 'General Data',
+        'default_show_days': 1,
     }
 
     if 'date_from' in request.GET:
@@ -105,7 +106,8 @@ def arrivals(request):
     params = {
         'multichart': True,
         'columns':DEFAULT_COLUMNS,
-        'title': 'New Tasks/HITs/$$$ per day'
+        'title': 'New Tasks/HITs/$$$ per day',
+        'default_show_days': 5,
     }
 
     date_from = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
