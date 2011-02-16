@@ -155,7 +155,6 @@ def update_first_occured_agregates():
 
 
 def update_crawl_agregates(commit_threshold=10, only_new = True):
-    try:
 
         results = None
 
@@ -167,32 +166,33 @@ def update_crawl_agregates(commit_threshold=10, only_new = True):
         logging.info("got %s results" % len(results))
 
         for i, row in enumerate(results):
+            try:
 
-            execute_sql("""
-            INSERT INTO
-                main_crawlagregates
-            SELECT
-                sum(hits_available) as "hits",
-                start_time,
-                sum(reward * hits_available) as "reward",
-                crawl_id,
-                nextval('main_crawlagregates_id_seq'),
-                count(*) as "count"
-            FROM
-                (SELECT DISTINCT ON (group_id) * FROM hits_mv WHERE crawl_id = %s) AS p
-            GROUP BY
-                crawl_id, start_time
-            """, row['id'])
+                execute_sql("""
+                INSERT INTO
+                    main_crawlagregates
+                SELECT
+                    sum(hits_available) as "hits",
+                    start_time,
+                    sum(reward * hits_available) as "reward",
+                    crawl_id,
+                    nextval('main_crawlagregates_id_seq'),
+                    count(*) as "count"
+                FROM
+                    (SELECT DISTINCT ON (group_id) * FROM hits_mv WHERE crawl_id = %s) AS p
+                GROUP BY
+                    crawl_id, start_time
+                """, row['id'])
+    
+                if i % commit_threshold == 0:
+                    logging.debug( 'commited after %s crawls' % i )
+                    execute_sql('commit;')
 
-            if i % commit_threshold == 0:
-                logging.debug( 'commited after %s crawls' % i )
-                execute_sql('commit;')
+            except:
+                error_info = grab_error(sys.exc_info())
+                logging.error('an error occured at crawl_id: %s, %s %s' % (row['id'],error_info['type'], error_info['value']))
+                execute_sql('rollback;')
 
-
-    except:
-        error_info = grab_error(sys.exc_info())
-        logging.error('an error occured at crawl_id: %s, %s %s' % (row['id'],error_info['type'], error_info['value']))
-        execute_sql('rollback;')
 
     # delete dummy data
     execute_sql("DELETE FROM main_crawlagregates WHERE projects < 200;")
