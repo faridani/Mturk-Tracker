@@ -46,6 +46,8 @@ class Command(BaseCommand):
     def handle(self, **options):
         
         pid = Pid('mturk_crawler', True)
+
+        start_time = time.time()
         
         logging.info('cleaning up db from duplicates')
         clean_duplicates()
@@ -54,20 +56,19 @@ class Command(BaseCommand):
 #        calculate_first_crawl_id()  
         
         logging.info('Refreshing materialised views')
-        start_time = time.time()
         update_mviews()
-        log = 'refreshing hits_mv took: %s' % (time.time() - start_time)
+        
         logging.info(log)
         
        
         logging.info('Updating crawl agregates')
         update_crawl_agregates(1, only_new = True)
         
-        logging.info('Updating first occured agregates')
-        update_first_occured_agregates()
+#        logging.info('Updating first occured agregates')
+#        update_first_occured_agregates()
         
         logging.info('done refreshing mviews')
         
-        print log
+        log = 'db_refresh_mviews took: %s' % (time.time() - start_time)
         
         pid.remove_pid()
