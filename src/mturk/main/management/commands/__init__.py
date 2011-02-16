@@ -183,9 +183,11 @@ def update_crawl_agregates(commit_threshold=10, only_new = True):
             GROUP BY
                 crawl_id, start_time
             """, row['id'])
+            
+            logging.info("update agregates for %s" % row['id'])
     
             if i % commit_threshold == 0:
-                logging.debug( 'commited after %s crawls' % i )
+                logging.info( 'commited after %s crawls' % i )
                 execute_sql('commit;')
     
         except:
