@@ -50,8 +50,8 @@ class Command(BaseCommand):
         logging.info('cleaning up db from duplicates')
         clean_duplicates()
         
-        logging.info('calculating first_crawl_id')
-        calculate_first_crawl_id()  
+#        logging.info('calculating first_crawl_id')
+#        calculate_first_crawl_id()  
         
         logging.info('Refreshing materialised views')
         start_time = time.time()
