@@ -58,7 +58,7 @@ class Command(BaseCommand):
         logging.info('Refreshing materialised views')
         update_mviews()
         
-        logging.info(log)
+        
         
        
         logging.info('Updating crawl agregates')
@@ -69,6 +69,6 @@ class Command(BaseCommand):
         
         logging.info('done refreshing mviews')
         
-        log = 'db_refresh_mviews took: %s' % (time.time() - start_time)
+        logging.info('db_refresh_mviews took: %s' % (time.time() - start_time))
         
         pid.remove_pid()
