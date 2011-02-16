@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 '''
 Copyright (c) 2009 Panagiotis G. Ipeirotis
 
@@ -45,27 +47,12 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         
-        pid = Pid('mturk_crawler', True)
-
+        pid = Pid('mturk_agregates', True)
         start_time = time.time()
         
-        logging.info('cleaning up db from duplicates')
-        clean_duplicates()
+        logging.info('Updating crawl agregates')
+        update_crawl_agregates(1, only_new = True)
         
-#        logging.info('calculating first_crawl_id')
-#        calculate_first_crawl_id()  
-        
-        logging.info('Refreshing materialised views')
-        update_mviews()
-       
-#        logging.info('Updating crawl agregates')
-#        update_crawl_agregates(1, only_new = True)
-        
-#        logging.info('Updating first occured agregates')
-#        update_first_occured_agregates()
-        
-        logging.info('done refreshing mviews')
-        
-        logging.info('db_refresh_mviews took: %s' % (time.time() - start_time))
+        logging.info('db_update_agregates took: %s' % (time.time() - start_time))
         
         pid.remove_pid()

@@ -164,6 +164,8 @@ def update_crawl_agregates(commit_threshold=10, only_new = True):
         else:
             results = query_to_dicts("select id from main_crawl p where not exists(select id from main_crawlagregates where crawl_id = p.id)")
 
+        logging.info("got %s results" % len(results))
+
         for i, row in enumerate(results):
 
             execute_sql("""
