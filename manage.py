@@ -41,7 +41,7 @@ if __name__ == "__main__":
     """
     #Import settings
     try:
-        settings_name = os.environ.get(ENVIRONMENT_VARIABLE, 'mturk.settings.defaults')
+        settings_name = os.environ[ENVIRONMENT_VARIABLE]
         print 'Settings: %s' % settings_name
         __mod = __import__(settings_name, {}, {}, [''])
     except ImportError, e:
