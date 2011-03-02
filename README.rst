@@ -41,13 +41,13 @@ After that, clone mturk code from repository and install all
 dependencies using pip_ (you have to install *mercurial* and *subversion*
 first)::
 
-    $ git clone git://github.com/mickek/Mturk-Tracker.git src
-    $ cd src
+	$ git clone git://github.com/mickek/Mturk-Tracker.git src
+	$ cd src
 	$ git fetch
 	$ git checkout -b virtualenv --track origin/virtualenv
 	$ echo "mturk.settings.base" > DJANGO_SETTINGS_MODULE
-    $ pip install -r requirements.txt
-
+	$ pip install -r requirements.txt
+	
 Libraries update
 ~~~~~~~~~~~~~~~~
 
@@ -73,7 +73,7 @@ Setting up Database
 ~~~~~~~~~~~~~~~~~~~
 
 Make sure that django app can connect to database, the best way to do that is to allow postgres to accept local connections by editing pg_hba.conf file.
-Check if you can connect to database:
+Check if you can connect to database::
 
 	$ psql -U postgres
 
