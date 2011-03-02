@@ -34,16 +34,14 @@ if __name__ == "__main__":
     """
     for opt in sys.argv:
         if opt.startswith('--settings='):
-            os.environ[ENVIRONMENT_VARIABLE] = opt.replace("--settings=",
-'')
+            os.environ[ENVIRONMENT_VARIABLE] = opt.replace("--settings=",'')
 
     """
     if all fails settings can still be taken from env
     """
-
     #Import settings
     try:
-        print 'Settings: %s' % os.environ[ENVIRONMENT_VARIABLE]
+        print 'Settings: %s' % os.environ.get(ENVIRONMENT_VARIABLE,'settings.defaults')
         __mod = __import__(os.environ[ENVIRONMENT_VARIABLE], {}, {}, [''])
     except ImportError, e:
         raise ImportError, "Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?): %s" % (os.environ[ENVIRONMENT_VARIABLE], e)
