@@ -6,7 +6,7 @@ Mturk-Tracker is a Django web application and is setup within python virtualenv 
 Required libraries 
 ------------------
 
-Mturk-Tracker requires some basic packages:
+Mturk-Tracker requires some basic packages::
 
 	$ sudo apt-get install python-virtualenv
 	$ sudo apt-get install git
@@ -77,7 +77,7 @@ Check if you can connect to database:
 
 	$ psql -U postgres
 
-In order to setup a clean db you have to create the database and populate it with tables:
+In order to setup a clean db you have to create the database and populate it with tables::
 
 	$ createdb -U postgres  mturk_tracker
 	$ createlang plpgsql -U postgres -d mturk_tracker
@@ -96,13 +96,13 @@ in django project directory. And then point your browser to http://localhost/
 Crawling mturk
 --------------
 
-You may launch initial crawl by:
+You may launch initial crawl by::
 
 	$ python manage.py crawl --workers=8 --logconf=logging.conf
 
 Logs will be saved in /tmp/crawler.log
 
-To generate data that will be displayed on graphs you need to launch scripts:
+To generate data that will be displayed on graphs you need to launch scripts::
 
 	$ python manage.py db_refresh_mviews
 	$ python manage.py db_update_agregates
