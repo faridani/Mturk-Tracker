@@ -67,7 +67,7 @@ API_CACHE_TIMEOUT=60*60*24
 
 SOLR_MAIN = "http://localhost:8983/solr/en"
 
-ROOT_URLCONF = PROJECT_NAME + '.urls'
+ROOT_URLCONF = 'mturk.urls'
 
 MEDIA_ROOT = os.path.join(ROOT_PATH, 'media')
 MEDIA_URL = '/s/'
