@@ -37,7 +37,7 @@ PROJECT_NAME = os.path.basename(ROOT_PATH)
 SETTINGS_NAME = os.environ[ENVIRONMENT_VARIABLE].split(".")[-1]
 
 DATABASE_ENGINE = 'postgresql_psycopg2'         # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = PROJECT_NAME + "_" + SETTINGS_NAME    # Or path to database file if using sqlite3.
+DATABASE_NAME = 'mturk_tracker'    # Or path to database file if using sqlite3.
 DATABASE_USER = 'postgres'                      # Not used with sqlite3.
 DATABASE_PASSWORD = ''                          # Not used with sqlite3.
 DATABASE_HOST = ''                              # Set to empty string for localhost. Not used with sqlite3.
