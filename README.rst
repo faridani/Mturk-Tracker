@@ -92,3 +92,23 @@ Nothing special, just type::
     $ sudo python manage.py runserver 80
 
 in django project directory. And then point your browser to http://localhost/
+ 
+Crawling mturk
+--------------
+
+You may launch initial crawl by:
+
+	$ python manage.py crawl --workers=8 --logconf=logging.conf
+
+Logs will be saved in /tmp/crawler.log
+
+To generate data that will be displayed on graphs you need to launch scripts:
+
+	$ python manage.py db_refresh_mviews
+	$ python manage.py db_update_agregates
+	$ python manage.py db_calculate_daily_stats
+	
+Solr
+----
+
+TODO
