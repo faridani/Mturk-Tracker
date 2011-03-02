@@ -42,7 +42,7 @@ if __name__ == "__main__":
     #Import settings
     try:
         print 'Settings: %s' % os.environ.get(ENVIRONMENT_VARIABLE,'settings.defaults')
-        __mod = __import__(os.environ[ENVIRONMENT_VARIABLE], {}, {}, [''])
+        __mod = __import__(os.environ.get(ENVIRONMENT_VARIABLE,'settings.defaults'), {}, {}, [''])
     except ImportError, e:
         raise ImportError, "Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?): %s" % (os.environ[ENVIRONMENT_VARIABLE], e)
 
