@@ -41,10 +41,11 @@ if __name__ == "__main__":
     """
     #Import settings
     try:
-        print 'Settings: %s' % os.environ.get(ENVIRONMENT_VARIABLE,'settings.defaults')
-        __mod = __import__(os.environ.get(ENVIRONMENT_VARIABLE,'settings.defaults'), {}, {}, [''])
+        settings_name = os.environ.get(ENVIRONMENT_VARIABLE, 'mturk.settings.defaults')
+        print 'Settings: %s' % settings_name
+        __mod = __import__(settings_name, {}, {}, [''])
     except ImportError, e:
-        raise ImportError, "Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?): %s" % (os.environ[ENVIRONMENT_VARIABLE], e)
+        raise ImportError, "Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?): %s" % (settings_name, e)
 
     from django.core.management import execute_manager
     execute_manager(__mod)
