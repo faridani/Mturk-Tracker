@@ -24,6 +24,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
+from django.conf import settings
 from django.views.generic.simple import direct_to_template
 from tenclouds.sql import query_to_dicts, query_to_tuples
 from django.views.decorators.cache import cache_page
@@ -95,7 +96,10 @@ def general(request):
         a['row'] = (str(val), a['row'][1], a['row'][2])
         return a
 
-    params['data'] = plot.repair(list(data), _is_anomaly, _fixer, 2)
+    if settings.DATASMOOTHING:
+        params['data'] = plot.repair(list(data), _is_anomaly, _fixer, 2)
+    else:
+        params['data'] = list(data)
 
     return direct_to_template(request, 'main/graphs/timeline.html', params)
 
