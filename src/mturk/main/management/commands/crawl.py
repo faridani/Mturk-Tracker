@@ -92,22 +92,16 @@ class Command(BaseCommand):
         # are public or not
         reqesters = RequesterProfile.objects.all_as_dict()
 
-        # manage database connections here - should be one for each
-        # task working at the same time
-        groups_downloaded = set()
+        # collection of group_ids that were already processed - this should
+        # protect us from duplicating data
+        processed_groups = set()
         total_reward = 0
         hitgroups_iter = self.hits_iter()
         for hg_pack in hitgroups_iter:
             jobs = []
             for hg in hg_pack:
-                # because we're not fetching all pages at once, hitgroups
-                # might move between fetches and it's possible to fetch single
-                # hitgroup info more than once. If so, ignore..
-                if hg['group_id'] in groups_downloaded:
-                    continue
-                groups_downloaded.add(hg['group_id'])
-
-                j = gevent.spawn(tasks.process_group, hg, crawl.id, reqesters)
+                j = gevent.spawn(tasks.process_group,
+                        hg, crawl.id, reqesters, processed_groups)
                 jobs.append(j)
                 total_reward += hg['reward'] * hg['hits_available']
             log.debug('processing pack of hitgroups objects')
@@ -116,11 +110,9 @@ class Command(BaseCommand):
             for job in jobs:
                 if not job.ready():
                     log.error('Killing job: %s', job)
-                    # -1 for downloaded groups, but we actually don't know
-                    # which one
                     job.kill()
 
-            if len(groups_downloaded) >= groups_available:
+            if len(processed_groups) >= groups_available:
                 # there's no need to iterate over empty groups.. break
                 break
 
@@ -131,15 +123,15 @@ class Command(BaseCommand):
         dbpool.closeall()
 
         # update crawler object
-        crawl.groups_downloaded = len(groups_downloaded)
+        crawl.groups_downloaded = len(processed_groups)
         crawl.end_time = datetime.datetime.now()
         crawl.save()
 
         work_time = time.time() - _start_time
         log.info('created crawl id: %s', crawl.id)
         log.info('total reward value: %s', total_reward)
-        log.info('hitgroups downloaded: %s', len(groups_downloaded))
-        log.info('hitgroups available: %s', groups_available)
+        log.info('processed hits groups downloaded: %s', len(processed_groups))
+        log.info('processed hits groups available: %s', groups_available)
         log.info('work time: %.2fsec', work_time)
 
     def hits_iter(self):
