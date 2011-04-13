@@ -104,7 +104,6 @@ class Command(BaseCommand):
                 # might move between fetches and it's possible to fetch single
                 # hitgroup info more than once. If so, ignore..
                 if hg['group_id'] in groups_downloaded:
-                    log.debug('duplicate group ignored: %s', hg['group_id'])
                     continue
                 groups_downloaded.add(hg['group_id'])
 
