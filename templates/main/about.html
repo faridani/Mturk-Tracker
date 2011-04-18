@@ -59,13 +59,27 @@
 
 {% block content %}
 
+
 <div class="span-24">
-	<div class="span-12" id="introduction">
+
+<div class="span-12 ">
+<img src="{{MEDIA_URL}}images/m_about_1.png" alt="" />
+</div>
+
+	<div class="span-12 about last" >
+    
 		<h2>How does it work?</h2>
 		<p>
 			We use a web crawler written in python to gather all avaliable information from Amazon Mechanical Turk, we store that information PostgreSQL and everything is working on Amazon EC2 instances.
 			We crawl Mechanical Turk each hour, and compute daily statistics for new projects and completed tasks once a day.
 		</p>
+        
+</div>
+
+</div>
+
+<div class="span-24">
+	<div class="span-12 about" >
 		<h2>What type of graphs?</h2>
 		<ul>
 			<li><a href="{% url graphs_general%}" title="General">General graphs</a> - listing of projects, total number of available hits and rewards for every hour</li>
@@ -76,7 +90,7 @@
 
 	</div>
 
-	<div class="span-11 last">
+	<div class="span-12 last">
 
 		<ul class="galleria">
 			<li><img src="{{MEDIA_URL}}images/general.jpg" title="General data" alt="General data"></img></li>
