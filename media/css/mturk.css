@@ -34,3 +34,6 @@ a { color:#075b8d;}
 
 table.result thead tr { background:url(../images/m_header_bg.png) bottom  repeat-x; }
 table.result thead tr td a{ padding:5px 0 5px 0; display:block; color:#075b8d; }
+
+div#datepick { width:325px;}
+div#datepick img { position:relative; top:6px; margin:0 5px 0 0;}
