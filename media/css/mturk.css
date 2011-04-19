@@ -37,3 +37,4 @@ table.result thead tr td a{ padding:5px 0 5px 0; display:block; color:#075b8d; }
 
 div#datepick { width:325px;}
 div#datepick img { position:relative; top:6px; margin:0 5px 0 0;}
+p.error { display:block; padding:15px 0 0 45px; background: url(../images/m_error.png) no-repeat; width:300px; height:30px; border:none; }

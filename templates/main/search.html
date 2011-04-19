@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
 {% load webdesign %}
-{% block title %}}{{block.super}}: Search{% endblock %}
+
+{% block title %}
+	{{block.super}}: Search
+{% endblock %}
+
 {% block head %}
 
 	<link rel="stylesheet" href="{{MEDIA_URL}}css/search.css" type="text/css" />
@@ -67,7 +71,7 @@
                         error:
                             function (msg) {
                                 $('.loading').fadeOut('slow');
-                                $('#response').html('Error');
+                                $('#response').html('<p class="error">Error</p>');
                             },
                         success:
                             function (msg) {
@@ -178,13 +182,15 @@
 
 
 		});
-	</script>'
+	</script>
 
 {% endblock %}
 
 {% block content %}
 
 <div class="span-24">
+
+<!--
 	<div id="query">
 		<form method="post" action="#" onsubmit="submitForm()">
 			<div id="query_in">
@@ -194,17 +200,14 @@
             </div>
 		</form>
 	</div>
-    <br style="clear:both;"/>
-	<div id="response">
-	</div>
+-->	
+
+	<center><span class="loading"></span></center>
+
+    <div style="clear:both;"/></div>
+	<div id="response"></div>
 </div>
 
-<table class="result"><thead><tr><td><a href="/hit/0WMTVRN2GSVZXGZAZ0MZ/">Edit a Transcript (Panos Greece) (avg rwrd+bns: $1.34)</a></td></tr></thead><tbody><tr><td class="result-date"><div class="label">Date:</div><div class="content">2010-01-19</div></td></tr><tr><td class="result-requester"><div class="label">Requester:</div><div class="content"><a href="/requester_details/A3MI6MIUNWCR7F/">CastingWords</a></div></td></tr><tr><td class="result-description"><div class="label">Description:</div><div class="content">Edit a Transcript: 'Panos   Greece'</div></td></tr><tr><td class="result-qualifications"><div class="label">Qualifications:</div><div class="content">CastingWords Transcription Editor is not less than 85</div></td></tr><tr><td class="result-reward"><div class="label">Reward</div><div class="content">$0.67<div></div></div></td></tr><tr><td class="result-keywords"><a class="keyword">CW</a>, <a class="keyword">CastingWords</a>, <a class="keyword">cw</a>, <a class="keyword">podcast</a>, <a class="keyword">edit</a>, <a class="keyword">justedit</a>, <a class="keyword">bee</a>, <a class="keyword">AF57987</a></td></tr></tbody></table>
-
-<table class="result"><thead><tr><td><a href="/hit/0WMTVRN2GSVZXGZAZ0MZ/">Edit a Transcript (Panos Greece) (avg rwrd+bns: $1.34)</a></td></tr></thead><tbody><tr><td class="result-date"><div class="label">Date:</div><div class="content">2010-01-19</div></td></tr><tr><td class="result-requester"><div class="label">Requester:</div><div class="content"><a href="/requester_details/A3MI6MIUNWCR7F/">CastingWords</a></div></td></tr><tr><td class="result-description"><div class="label">Description:</div><div class="content">Edit a Transcript: 'Panos   Greece'</div></td></tr><tr><td class="result-qualifications"><div class="label">Qualifications:</div><div class="content">CastingWords Transcription Editor is not less than 85</div></td></tr><tr><td class="result-reward"><div class="label">Reward</div><div class="content">$0.67<div></div></div></td></tr><tr><td class="result-keywords"><a class="keyword">CW</a>, <a class="keyword">CastingWords</a>, <a class="keyword">cw</a>, <a class="keyword">podcast</a>, <a class="keyword">edit</a>, <a class="keyword">justedit</a>, <a class="keyword">bee</a>, <a class="keyword">AF57987</a></td></tr></tbody></table>
-
-<table class="result"><thead><tr><td><a href="/hit/0WMTVRN2GSVZXGZAZ0MZ/">Edit a Transcript (Panos Greece) (avg rwrd+bns: $1.34)</a></td></tr></thead><tbody><tr><td class="result-date"><div class="label">Date:</div><div class="content">2010-01-19</div></td></tr><tr><td class="result-requester"><div class="label">Requester:</div><div class="content"><a href="/requester_details/A3MI6MIUNWCR7F/">CastingWords</a></div></td></tr><tr><td class="result-description"><div class="label">Description:</div><div class="content">Edit a Transcript: 'Panos   Greece'</div></td></tr><tr><td class="result-qualifications"><div class="label">Qualifications:</div><div class="content">CastingWords Transcription Editor is not less than 85</div></td></tr><tr><td class="result-reward"><div class="label">Reward</div><div class="content">$0.67<div></div></div></td></tr><tr><td class="result-keywords"><a class="keyword">CW</a>, <a class="keyword">CastingWords</a>, <a class="keyword">cw</a>, <a class="keyword">podcast</a>, <a class="keyword">edit</a>, <a class="keyword">justedit</a>, <a class="keyword">bee</a>, <a class="keyword">AF57987</a></td></tr></tbody></table>
-
-<div>&nbsp;</div>
+<div></div>
 
 {% endblock %}

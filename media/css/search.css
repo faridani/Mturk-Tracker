@@ -62,7 +62,7 @@ a {
 }
 
 .loading {  
-    float:right;
+    float:left;
     background: url('/s/images/ajax-loader.gif') no-repeat 1px;
     height:28px;
     width:28px;
@@ -70,8 +70,7 @@ a {
 }
 
 #response {
-	margin-left: 20px;
-	margin-right: 20px;
+	margint: 20px 0 0 0;
 }
 
 .metadata-box {
