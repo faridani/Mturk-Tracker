@@ -29,44 +29,26 @@ import time
 import logging
 
 from django.conf import settings
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, NoArgsCommand
+from optparse import make_option
 
-from tenclouds.pid import Pid
-
-from mturk.main.management.commands import clean_duplicates, update_crawl_agregates,\
-    update_mviews, calculate_first_crawl_id, update_first_occured_agregates,
-    update_diffs
+from mturk.main.management.commands import update_diffs
 
 
-logger = logging.getLogger('db_refresh_mviews')
+logger = logging.getLogger('db_refresh_diffs')
 
 
 class Command(BaseCommand):
-    help = 'Refreshes materialised views used to generate stats'
+    option_list = NoArgsCommand.option_list + (
+        make_option('--limit', dest='limit', default='100',
+            help='Number of crawls to process.'),
+    )
+    help = 'Update views with diff values'
 
     def handle(self, **options):
-
-        pid = Pid('mturk_crawler', True)
-
         start_time = time.time()
 
-        logging.info('cleaning up db from duplicates')
-        clean_duplicates()
+        update_diffs(limit=options['limit'])
 
-#        logging.info('calculating first_crawl_id')
-#        calculate_first_crawl_id()
+        logging.info('db_refresh_diffs took: %s' % (time.time() - start_time))
 
-        logging.info('Refreshing materialised views')
-        update_mviews()
-
-#        logging.info('Updating crawl agregates')
-#        update_crawl_agregates(1, only_new = True)
-
-#        logging.info('Updating first occured agregates')
-#        update_first_occured_agregates()
-        update_diffs()
-        logging.info('done refreshing mviews')
-
-        logging.info('db_refresh_mviews took: %s' % (time.time() - start_time))
-
-        pid.remove_pid()

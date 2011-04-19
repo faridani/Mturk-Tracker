@@ -124,6 +124,34 @@ def update_mviews():
     log.debug('missing higroup info insert: %.2fsec', work_time)
 
 
+def update_diffs(limit=100):
+    start_time = time.time()
+    result = execute_sql("""
+        UPDATE hits_mv
+            SET hits_diff = diffs.hits_diff
+        FROM
+            (SELECT
+                group_id, crawl_id,
+                    hits_available -
+                    COALESCE(lag(hits_available) over (partition BY group_id ORDER BY crawl_id), 0)
+                    AS hits_diff
+            FROM hits_mv
+            WHERE
+                hits_diff is NULL
+            AND crawl_id in
+                (SELECT DISTINCT crawl_id
+                FROM hits_mv
+                WHERE hits_diff is NULL
+                ORDER BY crawl_id DESC LIMIT %s)
+
+            ) AS diffs
+
+        WHERE (diffs.group_id = hits_mv.group_id) AND (diffs.crawl_id = hits_mv.crawl_id);""",
+        (int(limit), ))
+
+    log.debug('Updated diffs for %s crawls in %s\n%s', limit, (time.time() - start_time))
+
+
 
 def update_first_occured_agregates():
 
@@ -157,17 +185,17 @@ def update_first_occured_agregates():
 def update_crawl_agregates(commit_threshold=10, only_new = True):
 
     results = None
-    
+
     if only_new:
         results = query_to_dicts("select id from main_crawl p where old_id is null and not exists(select id from main_crawlagregates where crawl_id = p.id)")
     else:
         results = query_to_dicts("select id from main_crawl p where not exists(select id from main_crawlagregates where crawl_id = p.id)")
-    
+
     logging.info("got results")
-    
+
     for i, row in enumerate(results):
         try:
-    
+
             execute_sql("""
             INSERT INTO
                 main_crawlagregates
@@ -183,13 +211,13 @@ def update_crawl_agregates(commit_threshold=10, only_new = True):
             GROUP BY
                 crawl_id, start_time
             """, row['id'])
-            
+
             logging.info("update agregates for %s" % row['id'])
-    
+
             if i % commit_threshold == 0:
                 logging.info( 'commited after %s crawls' % i )
                 execute_sql('commit;')
-    
+
         except:
             error_info = grab_error(sys.exc_info())
             logging.error('an error occured at crawl_id: %s, %s %s' % (row['id'],error_info['type'], error_info['value']))
