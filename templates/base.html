@@ -20,7 +20,7 @@
 	<link rel="stylesheet" href="{{MEDIA_URL}}css/mturk.css" type="text/css" media="screen, projection">
 
 	<!--  jquery stuff start -->
-	<link rel="stylesheet" href="{{MEDIA_URL}}jqueryui/jquery-ui-1.7.1.css" type="text/css" />
+	<link rel="stylesheet" href="{{MEDIA_URL}}css/jquery-ui-1.7.1.css" type="text/css" />
 	<!--  jquery stuff end -->
 
 	<script src="http://www.google.com/jsapi"></script>
@@ -58,20 +58,22 @@
     	<a href="{%url graphs_general%}"><img src="{{MEDIA_URL}}images/m_logo.png" alt="" /></a>
         </div>
         
-        <div class=" span-12 menu">
-		{% include 'main/tabs.html' %}
-        </div>
+        <div class=" span-18 menu last">
+		<ul>
+        {% include 'main/tabs.html' %}
+        <li class="search">                
+        <form method="post" action="/search/" onsubmit="submitForm()">
+        <input type="text" name="query" id="form_query" value="" onkeypress="return submitEnter(this,event)"/>
+        <input type="submit" id="form_submit" value="Search" style="display:none;"/>
         
-		<div class=" span-6 last">
-    	
-        <div id="search_box">
-                <form method="post" action="/search/" onsubmit="submitForm()">
-                        <input type="text" name="query" id="form_query" value="" onkeypress="return submitEnter(this,event)"/>
-                        <input type="submit" id="form_submit" value="Search"/>
-                        <span class="loading"></span>
-                </form>
-        </div>        
+        <!--
+        <span class="loading"></span>
+        -->        
         
+		</form>
+		</li>
+        
+        </ul>
         
         </div>
         
@@ -83,24 +85,20 @@
 
 		{% block content %}
 		{% endblock %}
+        
+    <div style="clear:both;"></div>
 
+</div>
+
+	<div class="span-24 footer">
+        <p>For bugs reports or feature requests, please contact <a href="http://www.stern.nyu.edu/~panos">Panos Ipeirotis</a> | Created by <a href="http://www.10clouds.com">10clouds.com</a> <br/> If you want to cite this website, please cite the paper <a href="http://portal.acm.org/citation.cfm?id=1869094">Analyzing the Amazon Mechanical Turk Marketplace</a>, P. Ipeirotis, ACM XRDS, Vol 17, Issue 2, Winter 2010, pp 16-21.</p>
 	</div>
 
-	<div id="footer">
-		<hr/>
-		<p>For bugs reports or feature requests, please contact <a href="http://www.stern.nyu.edu/~panos">Panos Ipeirotis</a>
-		 | Created by <a href="http://www.10clouds.com">10clouds.com</a>
-<br/>
-		 If you want to cite this website, please cite the paper <a
-		href="http://portal.acm.org/citation.cfm?id=1869094">Analyzing the
-		Amazon Mechanical Turk Marketplace</a>, P. Ipeirotis, ACM XRDS, Vol
-		17, Issue 2, Winter 2010, pp 16-21.</p>
-	</div>
-
-	{% google_analytics_code %}
 
 
 </div>
+
+	{% google_analytics_code %}
 
 </body>
 </html>

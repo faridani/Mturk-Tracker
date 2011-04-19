@@ -11,8 +11,6 @@
 
 <script type='text/javascript'>
 
-
-
 	$(document).ready( function() {
 
 		$.datepicker.setDefaults($.extend(
@@ -43,16 +41,17 @@
 
 	<div id="timeline_top">
         
-        <img src="{{MEDIA_URL}}images/m_icon_clock.png" alt="" />
         <div id="datepick">
+        <img src="{{MEDIA_URL}}images/m_icon_clock.png" alt="" style=" float:left;"/>
             <form method="get" action="">
                 <input class="datepick datepick_from" type="text" name="date_from" id="form_date_from" value="{% if date_from %}{{date_from}}{% else %}date from{% endif %}"/>
                 <input class="datepick datepick_to " type="text" name="date_to" id="form_date_to" value="{% if date_to %}{{date_to}}{% else %}date to{% endif %}"/>
                 <input class="submit" type="submit" id="form_submit" value="Adjust chart"/>
             </form>
         </div>
-	</div>
+        
     <div style="clear:both"></div>
+	</div>
 
 	{% google_timeline columns data %}
 
