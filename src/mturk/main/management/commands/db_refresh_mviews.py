@@ -34,8 +34,7 @@ from django.core.management.base import BaseCommand
 from tenclouds.pid import Pid
 
 from mturk.main.management.commands import clean_duplicates, update_crawl_agregates,\
-    update_mviews, calculate_first_crawl_id, update_first_occured_agregates,
-    update_diffs
+    update_mviews, calculate_first_crawl_id, update_first_occured_agregates, update_diffs
 
 
 logger = logging.getLogger('db_refresh_mviews')
