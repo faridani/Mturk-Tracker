@@ -126,7 +126,7 @@ def update_mviews():
 
 def update_diffs(limit=100):
     start_time = time.time()
-    result = execute_sql("""
+    execute_sql("""
         UPDATE hits_mv
             SET hits_diff = diffs.hits_diff
         FROM
@@ -148,6 +148,7 @@ def update_diffs(limit=100):
 
         WHERE (diffs.group_id = hits_mv.group_id) AND (diffs.crawl_id = hits_mv.crawl_id);""",
         (int(limit), ))
+    execute_sql('commit;')
 
     log.debug('Updated diffs for %s crawls in %s\n%s', limit, (time.time() - start_time))
 
