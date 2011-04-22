@@ -63,7 +63,7 @@ class Command(BaseCommand):
 
 #        logging.info('Updating first occured agregates')
 #        update_first_occured_agregates()
-        update_diffs()
+#        update_diffs()
         logging.info('done refreshing mviews')
 
         logging.info('db_refresh_mviews took: %s' % (time.time() - start_time))
