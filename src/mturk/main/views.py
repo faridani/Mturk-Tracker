@@ -101,7 +101,7 @@ def general(request):
         params['data'] = plot.repair(list(data), _is_anomaly, _fixer, 2)
     else:
         params['data'] = list(data)
-    print type(params['data']), len(params['data']), settings.DATASMOOTHING
+
     return direct_to_template(request, 'main/graphs/timeline.html', params)
 
 @cache_page(ONE_DAY)
