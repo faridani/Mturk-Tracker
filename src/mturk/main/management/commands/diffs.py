@@ -38,6 +38,9 @@ def hitgroups(cid):
     return [g[0] for g in r.fetchall()]
 
 
+def last_crawlids(limit=10):
+    r = execute_sql("select crawl_id from hits_mv order by crawl_id desc limit %s", limit)
+    return [c[0] for c in r.fetchall()]
 
 def last_crawlid():
     return execute_sql("select crawl_id from hits_mv order by crawl_id desc limit 1;").fetchall()[0][0]
