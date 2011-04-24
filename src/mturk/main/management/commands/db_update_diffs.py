@@ -56,7 +56,7 @@ class Command(BaseCommand):
         for cid in last_crawlids(limit=5):
         	update_cid(cid)
 
-        print 'took:', (time.time() - start_time)/1000, 's'
+        print 'updating 5 crawls took:', (time.time() - start_time)/1000, 's'
 
         # update_diffs(limit=options['limit'])
         pid.remove_pid()

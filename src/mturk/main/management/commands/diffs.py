@@ -50,20 +50,17 @@ def updatehitgroup(g, cid):
             %s and group_id = %s order by crawl_id desc limit 1;""", cid,
             g).fetchall()
     prev = prev[0] if prev else 0
-    print "got, updating"
-    st = time.time()
     execute_sql("""update hits_mv set hits_diff = hits_available - %s where
             group_id = %s and crawl_id = %s;""", prev, g, cid)
-    print "updated in ", time.time() - st
 
 
 def update_cid(cid):
     st = time.time()
     hgs = hitgroups(cid)
-    l = float(len(hgs))
+    l = len(hgs)
     for i, g in enumerate(hgs):
-        print "processing", i / l
+        print "processing", i, 'out of', l
         updatehitgroup(g, cid)
-    print "updated", time.time() - st
+    print "updated crawl in", time.time() - st
 
 
