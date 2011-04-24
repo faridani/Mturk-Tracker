@@ -28,7 +28,7 @@ import sys
 import time
 import logging
 
-from tenclouds.sql import execute_sql
+from tenclouds.sql import *
 
 log = logging.getLogger('__init__')
 
@@ -55,12 +55,13 @@ def updatehitgroup(g, cid):
 
 
 def update_cid(cid):
+
     st = time.time()
-    hgs = hitgroups(cid)
-    l = len(hgs)
-    for i, g in enumerate(hgs):
-        print "processing", i, 'out of', l
+    for i, g in enumerate(query_to_tuples("select distinct group_id from hits_mv where crawl_id = %s", cid)):
+        cid = g[0]
+        print "processing", i
         updatehitgroup(g, cid)
+        
     print "updated crawl in", time.time() - st
 
 
