@@ -57,7 +57,7 @@ class Command(BaseCommand):
 
         try:
 
-            for c in Crawl.objects.filter(has_diff=False).order_by('-id')[:10]:
+            for c in Crawl.objects.filter(has_diffs=False).order_by('-id')[:10]:
                 
                 update_cid(c.id)
                 
