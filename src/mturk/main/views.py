@@ -25,6 +25,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
 from django.conf import settings
+from django.core.cache import cache
 from django.views.generic.simple import direct_to_template
 from tenclouds.sql import query_to_dicts, query_to_tuples
 from django.views.decorators.cache import cache_page
@@ -162,9 +163,12 @@ def top_requesters(request):
     if request.user.is_superuser:
         return admin.top_requesters(request)
 
-    @cache_page(ONE_DAY)
-    def _top_requesters(request):
 
+    key = 'TOPREQUESTERS_CACHED'
+    # check cache
+    data = cache.get(key) or []
+
+    def _top_requesters(request):
         def row_formatter(input):
             for cc in input:
                 row = []
@@ -174,24 +178,6 @@ def top_requesters(request):
                 row.extend(cc[2:6])
                 yield row
 
-        data = row_formatter(query_to_tuples('''
-                SELECT
-                    h.requester_id,
-                    h.requester_name,
-                    count(*) as "projects",
-                    sum(h.hits_available) as "hits",
-                    sum(h.hits_available*reward) as "reward",
-                    max(h.occurrence_date) as "last_posted"
-                FROM
-                    main_hitgroupfirstoccurences h
-                        LEFT JOIN main_requesterprofile p ON h.requester_id = p.requester_id
-                WHERE
-                    h.occurrence_date > %s
-                    AND coalesce(p.is_public, true) = true
-                group by h.requester_id, h.requester_name
-                order by sum(h.hits_available*reward) desc
-                limit 1000;
-        ''', datetime.date.today() - datetime.timedelta(days=30)))
 
         columns = (
             ('string','Requester ID'),
