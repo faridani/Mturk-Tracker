@@ -41,6 +41,7 @@ class Crawl(models.Model):
     success             = models.BooleanField('Successfoul crawl?')
     errors              = JSONField('Errors', blank=True, null=True)
     old_id              = models.IntegerField(null=True,blank=True,unique=True,db_index=True)
+    has_diffs           = models.BooleanField("Has Diffs", db_index=True, default=False)
 
     def start_day(self):
         return datetime.date(year= self.start_time.year,

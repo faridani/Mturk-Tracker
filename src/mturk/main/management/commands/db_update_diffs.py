@@ -28,15 +28,13 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 import time
 import logging
 
-from django.conf import settings
 from django.core.management.base import BaseCommand, NoArgsCommand
 from optparse import make_option
 from tenclouds.pid import Pid
+from mturk.main.models import Crawl
 
-
-# from mturk.main.management.commands import update_diffs
-from mturk.main.management.commands.diffs import *
-
+from mturk.main.management.commands.diffs import update_cid
+from django.db import transaction
 
 logger = logging.getLogger('db_refresh_diffs')
 
@@ -50,18 +48,32 @@ class Command(BaseCommand):
 
     def handle(self, **options):
 
-    	pid = Pid('mturk_crawler', True)
+        pid = Pid('mturk_crawler', True)
+
+        transaction.enter_transaction_management()
+        transaction.managed(True)
 
         start_time = time.time()
-        for cid in last_crawlids(limit=5):
-        	update_cid(cid)
 
-        print 'updating 5 crawls took:', (time.time() - start_time)/1000, 's'
+        try:
 
-        # update_diffs(limit=options['limit'])
-        pid.remove_pid()
+            for c in Crawl.objects.filter(has_diff=False).order_by('-id')[:10]:
+                
+                update_cid(c.id)
+                
+                c.has_diffs=True
+                c.save()
 
+                transaction.commit()
 
+        except KeyError:
+            transaction.rollback()
+            pid.remove_pid()
+            exit()            
+        else:
+            transaction.rollback()
+            pid.remove_pid()
+            exit()
+            raise            
 
-        # logging.info('db_refresh_diffs took: %s' % (time.time() - start_time))
-
+        logger.info('updating 5 crawls took: %s s', (time.time() - start_time))

@@ -24,13 +24,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
-import sys
 import time
 import logging
 
-from tenclouds.sql import *
+from tenclouds.sql import execute_sql, query_to_tuples
 
-log = logging.getLogger('__init__')
+log = logging.getLogger('db_refresh_diffs')
 
 
 def hitgroups(cid):
@@ -46,10 +45,14 @@ def last_crawlid():
     return execute_sql("select crawl_id from hits_mv order by crawl_id desc limit 1;").fetchall()[0][0]
 
 def updatehitgroup(g, cid):
-    prev = execute_sql("""select hits_available from hits_mv where crawl_id <
-            %s and group_id = %s order by crawl_id desc limit 1;""", cid,
-            g).fetchall()
+    prev = execute_sql("""select hits_available from hits_mv 
+                where 
+                    crawl_id between %s and %s and 
+                    group_id = '%s' 
+                order by crawl_id desc 
+                limit 1;""" % (cid-100, cid-1, g)).fetchall()
     prev = prev[0] if prev else 0
+    
     execute_sql("""update hits_mv set hits_diff = hits_available - %s where
             group_id = %s and crawl_id = %s;""", prev, g, cid)
 
@@ -58,10 +61,10 @@ def update_cid(cid):
 
     st = time.time()
     for i, g in enumerate(query_to_tuples("select distinct group_id from hits_mv where crawl_id = %s", cid)):
-        cid = g[0]
-        print "processing", i
+        g = g[0]
+        log.info("processing %s, %s %s", i, cid,  g)
         updatehitgroup(g, cid)
-        
-    print "updated crawl in", time.time() - st
+
+    log.info("updated crawl in %s", time.time() - st)
 
 
