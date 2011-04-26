@@ -38,7 +38,7 @@ from mturk.main.models import Crawl, DayStats
 
 
 def get_first_crawl():
-        crawls = Crawl.objects.filter().order_by('start_time')[:1]
+        crawls = Crawl.objects.filter(has_diffs=True).order_by('start_time')[:1]
         if not crawls:
             return None
         else:
@@ -51,6 +51,13 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         
+        """
+        take all crawls that have diffs computed from - inf till yesterday
+        start from the oldest crawl and try to create daily stats 
+        if there are some crawls without diffs stop the process
+        """
+
+
         '''
         take earliest crawl
         calculate incosistencies in history
@@ -68,80 +75,55 @@ class Command(BaseCommand):
         for i in range(0,(today() - crawl.start_day()).days):
             
             day = crawl.start_day()+datetime.timedelta(days=i)
+            day_end = day + datetime.timedelta(days=1)
             
+            crawls = Crawl.objects.filter(has_diffs=False,start_time__gte=day, start_time__lt=day)
+            if len(crawls > 0):
+                logging.error("not all crawls from %s have diffs" % day)
+                return
+
             try:
                 DayStats.objects.get(date = day)
             except DayStats.DoesNotExist: #@UndefinedVariable
                 logging.info("db_calculate_daily_stats: calculating stats for: %s" % day)
                 
                 range_start_date   = day.isoformat()
-                range_end_date     = (day + datetime.timedelta(days=1)).isoformat()
+                range_end_date     = (day_end).isoformat()
                 
                 '''
                 stats for projects posted on particular day
                 '''
                 arrivals = query_to_dicts('''
-                    select count(*) as "projects", sum(reward*hits_available) as "reward", sum(hits_available) as "hits"  
+                    select sum(hits_diff) as "arrivals"
                     from 
                         hits_mv p join
-                        (select min(crawl_id) as "crawl_id",group_id from hits_mv q
-                            where
-                                q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                                group by q.group_id
-                        ) as "r" on ( p.group_id = r.group_id and p.crawl_id = r.crawl_id  )
+                        main_crawl r on ( p.crawl_id = r.id )
                     where
-                        p.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                        and not exists( select group_id from hits_mv where start_time < TIMESTAMP '%s' and group_id = p.group_id)                        
-                    ''' % ( range_start_date, range_end_date, range_start_date, range_end_date, range_start_date )).next()
+                        p.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'                    
+                        and hits_diff > 0
+                    ''' % ( range_start_date, range_end_date)).next()
+
+                processed = query_to_dicts('''
+                    select sum(hits_diff) as "processed"
+                    from 
+                        hits_mv p join
+                        main_crawl r on ( p.crawl_id = r.id )
+                    where
+                        p.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'                    
+                        and hits_diff < 0
+                    ''' % ( range_start_date, range_end_date)).next()                    
                 
-                '''
-                stats at the begining of day
-                '''
-                day_start = query_to_dicts('''
-                    select count(*) as "projects", sum(reward*hits_available) as "reward", sum(hits_available) as "hits"
-                    from 
-                        hits_mv p join
-                        (select min(crawl_id) as "crawl_id",group_id from hits_mv q
-                            where
-                                q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                                group by q.group_id
-                        ) as "r" on ( p.group_id = r.group_id and p.crawl_id = r.crawl_id  )
-                    where
-                        p.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                ''' % ( range_start_date, range_end_date, range_start_date, range_end_date )).next()
-
-                '''
-                stats at the end of day
-                '''
-                day_end = query_to_dicts('''
-                    select count(*) as "projects", sum(reward*hits_available) as "reward", sum(hits_available) as "hits" from hits_mv p
-                        where 
-                            start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                            and crawl_id = ( select max(id) from main_crawl q  
-                                where q.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
-                            );                    
-                ''' % ( range_start_date, range_end_date, range_start_date, range_end_date )).next()
-
                 '''
                 making sure no null values are passed
                 '''
-                for map in (arrivals, day_start, day_end):
+                for map in (arrivals, processed):
                     for key,value in map.iteritems():
                         if value is None or value < 0: map[key] = 0
                 
                 DayStats.objects.create(date = day,
                                         
-                                        arrivals_reward     = arrivals['reward'],
-                                        arrivals_hits       = arrivals['hits'],
-                                        arrivals_projects   = arrivals['projects'],
-                                        
-                                        day_start_reward    = day_start['reward'],
-                                        day_start_hits      = day_start['hits'],
-                                        day_start_projects  = day_start['projects'],
-                                        
-                                        day_end_reward      = day_end['reward'],
-                                        day_end_hits        = day_end['hits'],
-                                        day_end_projects    = day_end['projects']                                        
+                                        arrivals = arrivals['arrivals'],
+                                        processed = processed['processed']
                                         )
                 
                 transaction.commit()

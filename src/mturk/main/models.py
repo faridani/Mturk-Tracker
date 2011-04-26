@@ -85,17 +85,8 @@ class DayStats(models.Model):
 
     date                = models.DateField('Date', db_index=True)
 
-    arrivals_reward     = models.FloatField('Arrivals Reward')
-    arrivals_hits       = models.FloatField('Arrivals Hits')
-    arrivals_projects   = models.FloatField('Arrivals Projects')
-
-    day_start_reward    = models.FloatField('Day Start Reward')
-    day_start_hits     = models.FloatField('Day Start Hits')
-    day_start_projects  = models.FloatField('Day Start Projects')
-
-    day_end_reward      = models.FloatField('Day End Reward')
-    day_end_hits        = models.FloatField('Day End Hits')
-    day_end_projects    = models.FloatField('Day End Projects')
+    arrivals            = models.IntegerField('Arrivals Hits')
+    processed           = models.IntegerField('Processed Hits')
 
 
 class CrawlAgregates(models.Model):
