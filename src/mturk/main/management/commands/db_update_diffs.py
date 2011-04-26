@@ -48,7 +48,7 @@ class Command(BaseCommand):
 
     def handle(self, **options):
 
-        pid = Pid('mturk_crawler', True)
+        pid = Pid('mturk_diffs', True)
 
         transaction.enter_transaction_management()
         transaction.managed(True)
