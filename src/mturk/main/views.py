@@ -28,7 +28,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.views.generic.simple import direct_to_template
 from tenclouds.sql import query_to_dicts, query_to_tuples
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 from django.core.urlresolvers import reverse
 from mturk.main.templatetags.graph import text_row_formater
 from django.shortcuts import get_object_or_404
@@ -159,6 +159,43 @@ def completed(request):
 
     return direct_to_template(request, 'main/graphs/timeline.html', params)
 
+
+def topreq_data(days):
+    from tenclouds.sql import query_to_tuples, execute_sql
+    start_time = time.time()
+    firstcrawl = execute_sql("""
+        SELECT crawl_id
+        FROM hits_mv
+        WHERE
+            start_time > %s
+        ORDER BY start_time ASC
+        LIMIT 1;""", datetime.date.today() - datetime.timedelta(int(days))).fetchall()[0][0]
+
+    return list(query_to_tuples("""
+        SELECT
+            h.requester_id,
+            h.requester_name,
+            count(*) as "projects",
+            sum(mv.hits_available) as "hits",
+            sum(mv.hits_available*h.reward) as "reward",
+            max(h.occurrence_date) as "last_posted"
+        FROM
+                main_hitgroupcontent h
+                LEFT JOIN main_requesterprofile p ON h.requester_id = p.requester_id
+                LEFT JOIN (
+                    SELECT group_id, crawl_id, hits_available from
+                    hits_mv where crawl_id> %s
+                ) mv ON (h.group_id=mv.group_id and h.first_crawl_id=mv.crawl_id)
+            WHERE
+                h.first_crawl_id > %s
+                AND coalesce(p.is_public, true) = true
+            group by h.requester_id, h.requester_name
+            order by sum(mv.hits_available*h.reward) desc
+            limit 1000;""" % (firstcrawl, firstcrawl)))
+
+
+
+@never_cache
 def top_requesters(request):
     if request.user.is_superuser:
         return admin.top_requesters(request)
@@ -166,7 +203,7 @@ def top_requesters(request):
 
     key = 'TOPREQUESTERS_CACHED'
     # check cache
-    data = cache.get(key) or []
+    data = cache.get(key) or topreq_data(30)
 
     def _top_requesters(request):
         def row_formatter(input):
@@ -188,7 +225,7 @@ def top_requesters(request):
             ('datetime', 'Last Posted On')
         )
         ctx = {
-            'data': data,
+            'data': row_formatter(data),
             'columns': columns,
             'title': 'Top-1000 Recent Requesters',
         }
@@ -220,18 +257,19 @@ def requester_details(request, requester_id):
         data = query_to_tuples("""
     select
         title,
-        hits_available,
+        0,
         p.reward,
         p.occurrence_date,
-        (select end_time from main_crawl where id = (select max(crawl_id) from main_hitgroupstatus where group_id = q.group_id and hit_group_content_id = p.group_content_id)) - p.occurrence_date,
+        (select end_time from main_crawl where id = (select max(crawl_id) from main_hitgroupstatus where group_id = p.group_id)) - p.occurrence_date,
         p.group_id
-    from main_hitgroupfirstoccurences p join main_hitgroupcontent q on ( p.group_content_id = q.id and p.requester_id = q.requester_id )
+    from main_hitgroupcontent p
+        LEFT JOIN main_requesterprofile r ON p.requester_id = r.requester_id
     where
         p.requester_id = '%s'
-        and q.is_public = true
-        and p.occurrence_date > TIMESTAMP '%s' and
-        q.occurrence_date > TIMESTAMP '%s';
-        """ % (requester_id, date_from, date_from))
+        AND coalesce(r.is_public, true) = true
+        and
+        p.occurrence_date > TIMESTAMP '%s';
+        """ % (requester_id, date_from))
 
         columns = [
             ('string', 'HIT Title'),

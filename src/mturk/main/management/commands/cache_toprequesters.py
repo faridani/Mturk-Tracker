@@ -32,9 +32,8 @@ from django.core.cache import cache
 from django.core.management.base import BaseCommand, NoArgsCommand
 from optparse import make_option
 
-from tenclouds.sql import query_to_tuples, execute_sql
 
-ONE_DAY = 60 * 60 * 24
+HOURS4 = 60 * 60 * 4
 
 logger = logging.getLogger('cache_toprequesters')
 
@@ -49,42 +48,17 @@ class Command(BaseCommand):
     def handle(self, **options):
         key = 'TOPREQUESTERS_CACHED'
         # check cache
-        result = cache.get(key)
-        if result is not None:
-            logging.info("toprequesters still in cache...")
-            return
+        #result = cache.get(key)
+        #if result is not None:
+        #    logging.info("toprequesters still in cache...")
+        #    return
+        days = options['days']
 
         logging.info("toprequesters missing, refetching")
         # no chache perform query:
+        from mturk.main.views import topreq_data
         start_time = time.time()
-        firstcrawl = execute_sql("""
-            SELECT crawl_id
-            FROM hits_mv
-            WHERE
-                start_time > %s
-            ORDER BY start_time ASC
-            LIMIT 1;""", datetime.date.today() - datetime.timedelta(int(options['days']))).fetchall()[0][0]
-
-        data = list(query_to_tuples("""
-            SELECT
-                h.requester_id,
-                h.requester_name,
-                count(*) as "projects",
-                sum(mv.hits_available) as "hits",
-                sum(mv.hits_available*h.reward) as "reward",
-                max(h.occurrence_date) as "last_posted"
-            FROM
-                    main_hitgroupcontent h
-                    LEFT JOIN (
-                        SELECT group_id, crawl_id, hits_available from
-                        hits_mv where crawl_id> %s
-                    ) mv ON (h.group_id=mv.group_id and h.first_crawl_id=mv.crawl_id)
-                WHERE
-                    h.first_crawl_id > %s
-                group by h.requester_id, h.requester_name
-                order by sum(mv.hits_available*h.reward) desc
-                limit 1000;""" % (firstcrawl, firstcrawl)))
-
+        data = topreq_data(days)
         logging.info("toprequesters: filled memcache in %s", time.time() - start_time)
-        cache.set(key, data, ONE_DAY)
+        cache.set(key, data, HOURS4)
 
