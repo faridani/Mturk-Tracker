@@ -66,14 +66,9 @@ class Command(BaseCommand):
 
                 transaction.commit()
 
-        except KeyError:
+        except (KeyError, KeyboardInterrupt):
             transaction.rollback()
             pid.remove_pid()
             exit()            
-        else:
-            transaction.rollback()
-            pid.remove_pid()
-            exit()
-            raise            
 
         logger.info('updating 5 crawls took: %s s', (time.time() - start_time))

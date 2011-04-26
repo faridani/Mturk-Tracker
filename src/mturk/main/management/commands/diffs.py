@@ -51,10 +51,12 @@ def updatehitgroup(g, cid):
                     group_id = '%s' 
                 order by crawl_id desc 
                 limit 1;""" % (cid-100, cid-1, g)).fetchall()
-    prev = prev[0] if prev else 0
+    prev = prev[0][0] if prev else 0
     
     execute_sql("""update hits_mv set hits_diff = hits_available - %s where
-            group_id = %s and crawl_id = %s;""", prev, g, cid)
+            group_id = '%s' and crawl_id = %s;""" % (prev, g, cid))
+
+    execute_sql("commit;")
 
 
 def update_cid(cid):
