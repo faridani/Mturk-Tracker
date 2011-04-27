@@ -12,3 +12,4 @@ data
 data/**
 *.counter
 config/etc/nginx/htpasswd
+mturk-tracker.sublime-project.sublime-project

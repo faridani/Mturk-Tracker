@@ -83,10 +83,12 @@ class HitGroupStatus(models.Model):
 
 class DayStats(models.Model):
 
-    date                = models.DateField('Date', db_index=True)
+    date = models.DateField('Date', db_index=True)
 
-    arrivals            = models.IntegerField('Arrivals Hits')
-    processed           = models.IntegerField('Processed Hits')
+    arrivals = models.IntegerField('Arrivals Hits', default=0)
+    arrivals_value = models.FloatField('Arrivals Hits Value', default=0)
+    processed = models.IntegerField('Processed Hits', default=0)
+    processed = models.FloatField('Processed Hits Value', default=0)
 
 
 class CrawlAgregates(models.Model):

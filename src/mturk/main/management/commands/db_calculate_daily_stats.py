@@ -36,6 +36,7 @@ from tenclouds.date import today
 from tenclouds.sql import query_to_dicts
 from mturk.main.models import Crawl, DayStats
 
+logger = logging.getLogger('db_calculate_daily_stats')
 
 def get_first_crawl():
         crawls = Crawl.objects.filter(has_diffs=True).order_by('start_time')[:1]
@@ -65,7 +66,7 @@ class Command(BaseCommand):
         '''
         crawl = get_first_crawl()
         if not crawl:
-            logging.error("no crawls in db")
+            logger.error("no crawls in db")
             return
         
         transaction.enter_transaction_management()
@@ -78,52 +79,51 @@ class Command(BaseCommand):
             day_end = day + datetime.timedelta(days=1)
             
             crawls = Crawl.objects.filter(has_diffs=False,start_time__gte=day, start_time__lt=day)
-            if len(crawls > 0):
-                logging.error("not all crawls from %s have diffs" % day)
-                return
+            if len(crawls)>0:
+                logger.error("not all crawls from %s have diffs" % day)
+                continue
 
             try:
                 DayStats.objects.get(date = day)
             except DayStats.DoesNotExist: #@UndefinedVariable
-                logging.info("db_calculate_daily_stats: calculating stats for: %s" % day)
+                logger.info("db_calculate_daily_stats: calculating stats for: %s" % day)
                 
                 range_start_date   = day.isoformat()
                 range_end_date     = (day_end).isoformat()
                 
+                logger.info("calculating arrivals")
+
                 '''
                 stats for projects posted on particular day
                 '''
                 arrivals = query_to_dicts('''
-                    select sum(hits_diff) as "arrivals"
+                    select sum(hits_diff) as "arrivals", sum(hits_diff*reward) as "arrivals_value"
                     from 
                         hits_mv p join
                         main_crawl r on ( p.crawl_id = r.id )
                     where
-                        p.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'                    
+                        r.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'                    
                         and hits_diff > 0
                     ''' % ( range_start_date, range_end_date)).next()
 
+                logger.info("calculating processed")
+
                 processed = query_to_dicts('''
-                    select sum(hits_diff) as "processed"
+                    select sum(hits_diff) as "processed", sum(hits_diff*reward) as "processed_value"
                     from 
                         hits_mv p join
                         main_crawl r on ( p.crawl_id = r.id )
                     where
-                        p.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'                    
+                        r.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'                    
                         and hits_diff < 0
                     ''' % ( range_start_date, range_end_date)).next()                    
-                
-                '''
-                making sure no null values are passed
-                '''
-                for map in (arrivals, processed):
-                    for key,value in map.iteritems():
-                        if value is None or value < 0: map[key] = 0
-                
+                                
                 DayStats.objects.create(date = day,
                                         
                                         arrivals = arrivals['arrivals'],
-                                        processed = processed['processed']
+                                        arrivals_value = arrivals['arrivals_value'],
+                                        processed = processed['processed'],
+                                        processed_value = processed['processed_value']
                                         )
                 
                 transaction.commit()
