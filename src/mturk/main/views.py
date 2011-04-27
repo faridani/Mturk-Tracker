@@ -47,6 +47,13 @@ DEFAULT_COLUMNS =  (
                ('number','#Projects'),
 )
 
+ARRIVALS_COLUMNS =  (
+               ('date','Date'),
+               ('number','#HITs'),
+               ('number','Rewards($)'),
+)
+
+
 ONE_DAY = 60 * 60 * 24
 ONE_HOUR = 60 * 60
 
@@ -109,7 +116,7 @@ def arrivals(request):
 
     params = {
         'multichart': True,
-        'columns':DEFAULT_COLUMNS,
+        'columns':ARRIVALS_COLUMNS,
         'title': 'New Tasks/HITs/$$$ per day'
     }
 
