@@ -78,8 +78,8 @@ def calculate_first_crawl_id():
     execute_sql('commit;')
 
 def update_mviews():
-    
-    missing_crawls = query_to_tuples("""select id from main_crawl p where p.success = true and not exists (select id from main_crawlagregates where crawl_id = p.id )""")
+
+    missing_crawls = query_to_tuples("""select id from main_crawl p where p.success = true and not exists (select id from main_crawlagregates where crawl_id = p.id ) and old_id is null""")
 
     for row in missing_crawls:
 

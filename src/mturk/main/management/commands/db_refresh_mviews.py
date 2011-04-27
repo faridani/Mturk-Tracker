@@ -52,18 +52,9 @@ class Command(BaseCommand):
         logging.info('cleaning up db from duplicates')
         clean_duplicates()
 
-#        logging.info('calculating first_crawl_id')
-#        calculate_first_crawl_id()
-
         logging.info('Refreshing materialised views')
         update_mviews()
 
-#        logging.info('Updating crawl agregates')
-#        update_crawl_agregates(1, only_new = True)
-
-#        logging.info('Updating first occured agregates')
-#        update_first_occured_agregates()
-#        update_diffs()
         logging.info('done refreshing mviews')
 
         logging.info('db_refresh_mviews took: %s' % (time.time() - start_time))
