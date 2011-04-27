@@ -124,8 +124,8 @@ def arrivals(request):
         params['date_to'] = request.GET['date_to']
 
     data = data_formater(query_to_dicts('''
-        select date as "start_time", arrivals_hits as "hits", arrivals_reward as "reward", arrivals_projects as "count"
-        from main_daystats where day_end_hits != 0 and date >= '%s' and date <= '%s'
+        select date as "start_time", arrivals as "hits", arrivals_value as "reward"
+        from main_daystats where date >= '%s' and date <= '%s'
     ''' % (date_from,date_to)))
 
     params['data'] = data
