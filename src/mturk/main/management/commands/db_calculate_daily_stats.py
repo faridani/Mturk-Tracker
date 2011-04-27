@@ -99,22 +99,20 @@ class Command(BaseCommand):
                 arrivals = query_to_dicts('''
                     select sum(hits_diff) as "arrivals", sum(hits_diff*reward) as "arrivals_value"
                     from 
-                        hits_mv p join
-                        main_crawl r on ( p.crawl_id = r.id )
+                        hits_mv p
                     where
-                        r.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'                    
+                     start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
                         and hits_diff > 0
                     ''' % ( range_start_date, range_end_date)).next()
 
                 logger.info("calculating processed")
 
                 processed = query_to_dicts('''
-                    select sum(hits_diff) as "processed", sum(hits_diff*reward) as "processed_value"
+                    select sum(hits_diff) as "arrivals", sum(hits_diff*reward) as "arrivals_value"
                     from 
-                        hits_mv p join
-                        main_crawl r on ( p.crawl_id = r.id )
+                        hits_mv p
                     where
-                        r.start_time between TIMESTAMP '%s' and TIMESTAMP '%s'                    
+                     start_time between TIMESTAMP '%s' and TIMESTAMP '%s'
                         and hits_diff < 0
                     ''' % ( range_start_date, range_end_date)).next()                    
                                 
