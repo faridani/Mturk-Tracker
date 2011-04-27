@@ -41,7 +41,7 @@ logger = logging.getLogger('db_refresh_diffs')
 
 class Command(BaseCommand):
     option_list = NoArgsCommand.option_list + (
-        make_option('--limit', dest='limit', default='100',
+        make_option('--limit', dest='limit', default='100', type='int',
             help='Number of crawls to process.'),
     )
     help = 'Update views with diff values'
@@ -57,7 +57,7 @@ class Command(BaseCommand):
 
         try:
 
-            for c in Crawl.objects.filter(has_diffs=False).order_by('-id')[:10]:
+            for c in Crawl.objects.filter(has_diffs=False).order_by('-id')[:options['limit']]:
                 
                 update_cid(c.id)
                 

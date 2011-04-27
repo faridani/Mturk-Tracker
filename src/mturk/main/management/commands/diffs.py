@@ -56,8 +56,6 @@ def updatehitgroup(g, cid):
     execute_sql("""update hits_mv set hits_diff = hits_available - %s where
             group_id = '%s' and crawl_id = %s;""" % (prev, g, cid))
 
-    execute_sql("commit;")
-
 
 def update_cid(cid):
 
@@ -66,6 +64,8 @@ def update_cid(cid):
         g = g[0]
         log.info("processing %s, %s %s", i, cid,  g)
         updatehitgroup(g, cid)
+
+    execute_sql("commit;")
 
     log.info("updated crawl in %s", time.time() - st)
 
