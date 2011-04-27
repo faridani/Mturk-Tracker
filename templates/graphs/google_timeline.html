@@ -27,7 +27,9 @@
             {% for row in data %}
                 var row = {{ row }};
                 for (i=1; i<=charts.length; ++i) {
-                    dataBox[i - 1].addRow([row[0], row[i]]);
+                    if(dataBox[i - 1] !== undefined){
+                        dataBox[i - 1].addRow([row[0], row[i]]);
+                    }
                 }
             {% endfor %}
 
