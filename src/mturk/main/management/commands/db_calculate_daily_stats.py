@@ -108,7 +108,7 @@ class Command(BaseCommand):
                 logger.info("calculating processed")
 
                 processed = query_to_dicts('''
-                    select sum(hits_diff) as "arrivals", sum(hits_diff*reward) as "arrivals_value"
+                    select sum(hits_diff) as "processed", sum(hits_diff*reward) as "processed_value"
                     from 
                         hits_mv p
                     where
