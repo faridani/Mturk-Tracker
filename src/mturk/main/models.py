@@ -88,7 +88,7 @@ class DayStats(models.Model):
     arrivals = models.IntegerField('Arrivals Hits', default=0)
     arrivals_value = models.FloatField('Arrivals Hits Value', default=0)
     processed = models.IntegerField('Processed Hits', default=0)
-    processed = models.FloatField('Processed Hits Value', default=0)
+    processed_value = models.FloatField('Processed Hits Value', default=0)
 
 
 class CrawlAgregates(models.Model):
