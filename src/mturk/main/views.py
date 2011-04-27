@@ -120,6 +120,13 @@ def arrivals(request):
         'title': 'New Tasks/HITs/$$$ per day'
     }
 
+    def arrivals_data_formater(input):
+        for cc in input:
+            yield {
+                    'date': cc['start_time'],
+                    'row': (str(cc['hits']), str(cc['reward'])),
+            }    
+
     date_from = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
     date_to = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
 
@@ -130,7 +137,7 @@ def arrivals(request):
         params['date_from'] = request.GET['date_from']
         params['date_to'] = request.GET['date_to']
 
-    data = data_formater(query_to_dicts('''
+    data = arrivals_data_formater(query_to_dicts('''
         select date as "start_time", arrivals as "hits", arrivals_value as "reward"
         from main_daystats where date >= '%s' and date <= '%s'
     ''' % (date_from,date_to)))
