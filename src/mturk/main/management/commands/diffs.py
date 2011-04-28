@@ -56,7 +56,6 @@ def updatehitgroup(g, cid):
     execute_sql("""update hits_mv set hits_diff = hits_available - %s where
             group_id = '%s' and crawl_id = %s;""" % (prev, g, cid))
 
-
 def update_cid(cid):
 
     st = time.time()

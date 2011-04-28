@@ -17,7 +17,6 @@ log = logging.getLogger('main.solr_sync')
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
             make_option('--verbose', dest='verbose', action='store_true'),
-            make_option('--clean-queue', dest='clean_queue', action='store_true'),
             make_option('--older-than', dest='older_than', type='int', default=2),
     )
 
@@ -30,12 +29,10 @@ class Command(BaseCommand):
             handler.setFormatter(formatter)
             log.addHandler(handler)
 
-        if options.get('clean_queue', False):
-            # remove rows from index queue and quit
-            now = datetime.datetime.now()
-            older_than = now - datetime.timedelta(days=options['older_than'])
-            IndexQueue.objects.filter(created__lte=older_than).delete()
-            return
+        # remove rows from index queue and quit
+        now = datetime.datetime.now()
+        older_than = now - datetime.timedelta(days=options['older_than'])
+        IndexQueue.objects.filter(created__lte=older_than).delete()
 
         log.info('solr delta sync started')
         url = "%s/import_db_hits/?command=delta-import" % settings.SOLR_MAIN
