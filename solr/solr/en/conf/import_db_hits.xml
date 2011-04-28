@@ -16,11 +16,10 @@
                     FROM
                         main_hitgroupcontent
                     WHERE
-                        is_public = true
-                        AND 5120 > LENGTH(html)"
+                        is_public = true AND 
+                        LENGTH(html) &lt; 9000001"
 
-				deltaQuery="
-                SELECT DISTINCT
+				deltaQuery="SELECT DISTINCT
                     hitgroupcontent_id as id
                 FROM
                     main_indexqueue
