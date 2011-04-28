@@ -217,7 +217,7 @@ def top_requesters(request):
 
     key = 'TOPREQUESTERS_CACHED'
     # check cache
-    data = cache.get(key) or topreq_data(30)
+    data = cache.get(key) or []
 
     def _top_requesters(request):
         def row_formatter(input):

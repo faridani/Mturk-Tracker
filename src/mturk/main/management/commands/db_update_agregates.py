@@ -30,13 +30,11 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 import time
 import logging
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from tenclouds.pid import Pid
 
-from mturk.main.management.commands import clean_duplicates, update_crawl_agregates,\
-    update_mviews, calculate_first_crawl_id, update_first_occured_agregates
+from mturk.main.management.commands import update_crawl_agregates
 
 
 logger = logging.getLogger('db_refresh_mviews')
