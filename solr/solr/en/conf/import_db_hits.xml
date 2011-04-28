@@ -17,7 +17,7 @@
                         main_hitgroupcontent
                     WHERE
                         is_public = true
-                        AND 1000001 > LENGTH(html)"
+                        AND 5120 > LENGTH(html)"
 
 				deltaQuery="
                 SELECT DISTINCT
