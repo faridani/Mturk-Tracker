@@ -59,10 +59,11 @@ class Command(BaseCommand):
 
             for c in Crawl.objects.filter(has_diffs=False).order_by('-id')[:options['limit']]:
                 
-                update_cid(c.id)
+                updated = update_cid(c.id)
                 
-                c.has_diffs=True
-                c.save()
+                if updated > 0:
+                    c.has_diffs=True
+                    c.save()
 
                 transaction.commit()
 

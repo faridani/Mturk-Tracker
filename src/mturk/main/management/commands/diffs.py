@@ -59,13 +59,17 @@ def updatehitgroup(g, cid):
 def update_cid(cid):
 
     st = time.time()
+    count = 0
     for i, g in enumerate(query_to_tuples("select distinct group_id from hits_mv where crawl_id = %s", cid)):
         g = g[0]
         log.info("processing %s, %s %s", i, cid,  g)
         updatehitgroup(g, cid)
+        count += 1
 
     execute_sql("commit;")
 
     log.info("updated crawl in %s", time.time() - st)
+
+    return count
 
 
