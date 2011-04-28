@@ -257,8 +257,8 @@ def requester_details(request, requester_id):
 
             for cc in input:
                 row = []
-                row.append('<a href="%s">%s</a>' % (reverse('hit_group_details',kwargs={'hit_group_id':cc[5]}) ,cc[0]))
-                row.extend(cc[1:5])
+                row.append('<a href="%s">%s</a>' % (reverse('hit_group_details',kwargs={'hit_group_id':cc[4]}) ,cc[0]))
+                row.extend(cc[1:4])
                 yield row
 
         requster_name = HitGroupContent.objects.filter(requester_id = requester_id).values_list('requester_name',flat=True).distinct()
@@ -274,7 +274,6 @@ def requester_details(request, requester_id):
         0,
         p.reward,
         p.occurrence_date,
-        (select end_time from main_crawl where id = (select max(crawl_id) from main_hitgroupstatus where group_id = p.group_id)) - p.occurrence_date,
         p.group_id
     from main_hitgroupcontent p
         LEFT JOIN main_requesterprofile r ON p.requester_id = r.requester_id
@@ -290,12 +289,11 @@ def requester_details(request, requester_id):
             ('number', '#HITs'),
             ('number', 'Reward'),
             ('datetime', 'Posted'),
-            ('number', 'Duration (Days)'),
         ]
         ctx = {
             'data': text_row_formater(row_formatter(data)),
             'columns': tuple(columns),
-            'title':'Last 100 Tasks posted by %s' % (requster_name),
+            'title':'Tasks posted during last 30 days by %s' % (requster_name),
             'user': request.user,
         }
         return direct_to_template(request, 'main/requester_details.html',ctx)
