@@ -17,7 +17,7 @@ log = logging.getLogger('crawler.tasks')
 
 
 
-def _get_html(url, timeout=5):
+def _get_html(url, timeout=10):
     """Get page code using given url. If server won't response in `timeout`
     seconds, return empty string.
     """

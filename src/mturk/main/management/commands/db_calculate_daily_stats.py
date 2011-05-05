@@ -28,7 +28,6 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 import datetime
 import logging
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
@@ -78,7 +77,7 @@ class Command(BaseCommand):
             day = crawl.start_day()+datetime.timedelta(days=i)
             day_end = day + datetime.timedelta(days=1)
             
-            crawls = Crawl.objects.filter(has_diffs=False,start_time__gte=day, start_time__lt=day)
+            crawls = Crawl.objects.filter(has_diffs=False, start_time__gte=day, start_time__lt=day_end )
             if len(crawls)>0:
                 logger.error("not all crawls from %s have diffs" % day)
                 continue

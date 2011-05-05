@@ -26,8 +26,8 @@
 
         var table = new google.visualization.Table(document.getElementById('table_div'));
 
-        var formatter = new google.visualization.TableBarFormat({width: 50, showValue: true});
-		formatter.format(data, 4);
+        //var formatter = new google.visualization.TableBarFormat({width: 50, showValue: true});
+		//formatter.format(data, 4);
         table.draw(data, {showRowNumber: true, allowHtml: true, page: 'enable', pageSize: 25, width: '100%', alternatingRowStyle: true});
 	}
 

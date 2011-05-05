@@ -257,8 +257,8 @@ def requester_details(request, requester_id):
 
             for cc in input:
                 row = []
-                row.append('<a href="%s">%s</a>' % (reverse('hit_group_details',kwargs={'hit_group_id':cc[4]}) ,cc[0]))
-                row.extend(cc[1:4])
+                row.append('<a href="%s">%s</a>' % (reverse('hit_group_details',kwargs={'hit_group_id':cc[3]}),cc[0]))
+                row.extend(cc[1:3])
                 yield row
 
         requster_name = HitGroupContent.objects.filter(requester_id = requester_id).values_list('requester_name',flat=True).distinct()
@@ -271,7 +271,6 @@ def requester_details(request, requester_id):
         data = query_to_tuples("""
     select
         title,
-        0,
         p.reward,
         p.occurrence_date,
         p.group_id
@@ -286,7 +285,6 @@ def requester_details(request, requester_id):
 
         columns = [
             ('string', 'HIT Title'),
-            ('number', '#HITs'),
             ('number', 'Reward'),
             ('datetime', 'Posted'),
         ]
