@@ -79,25 +79,26 @@ def calculate_first_crawl_id():
 
 def update_mviews():
 
-    missing_crawls = query_to_tuples("""select id from main_crawl p where p.success = true and not exists (select id from main_crawlagregates where crawl_id = p.id ) and old_id is null""")
+    missing_crawls = query_to_tuples("""select id, start_time from main_crawl p where p.success = true and not exists (select id from main_crawlagregates where crawl_id = p.id ) and old_id is null and groups_downloaded > 200 order by id desc""")
 
     for row in missing_crawls:
 
         crawl_id = str(row[0])
+        start_time = str(row[1])
 
         logging.info("inserting missing crawl: %s" % crawl_id)
         execute_sql("""INSERT INTO
                 hits_mv
             SELECT p.id AS status_id, q.id AS content_id, p.group_id, p.crawl_id,
-                ( SELECT main_crawl.start_time FROM main_crawl WHERE main_crawl.id = p.crawl_id) AS start_time,
+                %s,
                 q.requester_id, p.hits_available, p.page_number, p.inpage_position, p.hit_expiration_date, q.reward, q.time_alloted
             FROM
                 main_hitgroupstatus p
             JOIN
                 main_hitgroupcontent q ON (q.group_id::text = p.group_id::text AND p.hit_group_content_id = q.id)
             WHERE
-                p.crawl_id IN ( %s );
-        """ % crawl_id)
+                p.crawl_id = %s;
+        """ % (start_time, crawl_id))
         execute_sql('commit;')
 
     # insert missing higroups info for the last two days
