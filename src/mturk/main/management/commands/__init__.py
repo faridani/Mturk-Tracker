@@ -90,7 +90,7 @@ def update_mviews():
         execute_sql("""INSERT INTO
                 hits_mv
             SELECT p.id AS status_id, q.id AS content_id, p.group_id, p.crawl_id,
-                %s,
+                TIMESTAMP '%s',
                 q.requester_id, p.hits_available, p.page_number, p.inpage_position, p.hit_expiration_date, q.reward, q.time_alloted
             FROM
                 main_hitgroupstatus p
