@@ -1,2 +1,3 @@
 psycopg2
 gevent
+-e hg+https://google-api-python-client.googlecode.com/hg/#egg=gapi

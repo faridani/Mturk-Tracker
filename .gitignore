@@ -14,3 +14,5 @@ data/**
 config/etc/nginx/htpasswd
 mturk-tracker.sublime-project.sublime-project
 solr/solr/en/conf/import_db_hits.properties
+data
+prediction.dat

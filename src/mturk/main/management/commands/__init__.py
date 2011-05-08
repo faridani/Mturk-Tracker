@@ -91,7 +91,7 @@ def update_mviews():
                 hits_mv
             SELECT p.id AS status_id, q.id AS content_id, p.group_id, p.crawl_id,
                 TIMESTAMP '%s',
-                q.requester_id, p.hits_available, p.page_number, p.inpage_position, p.hit_expiration_date, q.reward, q.time_alloted
+                q.requester_id, p.hits_available, p.page_number, p.inpage_position, p.hit_expiration_date, q.reward, q.time_alloted, null, q.is_spam
             FROM
                 main_hitgroupstatus p
             JOIN

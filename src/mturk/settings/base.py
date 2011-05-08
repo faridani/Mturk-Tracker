@@ -75,7 +75,8 @@ INSTALLED_APPS = (
     'django.contrib.webdesign',
     'south',
     'mturk.main',
-    'mturk.importer'
+    'mturk.importer',
+    'mturk.spam',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -89,3 +90,13 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 LOGIN_REDIRECT_URL = "/"
 
 DATASMOOTHING = True
+
+PREDICTION_API_KEY= "AIzaSyDiETxIg9DJ6Unu7zbfPDKEoXq3v_9CAms"
+# PREDICTION_API_KEY= "AIzaSyDmmL1HdgFRnE32sSYay52X5bplfhnxyrA"
+
+PREDICTION_API_CLIENT_ID= "581229398898.apps.googleusercontent.com"
+PREDICTION_API_CLIENT_SECRET= "u-TQagk4z93p5W6OO7hoRBKZ"
+PREDICTION_API_DATA_SET= "mturk-tracker/spam-training-data-20110506.txt"
+
+# PREDICTION_API_CLIENT_ID= "1096089602663.apps.googleusercontent.com"
+# PREDICTION_API_CLIENT_SECRET= "xVr6Kmc1L9ccPze_aUEYEoF4"

@@ -32,16 +32,17 @@ import datetime
 
 class Crawl(models.Model):
 
-    start_time          = models.DateTimeField('Start Time')
-    end_time            = models.DateTimeField('End Time')
-    hits_available      = models.IntegerField('All hits avaliable', null=True)
-    hits_downloaded     = models.IntegerField('All hits downloaded', null=True)
-    groups_available    = models.IntegerField('Groups available', null=True)
-    groups_downloaded   = models.IntegerField('Groups downloaded', null=True)
-    success             = models.BooleanField('Successfoul crawl?')
-    errors              = JSONField('Errors', blank=True, null=True)
-    old_id              = models.IntegerField(null=True,blank=True,unique=True,db_index=True)
-    has_diffs           = models.BooleanField("Has Diffs", db_index=True, default=False)
+    start_time = models.DateTimeField('Start Time')
+    end_time = models.DateTimeField('End Time')
+    hits_available = models.IntegerField('All hits avaliable', null=True)
+    hits_downloaded = models.IntegerField('All hits downloaded', null=True)
+    groups_available = models.IntegerField('Groups available', null=True)
+    groups_downloaded = models.IntegerField('Groups downloaded', null=True)
+    success = models.BooleanField('Successfoul crawl?')
+    errors = JSONField('Errors', blank=True, null=True)
+    old_id = models.IntegerField(null=True,blank=True,unique=True,db_index=True)
+    has_diffs = models.BooleanField("Has Diffs", db_index=True, default=False)
+    is_spam_computed = models.BooleanField("Has Spam Computed", db_index=True, default=False)
 
     def start_day(self):
         return datetime.date(year= self.start_time.year,
@@ -69,6 +70,7 @@ class HitGroupContent(models.Model):
     time_alloted        = models.IntegerField('Time alloted')
     first_crawl         = models.ForeignKey(Crawl, blank=True, null=True)
     is_public = models.BooleanField(default=True)
+    is_spam = models.NullBooleanField(db_index=True)
 
 
 class HitGroupStatus(models.Model):
@@ -93,10 +95,11 @@ class DayStats(models.Model):
 
 class CrawlAgregates(models.Model):
 
-    reward              = models.FloatField()
-    hits                = models.IntegerField()
-    projects            = models.IntegerField()
-    start_time          = models.DateTimeField(db_index=True)
+    reward = models.FloatField()
+    hits = models.IntegerField()
+    projects = models.IntegerField()
+    start_time = models.DateTimeField(db_index=True)
+    spam_projects = models.IntegerField()
 
     crawl               = models.ForeignKey(Crawl)
 

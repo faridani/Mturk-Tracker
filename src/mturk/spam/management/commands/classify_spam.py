@@ -25,30 +25,48 @@ OTHER DEALINGS IN THE SOFTWARE.
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
 
-import time
 import logging
-
 from django.core.management.base import BaseCommand, NoArgsCommand
 from optparse import make_option
+from mturk.spam.management.commands import get_prediction_service
+
+from django.conf import settings
+
 from tenclouds.pid import Pid
 from mturk.main.models import Crawl
 
-from mturk.main.management.commands.diffs import update_cid
 from django.db import transaction
 
-logger = logging.getLogger('db_refresh_diffs')
+import time
 
+
+log = logging.getLogger('classify_spam')
 
 class Command(BaseCommand):
+
+    help = 'Train classifier'
+
     option_list = NoArgsCommand.option_list + (
-        make_option('--limit', dest='limit', default='100', type='int',
-            help='Number of crawls to process.'),
+        make_option('--file', dest='file', type='str',
+            help='Filename of file with training data', default=settings.PREDICTION_API_DATA_SET),
     )
-    help = 'Update views with diff values'
 
     def handle(self, **options):
 
-        pid = Pid('mturk_diffs', True)
+        """
+        Take ${lmit} last crawls without spam classification
+        Classify all hit groups, update hits_mv to have proper hit classification
+        Rebuild crawl_aggregates for a given crawl
+        Refresh memcache
+        """
+
+        service = get_prediction_service()
+        body = {'input': {'csvInstance': ["mucho bueno"]}}
+        prediction = service.predict(body=body, data=options['file']).execute()
+        print 'The prediction is:'
+        print prediction
+
+        pid = Pid('classify_spam', True)
 
         transaction.enter_transaction_management()
         transaction.managed(True)
@@ -59,10 +77,10 @@ class Command(BaseCommand):
 
             for c in Crawl.objects.filter(is_spam_computed=False).order_by('-id')[:options['limit']]:
                 
-                updated = update_cid(c.id)
+                updated = 0
                 
                 if updated > 0:
-                    c.has_diffs=True
+                    c.is_spam_computed=True
                     c.save()
 
                 transaction.commit()
@@ -72,4 +90,4 @@ class Command(BaseCommand):
             pid.remove_pid()
             exit()            
 
-        logger.info('updating 5 crawls took: %s s', (time.time() - start_time))
+        log.info('updating 5 crawls took: %s s', (time.time() - start_time))        
