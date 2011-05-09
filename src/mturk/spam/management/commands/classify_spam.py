@@ -29,12 +29,11 @@ import logging
 from django.core.management.base import BaseCommand, NoArgsCommand
 from optparse import make_option
 from mturk.spam.management.commands import get_prediction_service
-from mturk.main.models import HitGroupContent
+from mturk.main.models import HitGroupContent, CrawlAgregates, Crawl
 
 from django.conf import settings
 
 from tenclouds.pid import Pid
-from mturk.main.models import Crawl
 from tenclouds.sql import query_to_dicts, execute_sql
 
 from django.db import transaction
@@ -120,6 +119,8 @@ class Command(BaseCommand):
 
                 if(len(not_spam)>0):
                     execute_sql("update hits_mv set is_spam = false where content_id in(%s)" % ','.join(not_spam))
+
+                CrawlAgregates.filter(crawl_id= c.id).update(spam_projects=len(spam))
 
 
                 transaction.commit()
