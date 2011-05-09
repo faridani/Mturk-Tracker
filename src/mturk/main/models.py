@@ -72,8 +72,6 @@ class HitGroupContent(models.Model):
     first_crawl         = models.ForeignKey(Crawl, blank=True, null=True)
     is_public = models.BooleanField(default=True)
     is_spam = models.NullBooleanField(db_index=True)
-<<<<<<< HEAD
-=======
 
     def prepare_for_prediction(self):
 
@@ -98,8 +96,6 @@ class HitGroupContent(models.Model):
             sanitized_html, self.keywords, "true" if self.is_public else "false"]
 
         # return csvrow
->>>>>>> working version of spam classification
-
 
 class HitGroupStatus(models.Model):
     group_id            = models.CharField('Group ID', max_length=50)

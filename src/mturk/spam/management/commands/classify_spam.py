@@ -75,7 +75,9 @@ class Command(BaseCommand):
 
         try:
 
-            for c in Crawl.objects.filter(is_spam_computed=False).order_by('-id')[:options['limit']]:
+            number_of_predictions = 0
+
+            for c in list(Crawl.objects.filter(is_spam_computed=False).order_by('-id')[:options['limit']]):
 
                 log.info("processing %s", c)
 
@@ -96,6 +98,7 @@ class Command(BaseCommand):
 
                     body = {'input': {'csvInstance': data}}
                     prediction = service.predict(body=body, data=options['file']).execute()
+                    number_of_predictions += 1
                     
                     is_spam = prediction['outputLabel'] != 'No'
                     
@@ -126,4 +129,4 @@ class Command(BaseCommand):
             pid.remove_pid()
             exit()            
 
-        log.info('classyfiing %s crawls took: %s s', options['limit'], (time.time() - start_time))        
+        log.info('classyfiing %s crawls took: %s s, done %s predictions', options['limit'], (time.time() - start_time), number_of_predictions)        
