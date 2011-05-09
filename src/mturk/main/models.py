@@ -26,6 +26,7 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
 # -*- coding: utf-8 -*-
 from django.db import models, connection, transaction
+from django.utils.safestring import SafeString
 
 from mturk.fields import JSONField
 import datetime
@@ -71,6 +72,33 @@ class HitGroupContent(models.Model):
     first_crawl         = models.ForeignKey(Crawl, blank=True, null=True)
     is_public = models.BooleanField(default=True)
     is_spam = models.NullBooleanField(db_index=True)
+<<<<<<< HEAD
+=======
+
+    def prepare_for_prediction(self):
+
+        # import csv
+        # import StringIO
+        import re
+
+        num_of_qualifications = len(self.qualifications.split(','))
+        sanitized_html = re.sub(r'\n', ' ', self.html )
+        sanitized_html = re.sub(r'\r', '', sanitized_html )
+
+        # out = StringIO.StringIO()
+
+        # writer = csv.writer(out)
+        # writer.writerow(  )
+
+        # csvrow = out.getvalue()
+        # out.close()
+
+        return [self.reward, self.description, self.title, self.requester_name, 
+            self.qualifications, num_of_qualifications, self.time_alloted,
+            sanitized_html, self.keywords, "true" if self.is_public else "false"]
+
+        # return csvrow
+>>>>>>> working version of spam classification
 
 
 class HitGroupStatus(models.Model):

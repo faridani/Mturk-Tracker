@@ -94,8 +94,19 @@ DATASMOOTHING = True
 PREDICTION_API_KEY= "AIzaSyDiETxIg9DJ6Unu7zbfPDKEoXq3v_9CAms"
 # PREDICTION_API_KEY= "AIzaSyDmmL1HdgFRnE32sSYay52X5bplfhnxyrA"
 
+<<<<<<< HEAD
 PREDICTION_API_CLIENT_ID= "581229398898.apps.googleusercontent.com"
 PREDICTION_API_CLIENT_SECRET= "u-TQagk4z93p5W6OO7hoRBKZ"
+=======
+# mickek client
+# PREDICTION_API_CLIENT_ID= "581229398898.apps.googleusercontent.com"
+# PREDICTION_API_CLIENT_SECRET= "u-TQagk4z93p5W6OO7hoRBKZ"
+
+PREDICTION_API_CLIENT_ID= "1096089602663-erfn2lj26ae9n1djidfu8gf2e5egs5bk.apps.googleusercontent.com"
+PREDICTION_API_CLIENT_SECRET= "cWPdUE0BCcQsbZZ_xvLO9dMI"
+
+
+>>>>>>> working version of spam classification
 PREDICTION_API_DATA_SET= "mturk-tracker/spam-training-data-20110506.txt"
 
 # PREDICTION_API_CLIENT_ID= "1096089602663.apps.googleusercontent.com"

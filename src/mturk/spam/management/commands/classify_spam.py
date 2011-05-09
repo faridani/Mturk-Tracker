@@ -29,11 +29,13 @@ import logging
 from django.core.management.base import BaseCommand, NoArgsCommand
 from optparse import make_option
 from mturk.spam.management.commands import get_prediction_service
+from mturk.main.models import HitGroupContent
 
 from django.conf import settings
 
 from tenclouds.pid import Pid
 from mturk.main.models import Crawl
+from tenclouds.sql import query_to_dicts, execute_sql
 
 from django.db import transaction
 
@@ -49,6 +51,8 @@ class Command(BaseCommand):
     option_list = NoArgsCommand.option_list + (
         make_option('--file', dest='file', type='str',
             help='Filename of file with training data', default=settings.PREDICTION_API_DATA_SET),
+        make_option('--limit', dest='limit', type='int',
+            help='Max number of crawls to process', default=1),            
     )
 
     def handle(self, **options):
@@ -61,10 +65,6 @@ class Command(BaseCommand):
         """
 
         service = get_prediction_service()
-        body = {'input': {'csvInstance': ["mucho bueno"]}}
-        prediction = service.predict(body=body, data=options['file']).execute()
-        print 'The prediction is:'
-        print prediction
 
         pid = Pid('classify_spam', True)
 
@@ -76,12 +76,48 @@ class Command(BaseCommand):
         try:
 
             for c in Crawl.objects.filter(is_spam_computed=False).order_by('-id')[:options['limit']]:
+
+                log.info("processing %s", c)
+
+                spam = set([])
+                not_spam = set([])
                 
                 updated = 0
+
+                for row in query_to_dicts("""select content_id, group_id from hits_mv 
+                    where 
+                        crawl_id = %s and 
+                        is_spam is null""", c.id):
+
+                    log.info("classyfing %s", row)
+
+                    content = HitGroupContent.objects.get(id= row['content_id'])
+                    data = content.prepare_for_prediction()
+
+                    body = {'input': {'csvInstance': data}}
+                    prediction = service.predict(body=body, data=options['file']).execute()
+                    
+                    is_spam = prediction['outputLabel'] != 'No'
+                    
+                    if is_spam:
+                        log.info("detected spam for %s", row)
+                        spam.add(row['content_id'])
+                    else:
+                        not_spam.add(row['content_id'])
+
+                    content.is_spam = is_spam
+                    content.save()
                 
                 if updated > 0:
                     c.is_spam_computed=True
                     c.save()
+
+                if(len(spam)>0):
+                    execute_sql("update hits_mv set is_spam = true where content_id in(%s)" % ','.join(spam))
+
+                if(len(not_spam)>0):
+                    execute_sql("update hits_mv set is_spam = false where content_id in(%s)" % ','.join(not_spam))
+
 
                 transaction.commit()
 
@@ -90,4 +126,4 @@ class Command(BaseCommand):
             pid.remove_pid()
             exit()            
 
-        log.info('updating 5 crawls took: %s s', (time.time() - start_time))        
+        log.info('classyfiing %s crawls took: %s s', options['limit'], (time.time() - start_time))        
