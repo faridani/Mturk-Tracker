@@ -97,7 +97,9 @@ class Command(BaseCommand):
 
                     body = {'input': {'csvInstance': data}}
                     prediction = service.predict(body=body, data=options['file']).execute()
+                    
                     number_of_predictions += 1
+                    updated += 1                    
                     
                     is_spam = prediction['outputLabel'] != 'No'
                     

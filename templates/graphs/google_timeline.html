@@ -6,7 +6,8 @@
         var charts = [
             {DOMobj: document.getElementById('chart_div_hits'), dataType: 'hits', color: 'blue'},
             {DOMobj: document.getElementById('chart_div_rewards'), dataType: 'rewards', color: 'red'},
-            {DOMobj: document.getElementById('chart_div_projects'), dataType: 'projects', color: 'green'}
+            {DOMobj: document.getElementById('chart_div_projects'), dataType: 'projects', color: 'green'},
+            {DOMobj: document.getElementById('chart_div_spam'), dataType: 'spam', color: 'blue'}            
         ]
 
         google.setOnLoadCallback(function () {
@@ -64,10 +65,18 @@
             <h2><span class="no">2</span> Rewards</h2>
             <div id="chart_div_rewards" style="height: 300px;"></div>
         </div>
+
+        <div style="clear: both;"></div>
+
         
-        <div class="chartBox final">
+        <div class="chartBox">
             <h2><span class="no">3</span> Projects</h2>
             <div id="chart_div_projects" style="height: 300px;"></div>
+        </div>
+
+        <div class="chartBox">
+            <h2><span class="no">4</span> Spam</h2>
+            <div id="chart_div_spam" style="height: 300px;"></div>
         </div>
         
         <div style="clear: both;"></div>

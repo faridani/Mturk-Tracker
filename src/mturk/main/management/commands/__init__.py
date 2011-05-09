@@ -208,12 +208,19 @@ def update_crawl_agregates(commit_threshold=10, only_new = True):
                 sum(reward * hits_available) as "reward",
                 crawl_id,
                 nextval('main_crawlagregates_id_seq'),
-                count(*) as "count"
+                count(*) as "count",
+                0
             FROM
                 (SELECT DISTINCT ON (group_id) * FROM hits_mv WHERE crawl_id = %s) AS p
             GROUP BY
                 crawl_id, start_time
             """, row['id'])
+
+            execute_sql("""UPDATE main_crawlagregates 
+                set spam_projects = 
+                    ( select count(*) from hits_mv where crawl_id = %s and is_spam = true )
+                where crawl_id = %s""" % (row['id'], row['id']) ) 
+
 
             logging.info("update agregates for %s" % row['id'])
 

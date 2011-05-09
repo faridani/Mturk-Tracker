@@ -40,6 +40,14 @@ import time
 import admin
 import plot
 
+GENERAL_COLUMNS =  (
+               ('date','Date'),
+               ('number','#HITs'),
+               ('number','Rewards($)'),
+               ('number','#Projects'),
+               ('number','#Spam Projects'),
+)
+
 DEFAULT_COLUMNS =  (
                ('date','Date'),
                ('number','#HITs'),
@@ -61,7 +69,7 @@ def data_formater(input):
     for cc in input:
         yield {
                 'date': cc['start_time'],
-                'row': (str(cc['hits']), str(cc['reward']), str(cc['count'])),
+                'row': (str(cc['hits']), str(cc['reward']), str(cc['count']), str(cc['spam_projects'])),
         }
 
 @cache_page(ONE_HOUR)
@@ -69,7 +77,7 @@ def general(request):
 
     params = {
         'multichart': True,
-        'columns':DEFAULT_COLUMNS,
+        'columns':GENERAL_COLUMNS,
         'title': 'General Data'
     }
 
@@ -89,7 +97,7 @@ def general(request):
     params['date_to'] = date_to.strftime('%m/%d/%Y')
 
     data = data_formater(query_to_dicts('''
-        select reward, hits, projects as "count", start_time
+        select reward, hits, projects as "count", spam_projects, start_time
             from main_crawlagregates
             where start_time >= %s and start_time <= %s
             order by start_time asc
@@ -101,7 +109,7 @@ def general(request):
 
     def _fixer(a, others):
         val = sum(map(lambda e: int(e['row'][0]), others)) / len(others)
-        a['row'] = (str(val), a['row'][1], a['row'][2])
+        a['row'] = (str(val), a['row'][1], a['row'][2], a['row'][3])
         return a
 
     if settings.DATASMOOTHING:
