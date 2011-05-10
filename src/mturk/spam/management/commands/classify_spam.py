@@ -39,6 +39,7 @@ from tenclouds.sql import query_to_dicts, execute_sql
 
 from django.db import transaction
 
+
 import time
 
 
@@ -86,49 +87,56 @@ class Command(BaseCommand):
                 
                 updated = 0
 
-                for row in query_to_dicts("""select content_id, group_id from hits_mv 
+                for row in query_to_dicts("""select content_id, group_id, is_spam from hits_mv 
                     where 
-                        crawl_id = %s and 
-                        is_spam is null""", c.id):
+                        crawl_id = %s""", c.id):
 
-                    log.info("classyfing %s", row)
+                    log.info("classyfing crawl_id: %s, %s", c.id,row)
 
-                    is_spam = None
-                    content = HitGroupContent.objects.get(id= row['content_id'])
+                    if row['is_spam'] is None:
 
-                    if content.is_spam is None:
-                        data = content.prepare_for_prediction()
+                        is_spam = None
+                        content = HitGroupContent.objects.get(id= row['content_id'])
 
-                        body = {'input': {'csvInstance': data}}
-                        prediction = service.predict(body=body, data=options['file']).execute()
-                        
-                        number_of_predictions += 1
-                        updated += 1                    
-                        
-                        content.is_spam = prediction['outputLabel'] != 'No'
-                        content.save()
+                        if content.is_spam is None:
+                            data = content.prepare_for_prediction()
 
+                            body = {'input': {'csvInstance': data}}
+                            prediction = service.predict(body=body, data=options['file']).execute()
+                            
+                            number_of_predictions += 1
+                            updated += 1                    
+                            
+                            content.is_spam = prediction['outputLabel'] != 'No'
+                            content.save()
+
+                        execute_sql("update hits_mv set is_spam = %s where crawl_id = %s and group_id = '%s'" % ('true' if content.is_spam else 'false', c.id, row['group_id']))       
                         transaction.commit()
-                        
-                    if content.is_spam:
-                        log.info("detected spam for %s", row)
-                        spam.add(str(row['content_id']))
+                            
+                        if content.is_spam:
+                            log.info("detected spam for %s", row)
+                            spam.add(str(row['content_id']))
+                        else:
+                            not_spam.add(str(row['content_id']))
+
                     else:
-                        not_spam.add(str(row['content_id']))
+                        log.info("is_spam already computed for %s" % row)
                 
                 if updated > 0:
                     c.is_spam_computed=True
                     c.save()
 
-                if(len(spam)>0):
-                    execute_sql("update hits_mv set is_spam = true where content_id in(%s)" % ','.join(spam))
+                log.info("done classyfing crawl")
 
-                if(len(not_spam)>0):
-                    execute_sql("update hits_mv set is_spam = false where content_id in(%s)" % ','.join(not_spam))
+                execute_sql("""UPDATE main_crawlagregates 
+                    set spam_projects = 
+                        ( select count(*) from hits_mv where crawl_id = %s and is_spam = true )
+                    where crawl_id = %s""" % (c.id, c.id) ) 
 
-                CrawlAgregates.objects.filter(crawl = c.id).update(spam_projects=len(spam))
 
                 transaction.commit()
+
+                log.info("dome processing %s", c)
 
         except (KeyError, KeyboardInterrupt, HttpError), e:
             log.error(e)

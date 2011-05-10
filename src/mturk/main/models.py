@@ -79,7 +79,7 @@ class HitGroupContent(models.Model):
         # import StringIO
         import re
 
-        num_of_qualifications = len(self.qualifications.split(','))
+        num_of_qualifications = len(self.qualifications.split(',')) if self.qualifications else 0
         sanitized_html = re.sub(r'\n', ' ', self.html )
         sanitized_html = re.sub(r'\r', '', sanitized_html )
 
