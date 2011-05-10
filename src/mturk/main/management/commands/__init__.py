@@ -221,6 +221,11 @@ def update_crawl_agregates(commit_threshold=10, only_new = True):
                     ( select count(*) from hits_mv where crawl_id = %s and is_spam = true )
                 where crawl_id = %s""" % (row['id'], row['id']) ) 
 
+            print """UPDATE main_crawlagregates 
+                set spam_projects = 
+                    ( select count(*) from hits_mv where crawl_id = %s and is_spam = true )
+                where crawl_id = %s"""
+
 
             logging.info("update agregates for %s" % row['id'])
 

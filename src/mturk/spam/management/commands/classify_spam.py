@@ -30,6 +30,7 @@ from django.core.management.base import BaseCommand, NoArgsCommand
 from optparse import make_option
 from mturk.spam.management.commands import get_prediction_service
 from mturk.main.models import HitGroupContent, CrawlAgregates, Crawl
+from apiclient.errors import HttpError
 
 from django.conf import settings
 
@@ -92,25 +93,28 @@ class Command(BaseCommand):
 
                     log.info("classyfing %s", row)
 
+                    is_spam = None
                     content = HitGroupContent.objects.get(id= row['content_id'])
-                    data = content.prepare_for_prediction()
 
-                    body = {'input': {'csvInstance': data}}
-                    prediction = service.predict(body=body, data=options['file']).execute()
-                    
-                    number_of_predictions += 1
-                    updated += 1                    
-                    
-                    is_spam = prediction['outputLabel'] != 'No'
-                    
-                    if is_spam:
+                    if content.is_spam is None:
+                        data = content.prepare_for_prediction()
+
+                        body = {'input': {'csvInstance': data}}
+                        prediction = service.predict(body=body, data=options['file']).execute()
+                        
+                        number_of_predictions += 1
+                        updated += 1                    
+                        
+                        content.is_spam = prediction['outputLabel'] != 'No'
+                        content.save()
+
+                        transaction.commit()
+                        
+                    if content.is_spam:
                         log.info("detected spam for %s", row)
                         spam.add(row['content_id'])
                     else:
                         not_spam.add(row['content_id'])
-
-                    content.is_spam = is_spam
-                    content.save()
                 
                 if updated > 0:
                     c.is_spam_computed=True
@@ -122,12 +126,12 @@ class Command(BaseCommand):
                 if(len(not_spam)>0):
                     execute_sql("update hits_mv set is_spam = false where content_id in(%s)" % ','.join(not_spam))
 
-                CrawlAgregates.filter(crawl_id= c.id).update(spam_projects=len(spam))
-
+                CrawlAgregates.objects.filter(crawl = c.id).update(spam_projects=len(spam))
 
                 transaction.commit()
 
-        except (KeyError, KeyboardInterrupt):
+        except (KeyError, KeyboardInterrupt, HttpError), e:
+            log.error(e)
             transaction.rollback()
             pid.remove_pid()
             exit()            
