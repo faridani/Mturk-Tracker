@@ -112,9 +112,9 @@ class Command(BaseCommand):
                         
                     if content.is_spam:
                         log.info("detected spam for %s", row)
-                        spam.add(row['content_id'])
+                        spam.add(str(row['content_id']))
                     else:
-                        not_spam.add(row['content_id'])
+                        not_spam.add(str(row['content_id']))
                 
                 if updated > 0:
                     c.is_spam_computed=True

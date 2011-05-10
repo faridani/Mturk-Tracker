@@ -44,5 +44,5 @@ TIME_ZONE = 'Europe/Warsaw'
 CACHE_BACKEND = 'dummy:///'
 
 # mickek client
-PREDICTION_API_CLIENT_ID= "581229398898.apps.googleusercontent.com"
-PREDICTION_API_CLIENT_SECRET= "u-TQagk4z93p5W6OO7hoRBKZ"
+#PREDICTION_API_CLIENT_ID= "581229398898.apps.googleusercontent.com"
+#PREDICTION_API_CLIENT_SECRET= "u-TQagk4z93p5W6OO7hoRBKZ"
