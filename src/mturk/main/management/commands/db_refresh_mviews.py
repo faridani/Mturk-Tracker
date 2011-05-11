@@ -50,10 +50,10 @@ class Command(BaseCommand):
         logging.info('cleaning up db from duplicates')
         clean_duplicates()
 
-        logging.info('Refreshing materialised views')
+        logging.info('Refreshing hits_mv')
         update_mviews()
 
-        logging.info('done refreshing mviews')
+        logging.info('done refreshing hits_mv')
 
         logging.info('db_refresh_mviews took: %s' % (time.time() - start_time))
 

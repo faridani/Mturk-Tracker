@@ -110,6 +110,8 @@ def update_mviews():
                 p.crawl_id = %s;
         """ % (start_time, crawl_id))
 
+        execute_sql("update main_crawl set has_hits_mv = true where id = %s" % crawl_id)        
+
         execute_sql('commit;')
 
     # execute_sql("""
