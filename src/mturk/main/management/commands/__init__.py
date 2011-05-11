@@ -79,14 +79,24 @@ def calculate_first_crawl_id():
 
 def update_mviews():
 
-    missing_crawls = query_to_tuples("""select id, start_time from main_crawl p where p.success = true and not exists (select id from main_crawlagregates where crawl_id = p.id ) and old_id is null and groups_downloaded > 200 order by id desc""")
+    missing_crawls = query_to_tuples("""select id, start_time 
+        from main_crawl p 
+    where 
+        p.success = true and 
+        not exists (select id from main_crawlagregates where crawl_id = p.id ) and 
+        old_id is null and 
+        groups_downloaded > 200 and
+        has_hits_mv = false
+    order by id desc""")
 
     for row in missing_crawls:
 
-        crawl_id = str(row[0])
-        start_time = str(row[1])
-
         logging.info("inserting missing crawl: %s" % crawl_id)
+
+        crawl_id, start_time = row
+
+        execute_sql("delete from hits_mv where crawl_id = %s" % crawl_id)        
+
         execute_sql("""INSERT INTO
                 hits_mv
             SELECT p.id AS status_id, q.id AS content_id, p.group_id, p.crawl_id,
@@ -99,31 +109,28 @@ def update_mviews():
             WHERE
                 p.crawl_id = %s;
         """ % (start_time, crawl_id))
+
         execute_sql('commit;')
 
-    # insert missing higroups info for the last two days
-    start_time = time.time()
-    execute_sql("""
-        INSERT INTO
-            hits_mv (crawl_id, status_id, content_id, group_id, start_time,
-            requester_id, hits_available, page_number, inpage_position,
-            hit_expiration_date, reward, time_alloted)
-        SELECT
-            h.crawl_id + 1, h.status_id, h.content_id, h.group_id, h.start_time,
-            h.requester_id, h.hits_available, h.page_number, h.inpage_position,
-            h.hit_expiration_date, h.reward, h.time_alloted
-        FROM
-            hits_mv h
-        WHERE
-            NOT exists(select group_id from hits_mv where group_id=h.group_id and crawl_id = (h.crawl_id + 1))
-            AND exists(select group_id from hits_mv where group_id=h.group_id and crawl_id = (h.crawl_id + 2))
-            AND (hits_available * reward) > 350
-            AND start_time > now() - interval '2 days'
-        ;
-    """)
-    execute_sql('commit;')
-    work_time = time.time() - start_time
-    log.debug('missing higroup info insert: %.2fsec', work_time)
+    # execute_sql("""
+    #     INSERT INTO
+    #         hits_mv (crawl_id, status_id, content_id, group_id, start_time,
+    #         requester_id, hits_available, page_number, inpage_position,
+    #         hit_expiration_date, reward, time_alloted)
+    #     SELECT
+    #         h.crawl_id + 1, h.status_id, h.content_id, h.group_id, h.start_time,
+    #         h.requester_id, h.hits_available, h.page_number, h.inpage_position,
+    #         h.hit_expiration_date, h.reward, h.time_alloted
+    #     FROM
+    #         hits_mv h
+    #     WHERE
+    #         NOT exists(select group_id from hits_mv where group_id=h.group_id and crawl_id = (h.crawl_id + 1))
+    #         AND exists(select group_id from hits_mv where group_id=h.group_id and crawl_id = (h.crawl_id + 2))
+    #         AND (hits_available * reward) > 350
+    #         AND start_time > now() - interval '2 days'
+    #     ;
+    # """)
+    # execute_sql('commit;')
 
 
 def update_diffs(limit=100):
