@@ -251,3 +251,4 @@ def update_crawl_agregates(commit_threshold=10, only_new = True):
     # delete dummy data
     execute_sql("DELETE FROM main_crawlagregates WHERE projects < 200;")
     execute_sql("COMMIT;")
+
