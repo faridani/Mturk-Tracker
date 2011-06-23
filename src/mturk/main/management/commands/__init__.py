@@ -91,9 +91,9 @@ def update_mviews():
 
     for row in missing_crawls:
 
-        logging.info("inserting missing crawl: %s" % crawl_id)
-
         crawl_id, start_time = row
+        
+        logging.info("inserting missing crawl: %s" % crawl_id)        
 
         execute_sql("delete from hits_mv where crawl_id = %s" % crawl_id)        
 
