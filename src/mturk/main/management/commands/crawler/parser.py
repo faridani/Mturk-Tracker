@@ -65,10 +65,17 @@ _RX_HITS_LIST = \
 
         .*?
         Reward
-        .{,150}?
+        .{,200}?
         <td[^>]*>
-            \$
-            (?P<reward>[\.\d]*)
+            #
+            # <span> tag is optional, because this is something that has
+            # changed recently and I'm not sure that this is now valid for all
+            # listings..
+            #
+            (?:<span[^>]*>)?
+                \$
+                (?P<reward>[\.\d]*?)
+            (?:</span>)?
         </td>
 
         .*?

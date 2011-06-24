@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import sys
 import os
+import sys
+import signal
 import unittest
 import itertools
 import datetime
@@ -40,6 +41,21 @@ class TestParserTools(unittest.TestCase):
 
 
 class TestParers(ParserTest):
+    maxtimerun = 1
+
+    def setUp(self):
+        maxtimerun = self.maxtimerun
+
+        def handler(signum, frame):
+            assert False, "Took more that %s seconds!" % maxtimerun
+
+        signal.signal(signal.SIGALRM, handler)
+        signal.alarm(maxtimerun)
+
+    def tearDown(self):
+        # SIGALRM should not affect other tests
+        signal.alarm(0)
+
     def test_hits_mainpage(self):
         html = self.get_html('mainpage.html')
         expected = 94273
@@ -97,6 +113,11 @@ class TestParers(ParserTest):
             self.assertEqual(expected, result)
 
         self.assertEqual(results_num, 10)
+
+    def test_hits_group_listinfo__new_html(self):
+        html = self.get_html('hitslist_new.html')
+        results = list(parser.hits_group_listinfo(html))
+        self.assertEqual(len(results), 10)
 
     def test_hits_group_listinfo_wrong(self):
         html = '<html>wrong html code</html>'
