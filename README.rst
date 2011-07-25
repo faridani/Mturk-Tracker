@@ -97,7 +97,9 @@ You may launch initial crawl by::
 
 	$ python manage.py crawl --workers=6 --logconf=logging.conf
 
-Logs will be saved in /tmp/crawler.log
+Logs will be saved in ``/tmp/crawler.log``. Because mturk requires
+authentication for HITs listings pagination, use ``--mturk-email`` and
+``--mturk-password`` flags to authenticate and crawl as mturk worker.
 
 To generate data that will be displayed on graphs you need to launch scripts::
 

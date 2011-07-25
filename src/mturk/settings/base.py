@@ -95,3 +95,13 @@ PREDICTION_API_CLIENT_ID= "1096089602663-erfn2lj26ae9n1djidfu8gf2e5egs5bk.apps.g
 PREDICTION_API_CLIENT_SECRET= "cWPdUE0BCcQsbZZ_xvLO9dMI"
 
 PREDICTION_API_DATA_SET= "mturk-tracker/spam-training-data-20110506.txt"
+
+
+MTURK_AUTH_EMAIL = None
+MTURK_AUTH_PASSWORD = None
+
+# try to import local settings
+try:
+    from locals import *
+except ImportError:
+    pass

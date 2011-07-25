@@ -18,10 +18,12 @@ from optparse import make_option
 
 import gevent
 from django.core.management.base import BaseCommand
+from django.conf import settings
 
 from tenclouds.pid import Pid
 from crawler import tasks
 from crawler.db import dbpool
+from crawler import auth
 from mturk.main.models import Crawl, RequesterProfile
 
 
@@ -30,10 +32,20 @@ log = logging.getLogger('crawl')
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-            make_option('--workers', dest='workers', type='int', default=3),
-            make_option('--logconf', dest='logconf', metavar='FILE'),
-            make_option('--debug', dest='debug', action='store_true'),
+            make_option('--workers', dest='workers', type='int', default=3,
+                help='Use given number of concurrent crawl workers'),
+            make_option('--logconf', dest='logconf', metavar='FILE',
+                help='Load logging configuration from given file'),
+            make_option('--debug', dest='debug', action='store_true',
+                help='Work in debug mode (on fly pdb support)'),
+            make_option('--mturk-email', dest='mturk_email',
+                help='Mturk authentication email'),
+            make_option('--mturk-password', dest='mturk_password',
+                help='Mturk authentication passowrd'),
     )
+
+    mturk_email = getattr(settings, 'MTURK_AUTH_EMAIL', None)
+    mturk_password = getattr(settings, 'MTURK_AUTH_PASSWORD', None)
 
     def setup_logging(self, conf_fname):
         "Basic setup for logging module"
@@ -45,6 +57,24 @@ class Command(BaseCommand):
     def setup_debug(self):
         from crawler.debug import debug_listen
         debug_listen()
+
+    def _authenticate_if_possible(self):
+        """If possible - authenticate.  Mturk requires authentication for
+        listing pagination pages greater that 20
+
+        Return ``True`` if authentication was done successfully, else
+        ``False``.
+        """
+        if self.mturk_email and self.mturk_password:
+            auth.install_opener()
+            resp = auth.authenticate(email=self.mturk_email,
+                    password=self.mturk_password)
+            if resp.getcode() != 200:
+                raise Exception('Authentiaction error: %s' % resp.read())
+            log.debug('Mturk authentication done')
+            return True
+        log.debug('No mturk authentication')
+        return False
 
     def handle(self, *args, **options):
         _start_time = time.time()
@@ -141,6 +171,8 @@ class Command(BaseCommand):
         method is using concurent download, number of returned elements on
         each list cannot be greater that maximum number of workers.
         """
+        self._authenticate_if_possible()
+
         counter = count(1, self.maxworkers)
         for i in counter:
             jobs =[gevent.spawn(tasks.hits_groups_info, page_nr) \
