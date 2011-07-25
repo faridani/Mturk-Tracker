@@ -81,6 +81,11 @@ class Command(BaseCommand):
         pid = Pid('mturk_crawler', True)
         log.info('crawler started: %s;;%s', args, options)
 
+        if options.get('mturk_email'):
+            self.mturk_email = options['mturk_email']
+        if options.get('mturk_password'):
+            self.mturk_password = options['mturk_password']
+
         if options.get('logconf', None):
             self.setup_logging(options['logconf'])
 
