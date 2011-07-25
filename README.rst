@@ -1,24 +1,20 @@
 Getting started
 ===============
 
-Mturk-Tracker is a Django web application and is setup within python virtualenv and requires a working python envioroment and PostgreSQL database.
+Mturk-Tracker is a Django web application and is setup within python
+virtualenv and requires a working python envioroment and PostgreSQL database.
 
-Required libraries 
+Required libraries
 ------------------
 
-Mturk-Tracker requires some basic packages::
+Mturk-Tracker requires base packages::
 
-	$ sudo apt-get install python-virtualenv
-	$ sudo apt-get install git
-	$ sudo apt-get install subversion
-	$ sudo apt-get install mercurial
-	$ sudo apt-get install postgresql-8.4
-	$ sudo apt-get install postgresql-server-dev-8.4
-	$ sudo apt-get install python2.6-dev
-	$ sudo apt-get install libevent-dev
-	
-	
-Project setup 
+    $ sudo apt-get install python-virtualenv subversion mercurial \
+            postgresql-8.4 postgresql-server-dev-8.4  python2.6-dev \
+            libevent-dev
+
+
+Project setup
 -------------
 
 To initialize project, virtualenv_ python package is required (you may also
@@ -47,7 +43,7 @@ first)::
 	$ git checkout -b virtualenv --track origin/virtualenv
 	$ echo "mturk.settings.base" > DJANGO_SETTINGS_MODULE
 	$ pip install -r requirements.txt
-	
+
 Libraries update
 ~~~~~~~~~~~~~~~~
 
@@ -89,16 +85,17 @@ Running django appliaction
 
 Nothing special, just type::
 
-    $ sudo python manage.py runserver 80
+    $ sudo python manage.py runserver
 
-in django project directory. And then point your browser to http://localhost/
- 
+in django project directory. And then point your browser to
+http://localhost:8000/
+
 Crawling mturk
 --------------
 
 You may launch initial crawl by::
 
-	$ python manage.py crawl --workers=8 --logconf=logging.conf
+	$ python manage.py crawl --workers=6 --logconf=logging.conf
 
 Logs will be saved in /tmp/crawler.log
 
@@ -107,7 +104,7 @@ To generate data that will be displayed on graphs you need to launch scripts::
 	$ python manage.py db_refresh_mviews
 	$ python manage.py db_update_agregates
 	$ python manage.py db_calculate_daily_stats
-	
+
 Solr
 ----
 
