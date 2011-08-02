@@ -1,10 +1,10 @@
-APP_PATH=/var/www/mturk
 MAILTO="michal.klujszo@10clouds.com"
+PROJECT_ROOT=/home/mtracker/mturk/src;
 
-*/10    *       *       *       *       root    cd $APP_PATH && python manage.py crawl --workers=8
+*/10    *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec crawl --workers=8
 
-15      *       *       *       *       root    cd $APP_PATH && python manage.py db_refresh_mviews
-25      1       *       *       *       root    cd $APP_PATH && python manage.py db_calculate_daily_stats
+15      *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec db_refresh_mviews
+25      1       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec db_calculate_daily_stats
 
-15      2       *       *       *       root    cd $APP_PATH && python manage.py solr_sync --clean-queue --older-than=2
-45      *       *       *       *       root    cd $APP_PATH && python manage.py solr_sync
+15      2       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec solr_sync --clean-queue --older-than=2
+45      *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec solr_sync

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+CMD=$1
+
+PROJECT_ROOT="$HOME/mturk/src"
+HOME="/home/mtracker"
+DJANGO_SETTINGS_MODULE=`cat $PROJECT_ROOT/DJANGO_SETTINGS_MODULE`
+LOGDIR="$HOME/log"
+
+. "$HOME/mturk/bin/activate"
+cd "$HOME/mturk/src"
+
+shift 1
+ARGUMENTS=$*
+
+exec python manage.py $CMD $ARGUMENTS >> "$LOGDIR/$CMD.log"
