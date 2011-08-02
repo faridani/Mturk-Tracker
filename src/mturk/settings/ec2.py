@@ -34,7 +34,7 @@ DEBUG=False
 USE_CACHE=True
 SOLR_MAIN = "http://localhost:8983/solr/en"
 
-LOG_DIRECTORY = '/var/log/mturk/'
+LOG_DIRECTORY = '/home/mtracker/log'
 
 
 FORMAT = '%(asctime)s %(levelname)s %(message)s' 
