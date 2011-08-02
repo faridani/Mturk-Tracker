@@ -2,21 +2,21 @@ server {
         listen   80;
         server_name .mturk-tracker.com mturk;
 
-        access_log  /var/log/nginx/mturk.access.log;
-        error_log   /var/log/nginx/mturk.error.log;
+        access_log  /home/mtracker/log/mturk.access.log;
+        error_log   /home/mtracker/log/mturk.error.log;
 
 	rewrite ^/s/(.*)$ /media/$1 last;
 
         location /media  {
                 gzip on;
-                root /var/www/mturk/;
+                root /home/mtracker/mturk/src;
 		autoindex  off;
                 expires 60d;
         }
 
 	location /admin/media {
 		gzip on;
-		root /var/www/mturk/libs/django/contrib/;
+		root /home/mtracker/mturk/src/libs/django/contrib/;
 		autoindex off;
 		expires 60d;
 	}
@@ -48,14 +48,10 @@ server {
         }
 
         location = /robots.txt {
-                root   /var/www/mturk/templates/;
+                root   /home/mtracker/mturk/src/templates/;
         }
 
 
         error_page  404  /404.html;
-        #error_page   500 502 503 504  /50x.html;
-        #location = /50x.html {
-        #        root   /var/www/nginx-default;
-        #}
 }
 
