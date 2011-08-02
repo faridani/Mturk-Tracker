@@ -1,10 +1,12 @@
-MAILTO="michal.klujszo@10clouds.com"
+#MAILTO="michal.klujszo@10clouds.com"
 PROJECT_ROOT=/home/mtracker/mturk/src;
 
-*/10    *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec crawl --workers=8
-
-15      *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec db_refresh_mviews
+*/6     *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec crawl --workers=4 --logconf=logging.conf;
+40		1		*		*		*		root	cd $PROJECT_ROOT; ./control/python_manage_exec db_update_diffs --limit=200;
+5       *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec db_refresh_mviews;
+15		*		*		*		*		root 	cd $PROJECT_ROOT; ./control/python_manage_exec db_update_agregates; python manage.py db_update_diffs --limit=20; python manage.py classify_spam --limit=40;
 25      1       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec db_calculate_daily_stats
+#15      2       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec solr_sync --clean-queue
+#45      *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec solr_sync
 
-15      2       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec solr_sync --clean-queue --older-than=2
-45      *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec solr_sync
+#50	*/3	*	*	*	root cd $PROJECT_ROOT; ./control/python_manage_exec cache_toprequesters
