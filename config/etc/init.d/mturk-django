@@ -3,24 +3,23 @@
 # chkconfig: 2345 95 20
 # description: Some description
 # processname: python
-# pidfile: /tmp/mturk.pid
+# pidfile: /home/mturk/mturk.pid
 
-PID_FILE=/tmp/mturk.pid
-PORT=8002
-PROJECT_ROOT=/var/www/mturk/
-USER=nginx
+USER="mtracker"
+PORT="8001"
+PID_FILE="/home/mtracker/mturk.pid"
+PROJECT_ROOT="/home/mtracker/mturk/src"
 
 case $1 in
     start)
         cd  $PROJECT_ROOT
-        exec sudo -u $USER python manage.py runfcgi host=127.0.0.1 port=$PORT pidfile=$PID_FILE daemonize=false &
+        exec sudo -u $USER ./control/python_manage_exec runfcgi host=127.0.0.1 port=$PORT pidfile=$PID_FILE daemonize=false &
         ;;
     stop)
         kill `cat $PID_FILE` ;;
     restart)
-        kill `cat $PID_FILE`
-        cd  $PROJECT_ROOT
-        exec sudo -u $USER python manage.py runfcgi host=127.0.0.1 port=$PORT pidfile=$PID_FILE daemonize=false &
+        $0 stop
+        $1 start
         ;;
     *)
         echo "usage: mturk-django {start|stop}" ;;

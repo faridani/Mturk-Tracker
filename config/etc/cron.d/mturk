@@ -1,7 +1,7 @@
 #MAILTO="michal.klujszo@10clouds.com"
-PROJECT_ROOT=/home/mtracker/mturk/src;
+PROJECT_ROOT="/home/mtracker/mturk/src"
 
-*/6     *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec crawl --workers=4 --logconf=logging.conf;
+*/6     *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec crawl --workers=4;
 40		1		*		*		*		root	cd $PROJECT_ROOT; ./control/python_manage_exec db_update_diffs --limit=200;
 5       *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec db_refresh_mviews;
 15		*		*		*		*		root 	cd $PROJECT_ROOT; ./control/python_manage_exec db_update_agregates; python manage.py db_update_diffs --limit=20; python manage.py classify_spam --limit=40;
