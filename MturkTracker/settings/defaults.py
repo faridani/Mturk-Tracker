@@ -12,7 +12,7 @@ ADMINS = ()
 MANAGERS = ADMINS
 DATABASES = {}
 
-TIME_ZONE = 'Europe/Warsaw'
+TIME_ZONE = 'UTC'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
@@ -48,12 +48,26 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.doc.XViewMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request',
+
+    'mturk.tabs_context_processor.tabs'
 )
 
 ROOT_URLCONF = 'MturkTracker.urls'
@@ -82,12 +96,15 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.webdesign',
 
     'pipeline',
     'south',
     'bootstrap',
 
-    'MturkTracker.main',
+    'MturkTracker.mturk.main',
+    'MturkTracker.mturk.importer',
+    'MturkTracker.mturk.spam',
 )
 
 SOUTH_TESTS_MIGRATE = False
@@ -174,3 +191,34 @@ PIPELINE_COFFEE_SCRIPT_BINARY = os.path.join(ROOT_DIR, '..', 'bin', 'coffeefinde
 PIPELINE_TEMPLATE_FUNC = 'new EJS'
 PIPELINE_TEMPLATE_NAMESPACE = 'window.Template'
 PIPELINE_TEMPLATE_EXT = '.ejs'
+
+# do not cache search API results
+USE_CACHE = False
+
+API_CACHE_TIMEOUT = 60 * 60 * 24
+DYNAMIC_MEDIA = 'd/'
+ADMIN_MEDIA_PREFIX = MEDIA_URL + 'admin/'
+
+RUN_DATA_PATH = '/tmp'
+
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+)
+INTERNAL_IPS = ['127.0.0.1']
+
+GOOGLE_ANALYTICS_ID = 'UA-89122-17'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+LOGIN_REDIRECT_URL = "/"
+
+DATASMOOTHING = True
+
+PREDICTION_API_CLIENT_ID = "1096089602663-erfn2lj26ae9n1djidfu8gf2e5egs5bk.apps.googleusercontent.com"
+PREDICTION_API_CLIENT_SECRET = "cWPdUE0BCcQsbZZ_xvLO9dMI"
+
+PREDICTION_API_DATA_SET = "mturk-tracker/spam-training-data-20110506.txt"
+
+
+MTURK_AUTH_EMAIL = None
+MTURK_AUTH_PASSWORD = None
