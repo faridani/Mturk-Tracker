@@ -32,23 +32,20 @@ from mturk.main.models import *
 from django.conf import settings
 import os
 
+
 class Migration:
     '''
     Materialised views according to http://tech.jonathangardner.net/wiki/PostgreSQL/Materialized_Views
     '''
     def forwards(self, orm):
 
-        mviews_sql = os.path.join(settings.ROOT_PATH,'src/mturk/main/migrations/mviews.sql')
+        mviews_sql = os.path.join(settings.ROOT_PATH, 'mturk/main/migrations/mviews.sql')
         db.execute_many(open(mviews_sql).read())
-    
-    
-    def backwards(self, orm):
 
-        mviews_drop_sql = os.path.join(settings.ROOT_PATH,'src/mturk/main/migrations/mviews_drop.sql')
+    def backwards(self, orm):
+        mviews_drop_sql = os.path.join(settings.ROOT_PATH, 'mturk/main/migrations/mviews_drop.sql')
         db.execute_many(open(mviews_drop_sql).read())
 
-    
-    
     models = {
         'main.hitgroupstatus': {
             'crawl': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['main.Crawl']"}),
@@ -82,5 +79,5 @@ class Migration:
             'success': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'})
         }
     }
-    
+
     complete_apps = ['main']

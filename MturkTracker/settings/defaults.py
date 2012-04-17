@@ -7,6 +7,9 @@ JS_DEBUG = DEBUG
 
 _tempdir = tempfile.tempdir or '/tmp'
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+DJANGO_PATH = os.path.join(ROOT_PATH, os.path.join(ROOT_PATH, 'libs', 'django'))
+PROJECT_NAME = os.path.basename(ROOT_PATH)
 
 ADMINS = ()
 MANAGERS = ADMINS
@@ -61,7 +64,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.auth',
+    'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
@@ -102,9 +105,9 @@ INSTALLED_APPS = (
     'south',
     'bootstrap',
 
-    'MturkTracker.mturk.main',
-    'MturkTracker.mturk.importer',
-    'MturkTracker.mturk.spam',
+    'mturk.main',
+    'mturk.importer',
+    'mturk.spam',
 )
 
 SOUTH_TESTS_MIGRATE = False

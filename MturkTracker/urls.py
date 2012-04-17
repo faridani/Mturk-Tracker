@@ -10,13 +10,16 @@ def bad(request):
     1 / 0
 
 urlpatterns = patterns('MturkTracker',
-    (r'^api/', include('mturk.api.urls')),
-    ('', include('mturk.main.urls')),
 
-    url(r'^$', 'main.views.index', name='index'),
+    #url(r'^$', 'main.views.index', name='index'),
     url(r'^_admin/', include(admin.site.urls)),
 
     (r'^bad/$', bad),
+)
+
+urlpatterns += patterns('',
+    (r'^api/', include('mturk.api.urls')),
+    ('', include('mturk.main.urls')),
 )
 
 ## In DEBUG mode, serve media files through Django.
