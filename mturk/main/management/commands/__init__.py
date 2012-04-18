@@ -40,7 +40,7 @@ def clean_duplicates():
 
     for id in ids:
         print "deleting %s" % id['group_id']
-        logging.info( "deleting %s" % id['group_id'] )
+        logging.info("deleting %s" % id['group_id'])
 
         execute_sql("""delete from main_hitgroupstatus where
                         hit_group_content_id  in (
@@ -61,7 +61,7 @@ def calculate_first_crawl_id():
     progress = 10
     results = query_to_dicts("select id from main_hitgroupcontent where first_crawl_id is null")
     logging.info('got missing ids results')
-    for i,r in enumerate(results):
+    for i, r in enumerate(results):
         logging.info("\tprocessing %s" % r['id'])
         execute_sql("""update main_hitgroupcontent p set first_crawl_id =
             (select min(crawl_id) from main_hitgroupstatus where hit_group_content_id = p.id)
@@ -73,29 +73,28 @@ def calculate_first_crawl_id():
             execute_sql('commit;')
             logging.info("updated %s main_hitgroupcontent rows with first_crawl_id" % i)
 
-
-
     execute_sql('commit;')
+
 
 def update_mviews():
 
-    missing_crawls = query_to_tuples("""select id, start_time 
-        from main_crawl p 
-    where 
-        p.success = true and 
-        not exists (select id from main_crawlagregates where crawl_id = p.id ) and 
-        old_id is null and 
-        groups_downloaded > 200 and
+    missing_crawls = query_to_tuples("""select id, start_time
+        from main_crawl p
+    where
+        p.success = true and
+        not exists (select id from main_crawlagregates where crawl_id = p.id ) and
+        old_id is null and
+        groups_downloaded > 100 and
         has_hits_mv = false
     order by id desc""")
 
     for row in missing_crawls:
 
         crawl_id, start_time = row
-        
-        logging.info("inserting missing crawl: %s" % crawl_id)        
 
-        execute_sql("delete from hits_mv where crawl_id = %s" % crawl_id)        
+        logging.info("inserting missing crawl: %s" % crawl_id)
+
+        execute_sql("delete from hits_mv where crawl_id = %s" % crawl_id)
 
         execute_sql("""INSERT INTO
                 hits_mv
@@ -110,7 +109,7 @@ def update_mviews():
                 p.crawl_id = %s;
         """ % (start_time, crawl_id))
 
-        execute_sql("update main_crawl set has_hits_mv = true where id = %s" % crawl_id)        
+        execute_sql("update main_crawl set has_hits_mv = true where id = %s" % crawl_id)
 
         execute_sql('commit;')
 
@@ -164,7 +163,6 @@ def update_diffs(limit=100):
     log.debug('Updated diffs for %s crawls in %s\n%s', limit, (time.time() - start_time))
 
 
-
 def update_first_occured_agregates():
 
     missing_crawls = query_to_tuples("""select id from main_crawl p where p.success = true and not exists (select crawl_id from main_hitgroupfirstoccurences where crawl_id = p.id );""")
@@ -194,7 +192,7 @@ def update_first_occured_agregates():
         execute_sql('commit;')
 
 
-def update_crawl_agregates(commit_threshold=10, only_new = True):
+def update_crawl_agregates(commit_threshold=10, only_new=True):
 
     results = None
 
@@ -225,28 +223,26 @@ def update_crawl_agregates(commit_threshold=10, only_new = True):
                 crawl_id, start_time
             """, row['id'])
 
-            execute_sql("""UPDATE main_crawlagregates 
-                set spam_projects = 
+            execute_sql("""UPDATE main_crawlagregates
+                set spam_projects =
                     ( select count(*) from hits_mv where crawl_id = %s and is_spam = true )
-                where crawl_id = %s""" % (row['id'], row['id']) ) 
+                where crawl_id = %s""" % (row['id'], row['id']))
 
-            print """UPDATE main_crawlagregates 
-                set spam_projects = 
+            print """UPDATE main_crawlagregates
+                set spam_projects =
                     ( select count(*) from hits_mv where crawl_id = %s and is_spam = true )
                 where crawl_id = %s"""
-
 
             logging.info("update agregates for %s" % row['id'])
 
             if i % commit_threshold == 0:
-                logging.info( 'commited after %s crawls' % i )
+                logging.info('commited after %s crawls' % i)
                 execute_sql('commit;')
 
         except:
             error_info = grab_error(sys.exc_info())
-            logging.error('an error occured at crawl_id: %s, %s %s' % (row['id'],error_info['type'], error_info['value']))
+            logging.error('an error occured at crawl_id: %s, %s %s' % (row['id'], error_info['type'], error_info['value']))
             execute_sql('rollback;')
-
 
     # delete dummy data
     execute_sql("DELETE FROM main_crawlagregates WHERE projects < 200;")

@@ -65,6 +65,7 @@ ARRIVALS_COLUMNS =  (
 ONE_DAY = 60 * 60 * 24
 ONE_HOUR = 60 * 60
 
+
 def data_formater(input):
     for cc in input:
         yield {
@@ -72,12 +73,13 @@ def data_formater(input):
                 'row': (str(cc['hits']), str(cc['reward']), str(cc['count']), str(cc['spam_projects'])),
         }
 
+
 @cache_page(ONE_HOUR)
 def general(request):
 
     params = {
         'multichart': True,
-        'columns':GENERAL_COLUMNS,
+        'columns': GENERAL_COLUMNS,
         'title': 'General Data'
     }
 
@@ -119,6 +121,7 @@ def general(request):
 
     return direct_to_template(request, 'main/graphs/timeline.html', params)
 
+
 @cache_page(ONE_DAY)
 def arrivals(request):
 
@@ -133,7 +136,7 @@ def arrivals(request):
             yield {
                     'date': cc['start_time'],
                     'row': (str(cc['hits']), str(cc['reward'])),
-            }    
+            }
 
     date_from = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
     date_to = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()

@@ -31,6 +31,7 @@ from django.utils.safestring import SafeString
 from mturk.fields import JSONField
 import datetime
 
+
 class Crawl(models.Model):
 
     start_time = models.DateTimeField('Start Time')
@@ -41,18 +42,19 @@ class Crawl(models.Model):
     groups_downloaded = models.IntegerField('Groups downloaded', null=True)
     success = models.BooleanField('Successfoul crawl?')
     errors = JSONField('Errors', blank=True, null=True)
-    old_id = models.IntegerField(null=True,blank=True,unique=True,db_index=True)
+    old_id = models.IntegerField(null=True, blank=True, unique=True, db_index=True)
     has_diffs = models.BooleanField("Has Diffs", db_index=True, default=False)
     is_spam_computed = models.BooleanField("Has Spam Computed", db_index=True, default=False)
-    has_hits_mv =  models.BooleanField("Has hits mv", db_index=True, default=False)
+    has_hits_mv = models.BooleanField("Has hits mv", db_index=True, default=False)
 
     def start_day(self):
-        return datetime.date(year= self.start_time.year,
-                             month= self.start_time.month,
-                             day= self.start_time.day)
+        return datetime.date(year=self.start_time.year,
+                             month=self.start_time.month,
+                             day=self.start_time.day)
 
     def __str__(self):
         return 'Crawl: ' + str(self.start_time) + ' ' + str(self.end_time)
+
 
 class HitGroupContent(models.Model):
     group_id            = models.CharField('Group ID', max_length=50, db_index=True, unique=True)
@@ -92,7 +94,7 @@ class HitGroupContent(models.Model):
         # csvrow = out.getvalue()
         # out.close()
 
-        return [self.reward, self.description, self.title, self.requester_name, 
+        return [self.reward, self.description, self.title, self.requester_name,
             self.qualifications, num_of_qualifications, self.time_alloted,
             sanitized_html, self.keywords, "true" if self.is_public else "false"]
 
