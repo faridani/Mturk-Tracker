@@ -30,7 +30,7 @@ import logging
 
 from django.core.management.base import BaseCommand, NoArgsCommand
 from optparse import make_option
-from tenclouds.pid import Pid
+from utils.pid import Pid
 from mturk.main.models import Crawl
 
 from mturk.main.management.commands.diffs import update_cid
@@ -58,11 +58,11 @@ class Command(BaseCommand):
         try:
 
             for c in Crawl.objects.filter(is_spam_computed=False).order_by('-id')[:options['limit']]:
-                
+
                 updated = update_cid(c.id)
-                
+
                 if updated > 0:
-                    c.has_diffs=True
+                    c.has_diffs = True
                     c.save()
 
                 transaction.commit()
@@ -70,6 +70,6 @@ class Command(BaseCommand):
         except (KeyError, KeyboardInterrupt):
             transaction.rollback()
             pid.remove_pid()
-            exit()            
+            exit()
 
         logger.info('updating 5 crawls took: %s s', (time.time() - start_time))

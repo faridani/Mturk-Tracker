@@ -7,7 +7,7 @@ def query_to_dicts(query_string, *query_args):
     that returns the results as a bunch of dictionaries
     with keys for the column values selected.
     """
-    cursor = connection.cursor() #@UndefinedVariable
+    cursor = connection.cursor()
     cursor.execute(query_string, query_args)
     col_names = [desc[0] for desc in cursor.description]
     while True:
@@ -18,12 +18,13 @@ def query_to_dicts(query_string, *query_args):
         yield row_dict
     return
 
+
 def query_to_tuples(query_string, *query_args):
     """Run a simple query and produce a generator
     that returns the results as a bunch of dictionaries
     with keys for the column values selected.
     """
-    cursor = connection.cursor() #@UndefinedVariable
+    cursor = connection.cursor()
     cursor.execute(query_string, query_args)
     while True:
         row = cursor.fetchone()
@@ -35,9 +36,10 @@ def query_to_tuples(query_string, *query_args):
 
 def execute_sql(query_string, *query_args):
 
-    cursor = connection.cursor() #@UndefinedVariable
+    cursor = connection.cursor()
     cursor.execute(query_string, query_args)
     return cursor
+
 
 def exists(query_string, *query_args):
 

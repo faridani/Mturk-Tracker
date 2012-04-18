@@ -24,19 +24,19 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
-def tabs(request):
 
+
+def tabs(request):
 
     path = request.path_info
 
     top_tab = 'start'
-    
+
     if path.startswith('/requester_details') or path.startswith('/hit/'):
         top_tab = 'top_requesters'
     elif path != "/":
-        top_tab = path.replace('/','')
-    
+        top_tab = path.replace('/', '')
+
     return {
-        'top_tab':top_tab
+        'top_tab': top_tab
     }
-    

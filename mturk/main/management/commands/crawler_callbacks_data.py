@@ -27,7 +27,7 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 # -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup, ResultSet, Tag
 from django.utils.encoding import smart_str
-from tenclouds.text import fuse, remove_whitespaces, strip_html
+from utils.text import fuse, remove_whitespaces, strip_html
 
 import datetime
 import hashlib
@@ -40,6 +40,7 @@ import urllib2
 from crawler_common import get_allhit_url, get_group_url, grab_error
 from mturk.main.models import HitGroupContent
 
+
 ##########################################################################################
 # Fetches HIT group information from HITs list page by it's position in the pagination.
 #
@@ -49,12 +50,14 @@ from mturk.main.models import HitGroupContent
 def callback_allhit(pages, **kwargs):
 
     if type(pages) != type([]):
-        raise Exception, '::callback_allhit() must be called with one list argument'
+        raise Exception('::callback_allhit() must be called with one list argument')
 
     def remove_newline_fields(list):
         while True:
-            try:    list.remove("\n")
-            except: break
+            try:
+                list.remove("\n")
+            except:
+                break
         return list
 
 #    def is_soup(object):
@@ -72,7 +75,7 @@ def callback_allhit(pages, **kwargs):
             # Downloading page
             logging.info("Downloading page: %s" % page_number)
             page_url = get_allhit_url(page_number)
-            logging.debug("Downloading %s"  % page_url)
+            logging.debug("Downloading %s" % page_url)
             response = urllib2.urlopen(page_url)
             html = response.read()
             soup = BeautifulSoup(html)
@@ -80,7 +83,7 @@ def callback_allhit(pages, **kwargs):
             # Parsing HIT groups' list
             table = soup.find('table', cellpadding='0', cellspacing='5', border='0', width='100%')
             if type(table) == type(None):
-                
+
                 i = 0
                 while i < 3:
                     logging.warn("Soup returned an empty table for page %s. Trying once more" % page_number);
@@ -95,19 +98,19 @@ def callback_allhit(pages, **kwargs):
                         soup = None
                         html = None
                         i = i + 1
-                        
+
                 if type(table) == type(None):
                     logging.warn("Soup returned an empty table. This should not happen. Skipping page")
                     continue
-                
+
             table.contents = remove_newline_fields(table.contents)
-    
+
             # Parsing and fetching information about each group
             for i_group in range(0,len(table.contents)):
                 logging.debug("Processing group %s on page %s" % (i_group,page_number))
                 try:
                     group_html = table.contents[i_group]
-    
+
                     # Title
                     title = group_html.find('a', {'class':'capsulelink'})
                     if type(title) != type(None):
@@ -119,11 +122,11 @@ def callback_allhit(pages, **kwargs):
                             title = unicode(remove_whitespaces(title))
                         except:
                             title = ''
-    
+
                     fields = group_html.findAll('td', {'align':'left','valign':'top','class':'capsule_field_text'})
-    
+
                     if len(fields) == 7:
-    
+
                         # Requester's name and ID
                         requester_html = remove_newline_fields(fields[0].contents)[0]
                         requester_name = unicode(requester_html.contents[0])
@@ -131,27 +134,27 @@ def callback_allhit(pages, **kwargs):
                         start = requester_id.index('requesterId=')+12
                         stop = requester_id.index('&state')
                         requester_id = requester_id[start:stop]
-    
+
                         # HIT group expiration date
                         hit_expiration_date = remove_newline_fields(fields[1].contents)[0]
                         hit_expiration_date = remove_whitespaces(strip_html(hit_expiration_date))
                         hit_expiration_date = hit_expiration_date[:hit_expiration_date.index('(')-2]
                         hit_expiration_date = datetime.datetime.strptime(hit_expiration_date, '%b %d, %Y')
-    
+
                         # Time alloted
                         time_alloted = remove_newline_fields(fields[2].contents)[0]
                         time_alloted = remove_whitespaces(strip_html(time_alloted))
                         time_alloted = int(time_alloted[:time_alloted.index(' ')])
-    
+
                         # Reward
                         reward = float(remove_newline_fields(fields[3].contents)[0][1:])
 
                         # HITs available
                         hits_available = int(remove_newline_fields(fields[4].contents)[0])
-    
+
                         # Description
                         description = unicode(remove_newline_fields(fields[5].contents)[0])
-    
+
                         # Keywords
                         keywords_raw = remove_newline_fields(fields[6].contents)
                         keywords = []
@@ -166,15 +169,15 @@ def callback_allhit(pages, **kwargs):
                         # Qualification
                         qualifications = ''
                         qfields = group_html.findAll('td', {'style':'padding-right: 2em; white-space: nowrap;'})
-                        
+
                         if len(qfields) > 0:
                             qfields = [remove_whitespaces(unicode(remove_newline_fields(qfield.contents)[0])) for qfield in qfields]
                             qualifications = fuse(qfields, ', ')
                         qfields = None
-                            
+
                         # Occurrence date
                         occurrence_date = datetime.datetime.now()
-                            
+
                         # Group ID
                         group_id = group_html.find('span', {'class':'capsulelink'})
                         group_id_hashed = False
@@ -197,8 +200,8 @@ def callback_allhit(pages, **kwargs):
                         hit_group_content = None
                         try:
                             logging.debug("group_id=%s; requester=%s; title=%s; desc=%s; ta=%s; reward=%s" % (group_id,requester_id,title,description,time_alloted,reward))
-                            hit_group_content = HitGroupContent.objects.get(group_id=group_id, 
-                                                                            requester_id=requester_id, 
+                            hit_group_content = HitGroupContent.objects.get(group_id=group_id,
+                                                                            requester_id=requester_id,
                                                                             title=title,
                                                                             description=description,
                                                                             time_alloted=time_alloted,
@@ -219,7 +222,7 @@ def callback_allhit(pages, **kwargs):
                                     'group_id': group_id,
                                     'group_id_hashed': group_id_hashed
                                 })
-    
+
                         data.append({
                             'HitGroupStatus': {
                                 'group_id': group_id,
@@ -238,11 +241,11 @@ def callback_allhit(pages, **kwargs):
                     logging.error("Failed to process group %s on %s page (%s)" % (i_group,page_number,sys.exc_info()[0].__name__))
                     errors.append(grab_error(sys.exc_info()))
                     print grab_error(sys.exc_info())
-        
+
             table = None
             soup = None
             html = None
-                    
+
         except:
             logging.error("Failed to process page %d (%s)" % (page_number,sys.exc_info()[0].__name__))
             errors.append(grab_error(sys.exc_info()))
@@ -260,13 +263,13 @@ def callback_details(data, **kwargs):
 
     if type(data) != type([]):
         raise Exception, '::callback_allhit() must be called with one list argument'
-        
+
     errors = []
 
     # Processing each record
     for i in range(0, len(data)):
         if data[i]['HitGroupStatus']['hit_group_content'].html != '': continue
-        
+
         group_id = data[i]['HitGroupStatus']['group_id']
         if not data[i]['HitGroupStatus']['hit_group_content'].group_id_hashed:
             try:
@@ -285,14 +288,14 @@ def callback_details(data, **kwargs):
                     html = urllib2.urlopen(iframe_url.group(1)).read()
                 else:
                     html = str(BeautifulSoup(preview_html).find('div', {'id':'hit-wrapper'}))
-                
+
                 if html:
                     data[i]['HitGroupStatus']['hit_group_content'].html = html
-                
+
                 preview_html = None
-                    
+
             except:
-                logging.error("Failed to process group details for %s (%s)" % (group_id, 
+                logging.error("Failed to process group details for %s (%s)" % (group_id,
                               sys.exc_info()[0].__name__))
                 errors.append(grab_error(sys.exc_info()))
     return {'data':data,'errors':errors}

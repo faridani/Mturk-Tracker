@@ -30,7 +30,7 @@ import logging
 
 from django.core.management.base import BaseCommand
 
-from tenclouds.pid import Pid
+from utils.pid import Pid
 
 from mturk.main.management.commands import clean_duplicates, update_mviews
 

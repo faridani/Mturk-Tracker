@@ -10,24 +10,27 @@ def calculate_similarity(text1, text2):
     intersection = []
 
     for l in t1:
-        if l in t2: intersection.append(l)
+        if l in t2:
+            intersection.append(l)
 
     sum = t1
 
     for l in t2:
-        if l not in t1: sum.append(l)
+        if l not in t1:
+            sum.append(l)
 
     coefficient = float(len(intersection)) / float(len(sum))
 
     return coefficient
 
+
 def fuse(array, separator):
 
     if type(array) != type([]) and type(array) != type(()):
-        raise Exception, 'Fused object must be a list or a tuple.'
+        raise Exception('Fused object must be a list or a tuple.')
 
     if type(separator) != type(''):
-        raise Exception, 'Separator must be a string.'
+        raise Exception('Separator must be a string.')
 
     array_length = len(array)
     if array_length > 1:
@@ -35,7 +38,7 @@ def fuse(array, separator):
         result = ''
         for i in range(0, array_length):
             result += array[i]
-            if i < array_length-1:
+            if i < array_length - 1:
                 result += separator
         return result
 
@@ -61,7 +64,7 @@ def remove_whitespaces(text):
         if type(text) == type(u''):
             encoding = 'unicode'
         else:
-            raise Exception, 'Text must be a string.'
+            raise Exception('Text must be a string.')
 
     while text.find('  ') > -1:
         if encoding == 'unicode':
@@ -75,7 +78,7 @@ def remove_whitespaces(text):
     return text
 
 
-def strip_html(text, mode = 'strict'):
+def strip_html(text, mode='strict'):
 
     if mode == 'strict':
         text = filter(lambda c: ord(c) < 128, text)
@@ -83,7 +86,7 @@ def strip_html(text, mode = 'strict'):
     def fixup(m):
         text = m.group(0)
         if text[:1] == "<":
-            return "" # ignore tags
+            return ""  # ignore tags
         if text[:2] == "&#":
             try:
                 if text[:3] == "&#x":
@@ -103,7 +106,7 @@ def strip_html(text, mode = 'strict'):
                         pass
                 else:
                     return unicode(entity, "iso-8859-1")
-        return text # leave as is
+        return text  # leave as is
 
     try:
         return re.sub("(?s)<[^>]*>|&#?\w+;", fixup, text)

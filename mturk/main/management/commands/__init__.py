@@ -28,7 +28,7 @@ import sys
 import time
 import logging
 
-from tenclouds.sql import query_to_dicts, execute_sql, query_to_tuples
+from utils.sql import query_to_dicts, execute_sql, query_to_tuples
 from mturk.main.management.commands.crawler_common import grab_error
 
 log = logging.getLogger('__init__')

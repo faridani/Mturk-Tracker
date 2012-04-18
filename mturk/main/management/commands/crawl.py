@@ -20,7 +20,7 @@ import gevent
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
-from tenclouds.pid import Pid
+from utils.pid import Pid
 from crawler import tasks
 from crawler.db import dbpool
 from crawler import auth
@@ -180,7 +180,7 @@ class Command(BaseCommand):
 
         counter = count(1, self.maxworkers)
         for i in counter:
-            jobs =[gevent.spawn(tasks.hits_groups_info, page_nr) \
+            jobs = [gevent.spawn(tasks.hits_groups_info, page_nr) \
                         for page_nr in range(i, i + self.maxworkers)]
             gevent.joinall(jobs)
 

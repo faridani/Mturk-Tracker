@@ -27,7 +27,7 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 import time
 import logging
 from django.core.cache import cache
-from tenclouds.pid import Pid
+from utils.pid import Pid
 
 from django.core.management.base import BaseCommand, NoArgsCommand
 from optparse import make_option
@@ -50,16 +50,16 @@ class Command(BaseCommand):
         pid = Pid('mturk_agregates', True)
 
         key = 'TOPREQUESTERS_CACHED'
-        
+
         result = cache.get(key)
         if result is not None:
-           logging.info("toprequesters still in cache...")
-           return
+            logging.info("toprequesters still in cache...")
+            return
         days = options['days']
 
         logging.info("toprequesters missing, refetching")
         # no chache perform query:
-        
+
         from mturk.main.views import topreq_data
         start_time = time.time()
         data = topreq_data(days)
@@ -67,4 +67,3 @@ class Command(BaseCommand):
         cache.set(key, data, HOURS4)
 
         pid.remove_pid()
-

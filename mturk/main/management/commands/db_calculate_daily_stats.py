@@ -31,8 +31,7 @@ import logging
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from tenclouds.date import today
-from tenclouds.sql import query_to_dicts
+from utils.sql import query_to_dicts
 from mturk.main.models import Crawl, DayStats
 
 logger = logging.getLogger('db_calculate_daily_stats')
@@ -71,7 +70,7 @@ class Command(BaseCommand):
         transaction.enter_transaction_management()
         transaction.managed(True)
 
-        for i in range(0, (today() - crawl.start_day()).days):
+        for i in range(0, (datetime.date.today() - crawl.start_day()).days):
 
             day = crawl.start_day() + datetime.timedelta(days=i)
             day_end = day + datetime.timedelta(days=1)

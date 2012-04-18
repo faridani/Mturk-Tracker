@@ -15,7 +15,7 @@ from django.conf import settings
 
 from pythonsolr import  pysolr
 
-from tenclouds.sql import query_to_tuples
+from utils.sql import query_to_tuples
 from mturk.main.templatetags.graph import text_row_formater
 from models import RequesterProfile, HitGroupContent, IndexQueue
 from html import strip_tags
@@ -43,6 +43,7 @@ def _hitgroup_content_to_sorl_dt(hg):
     }
     return doc
 
+
 def no_cache(view):
     """Decorator that disables any cache for view
 
@@ -61,10 +62,10 @@ def top_requesters(request):
         "Yield formatted rows"
         for cc in input:
             row = []
-            url = reverse('requester_details', kwargs={'requester_id':cc[0]})
+            url = reverse('requester_details', kwargs={'requester_id': cc[0]})
             row.append('<a href="%s">%s</a>' % (url, cc[1]))
             row.append('<a href="https://www.mturk.com/mturk/searchbar?requesterId=%s" target="_mturk">%s</a> (<a href="http://feed.crowdsauced.com/r/req/%s">RSS</a>)'
-                       % (cc[0],cc[0],cc[0]) )
+                       % (cc[0], cc[0], cc[0]))
             row.extend(cc[2:6])
             url = reverse('admin-toggle-requester-status', args=(cc[0], ))
             row.append('<a href="%s">%s</a>' % (url, cc[6] and 'public' or 'private'))
@@ -94,11 +95,11 @@ def top_requesters(request):
             ''', date_30_days_before))
 
     columns = (
-        ('string','Requester ID'),
-        ('string','Requester'),
-        ('number','#Task'),
-        ('number','#HITs'),
-        ('number','Rewards'),
+        ('string', 'Requester ID'),
+        ('string', 'Requester'),
+        ('number', '#Task'),
+        ('number', '#HITs'),
+        ('number', 'Rewards'),
         ('datetime', 'Last Posted On'),
         ('string', 'Status'),
     )
@@ -108,6 +109,7 @@ def top_requesters(request):
         'title': 'Top-1000 Recent Requesters',
     }
     return direct_to_template(request, 'main/graphs/table.html', ctx)
+
 
 @login_required
 @no_cache
@@ -136,13 +138,14 @@ def toggle_requester_status(request, id):
     rp.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+
 @login_required
 @no_cache
 def requester_details(request, requester_id):
     def row_formatter(input):
         for cc in input:
             row = []
-            url = reverse('hit_group_details',kwargs={'hit_group_id':cc[5]})
+            url = reverse('hit_group_details', kwargs={'hit_group_id': cc[5]})
             row.append('<a href="%s">%s</a>' % (url, cc[0]))
             row.extend(cc[1:5])
             url = reverse('admin-toggle-hitgroup-status', args=(cc[5],))
@@ -150,7 +153,7 @@ def requester_details(request, requester_id):
             yield row
 
     requester_name = HitGroupContent.objects.filter(requester_id=requester_id)
-    requester_name = requester_name.values_list('requester_name',flat=True).distinct()
+    requester_name = requester_name.values_list('requester_name', flat=True).distinct()
 
     if requester_name:
         requester_name = requester_name[0]
@@ -188,6 +191,7 @@ def requester_details(request, requester_id):
     }
     return direct_to_template(request, 'main/requester_details.html', ctx)
 
+
 @login_required
 @no_cache
 def toggle_hitgroup_status(request, id):
@@ -209,9 +213,11 @@ def toggle_hitgroup_status(request, id):
     hg.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 
 def main_page(request):
     ctx = RequestContext(request)

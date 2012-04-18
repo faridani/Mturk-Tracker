@@ -43,12 +43,13 @@ import sys
 import time
 import urllib2
 
-from tenclouds.pid import Pid
+from utils.pid import Pid
 
 from crawler_callbacks_data import callback_allhit, callback_details, callback_add_crawlfk
 from crawler_callbacks_save import callback_database
 from crawler_common import get_allhit_url, get_group_url
 from mturk.main.models import Crawl
+
 
 class Command(BaseCommand):
     help = 'Runs the MTurk crawler'
@@ -62,7 +63,7 @@ class Command(BaseCommand):
 
 
 ##########################################################################################
-# Thread-based class running the mturk crawl. Makes use of Worker objects fired as 
+# Thread-based class running the mturk crawl. Makes use of Worker objects fired as
 # separate processes.
 ##########################################################################################
 class Crawler(Thread):
@@ -75,7 +76,7 @@ class Crawler(Thread):
     ######################################################################################
     def __init__(self, processes_count):
         Thread.__init__(self)
-        
+
         self.processes_count = processes_count
         self.data = []
         self.errors = []
@@ -123,11 +124,11 @@ class Crawler(Thread):
             })
 
     ######################################################################################
-    # Divide's given work between processes_count number of processes, where work is 
+    # Divide's given work between processes_count number of processes, where work is
     # defined as executing function with a list of values.
     #
-    # Values given as the function's parameter are fairly distributed between a defined 
-    # number of processes, and each process uses them as a parameter in it's callback 
+    # Values given as the function's parameter are fairly distributed between a defined
+    # number of processes, and each process uses them as a parameter in it's callback
     # function.
     #
     # In:
@@ -150,63 +151,63 @@ class Crawler(Thread):
                 time.sleep(1)
 
         if processes_count > 1:
-            
+
             data = []
             errors = []
-    
+
             conns = []
             processes = []
-    
+
             max_value = len(values)-1
             interval = max_value/processes_count
             values_range = processes_count
             if processes_count*(interval+1) < max_value:
                 values_range = values_range + 1
-    
+
             values_from = 0
             values_to = interval if interval <= max_value else max_value
-    
+
             for i in range(0, values_range):
-    
+
                 parent_conn, child_conn = Pipe(False)
                 conns.append(parent_conn)
-    
+
                 processes.append(Process(target=self.launch_worker,
                                          args=(callback,values[values_from:values_to+1],
                                          child_conn), kwargs=kwargs))
-    
+
                 values_from = values_to + 1
                 values_to = values_to + interval + 1
                 if i == values_range-2 and values_to > max_value:
                     values_to = max_value
-    
+
             for process in processes: process.start()
-    
+
             for conn in conns:
                 result = receive_from_pipe(conn)
                 for record in result['data']: data.append(record)
                 for error in result['errors']: errors.append(error)
-    
+
             for process in processes: process.join()
-    
+
             return {
                 'data': data,
                 'errors': errors
             }
-            
+
         else:
-            
+
             return callback(values, **kwargs)
 
 	######################################################################################
     def run(self):
-        
+
         pid = Pid('mturk_crawler', True)
 
         logging.info('Crawler started')
 
         start_time = datetime.datetime.now()
-        
+
         #Fetching statistical information about groups and HITs count
         logging.debug("Fetching stats")
         main_response = urllib2.urlopen(get_allhit_url())
@@ -226,18 +227,18 @@ class Crawler(Thread):
 
         #Fetching data from every mturk.com HITs list page
         logging.debug("Allhit processing")
-        result_allhit = self.process_values(range(1,self.get_max_page(main_html)+1), callback_allhit, 
+        result_allhit = self.process_values(range(1,self.get_max_page(main_html)+1), callback_allhit,
                                             self.processes_count)
         self.data = result_allhit['data']
         self.append_errors(result_allhit['errors'])
 
         #Fetching html details for every HIT group
         logging.debug("Details processing")
-        result_details = self.process_values(self.data, callback_details, 
+        result_details = self.process_values(self.data, callback_details,
                                              self.processes_count)
         self.data = result_details['data']
         self.append_errors(result_details['errors'])
-        
+
         hits_downloaded = sum([hgs['HitGroupStatus']['hits_available'] for hgs in self.data])
         groups_downloaded = len(self.data)
 
@@ -245,7 +246,7 @@ class Crawler(Thread):
         success = False
         if groups_downloaded > 0 and hits_downloaded > 0 and groups_available/groups_downloaded <= 1.5 and hits_available/hits_downloaded <= 1.5:
             success = True
-        
+
         logging.debug("Crawl finished with success=%s. Saving main_crawl entry" % success)
         crawl = Crawl(**{
             'start_time':           start_time,
@@ -262,7 +263,7 @@ class Crawler(Thread):
 
         #Adding crawl FK
         logging.debug("Adding FKs")
-        result_add_crawlfk = self.process_values(self.data, callback_add_crawlfk, 
+        result_add_crawlfk = self.process_values(self.data, callback_add_crawlfk,
                                                  crawl=crawl)
         self.data = result_add_crawlfk['data']
         self.append_errors(result_add_crawlfk['errors'])
@@ -271,7 +272,7 @@ class Crawler(Thread):
         logging.debug("Saving results")
         result_save_database = self.process_values(self.data, callback_database)
         self.append_errors(result_save_database['errors'])
-        
+
         print self.errors
 
         logging.info(
@@ -285,9 +286,9 @@ class Crawler(Thread):
                 len(self.errors)
             )
         )
-        
+
         pid.remove_pid()
-        
+
 ##########################################################################################
 # Thread-based class executing given function with certain parameters.
 ##########################################################################################
@@ -313,7 +314,7 @@ class Worker(Thread):
     def run(self):
 
         try:
-            self.data, self.errors = self.callback(self.callback_arg, 
+            self.data, self.errors = self.callback(self.callback_arg,
                                                    **self.callback_kwargs)
         except:
             import traceback

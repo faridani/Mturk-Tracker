@@ -46,6 +46,7 @@ class JSONEncoder(json.JSONEncoder):
 def dumps(data):
     return JSONEncoder().encode(data)
 
+
 def loads(str):
     return json.loads(str, encoding=settings.DEFAULT_CHARSET)
 

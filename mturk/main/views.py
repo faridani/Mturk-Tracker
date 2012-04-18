@@ -27,7 +27,7 @@ Initially designed and created by 10clouds.com, contact at 10clouds.com
 from django.conf import settings
 from django.core.cache import cache
 from django.views.generic.simple import direct_to_template
-from tenclouds.sql import query_to_dicts, query_to_tuples
+from utils.sql import query_to_dicts, query_to_tuples, execute_sql
 from django.views.decorators.cache import cache_page, never_cache
 from django.core.urlresolvers import reverse
 from mturk.main.templatetags.graph import text_row_formater
@@ -186,7 +186,6 @@ def completed(request):
 
 
 def topreq_data(days):
-    from tenclouds.sql import query_to_tuples, execute_sql
     start_time = time.time()
     firstcrawl = execute_sql("""
         SELECT crawl_id

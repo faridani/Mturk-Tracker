@@ -28,7 +28,7 @@ from django.core.management.base import BaseCommand
 from mturk.importer.management.commands import write_counter, get_counter
 from django.conf import settings
 from mturk.main.models import HitGroupContent, HitGroupStatus, Crawl
-from tenclouds.sql import execute_sql, exists
+from utils.sql import execute_sql
 from mturk.main.management.commands.crawler_common import grab_error
 import hashlib
 import datetime
@@ -37,34 +37,34 @@ import sys
 import os
 from django.db import transaction
 
+
 def parse_time_alloted(time):
-    
+
     pattern = re.compile(r"([0-9]+) hour")
     hours = re.search(pattern, time)
-    
+
     try:
         hours = int(hours.group(1))
     except:
         hours = 0
-    
+
     pattern = re.compile(r"([0-9]+) minute")
-    minutes = re.search(pattern, time)    
-    
+    minutes = re.search(pattern, time)
+
     try:
         minutes = int(minutes.group(1))
     except:
         minutes = 0
-        
+
     pattern = re.compile(r"([0-9]+) day")
-    days = re.search(pattern, time)    
-    
+    days = re.search(pattern, time)
+
     try:
         days = int(days.group(1))
     except:
         days = 0
-        
-    
-    return days*60*24+hours*60+minutes
+
+    return days * 60 * 24 + hours * 60 + minutes
 
 
 class Command(BaseCommand):
@@ -92,7 +92,7 @@ HitGroupContent:
     first_crawl         = models.ForeignKey(Crawl, blank=True, null=True)
 
 HitGroupStatus
-    
+
     group_id            = models.CharField('Group ID',max_length=50, db_index=True)
     hits_available      = models.IntegerField('Hits Avaliable')
     page_number         = models.IntegerField('Page Number')
@@ -100,32 +100,32 @@ HitGroupStatus
     hit_expiration_date = models.DateTimeField('Hit expiration Date')
 
     hit_group_content   = models.ForeignKey(HitGroupContent)
-    
-    crawl               = models.ForeignKey(Crawl)        
+
+    crawl               = models.ForeignKey(Crawl)
     '''
-        
+
         items_per_transaction = 1000
         transaction_count = 0
         i = 0
         hit_group_content_mapping = {}
         crawl_mapping = {}
-        
+
         print 'setting up crawl mappings'
         crawls = Crawl.objects.all().values_list('old_id','pk')
         for row in crawls:
             crawl_mapping[row[0]] = row[1]
-            
+
         del crawls
-        
+
         try:
             i = get_counter('import_hitgroups_line')
         except:
             pass
-        
+
         try:
             f = open(os.path.join(settings.ROOT_PATH,'data','hits.utf8.csv'),"rb")
             error_log = open(os.path.join(settings.ROOT_PATH,'data','error.hits.utf8.csv'),'w')
-                            
+
             '''
             seek to file_position stored in counter
             '''
@@ -137,20 +137,20 @@ HitGroupStatus
                 f.readline()
                 print 'coulnd not find last position starting from first line'
                 pass
-            
+
             transaction.enter_transaction_management()
             transaction.managed(True)
-        
+
             for row in f:
                 try:
                     row = row.strip()
                     group_id, title, requster_name, requester_id, description, keywords, qualifications, hit_expiration_date, time_alloted, reward, hits_available, time_crawled, crawl_id, page_no, inpage_position, dollars =  tuple(row.split('|'))
 
-                    '''                
+                    '''
                     check if there already is a HitGroupContent for this row
                     if HitGroupContent exists do nothin
                     '''
-                    
+
                     reward = float(reward[1:]) # stripiing starting $ ex. $0.1
                     time_alloted = parse_time_alloted(time_alloted) # parsing strings like 4 hours 30 minutes to int minutes
                     crawl_id = int(crawl_id)
@@ -158,45 +158,45 @@ HitGroupStatus
                     page_no = int(page_no)
                     inpage_position = int(inpage_position)
                     hashed_group_id = False
-                    
+
                     if group_id == '':
                         group_id = hashlib.md5("%s;%s;%s;%s;%s;%s;%s;" % (title, requester_id,
                                                                          time_alloted,reward,
                                                                          description,keywords,
                                                                          qualifications)).hexdigest()
                         hashed_group_id = True
-                        
 
-                    hit_expiration_date = datetime.datetime.strptime(re.sub('\(.*\)', '', hit_expiration_date).strip(), "%b %d, %Y") # Apr 5, 2009  (4 weeks 1 day) 
-                    
+
+                    hit_expiration_date = datetime.datetime.strptime(re.sub('\(.*\)', '', hit_expiration_date).strip(), "%b %d, %Y") # Apr 5, 2009  (4 weeks 1 day)
+
                     exists = False
                     content_id = execute_sql("select id from main_hitgroupcontent where group_id = '%s'" % group_id).fetchone()
                     if content_id is not None:
                         hit_group_content_mapping[group_id] = content_id[0]
                         exists = True
-                    
+
                     if not exists:
                         '''
                         if not: save new HitGroupContent object store mapping in memmory
                         '''
                         obj = HitGroupContent(group_id_hashed = hashed_group_id, group_id=group_id, requester_id = requester_id, requester_name = requster_name, reward = reward, description = description, title = title, keywords = keywords, qualifications = qualifications, time_alloted = time_alloted, occurrence_date = time_crawled )
                         obj.save()
-                        hit_group_content_mapping[group_id] = obj.pk                       
+                        hit_group_content_mapping[group_id] = obj.pk
 
                     '''
                     store hitgroupstatus into db with correct mapping to HitGroupContent
                     '''
                     obj = HitGroupStatus(group_id = group_id, hits_available = hits_available, page_number = page_no, inpage_position = inpage_position, hit_expiration_date = hit_expiration_date, hit_group_content_id = hit_group_content_mapping[group_id], crawl_id = crawl_mapping[crawl_id])
                     obj.save()
-                        
+
                 except (ValueError, KeyError):
                     error_info = grab_error(sys.exc_info())
                     error_log.write(row)
                     error_log.write("\r\n")
                     print 'an error occured at: %s line, %s %s' % (i,error_info['type'], error_info['value'])
-                
+
                 i += 1
-                
+
                 '''
                 do a transaction per items_per_transaction rows
                 when commiting transaction write file position and next crawl_id to counter file
@@ -211,7 +211,7 @@ HitGroupStatus
         except KeyboardInterrupt:
             '''
             User stopped script, rollback last data, close file descriptors  exit
-            '''        
+            '''
             transaction.rollback()
             error_log.close()
             f.close()
