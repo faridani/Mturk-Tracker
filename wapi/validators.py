@@ -27,10 +27,11 @@ from django.utils.translation import ugettext_lazy, ugettext as _
 ALPHA_NUMERIC_RE = re.compile('\w+')
 
 class Validator(object):
-    
+
     def __init__(self, *args, **kwargs):
+        """This one is missing from current wapi mirror."""
         pass
-    
+
     """Base class for all the Wapi validators"""
     DOC_NAMES = {}
     def validate(self, value):
