@@ -84,7 +84,7 @@ def update_mviews():
         p.success = true and
         not exists (select id from main_crawlagregates where crawl_id = p.id ) and
         old_id is null and
-        groups_downloaded > 100 and
+        groups_downloaded > 200 and
         has_hits_mv = false
     order by id desc""")
 
