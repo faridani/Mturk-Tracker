@@ -5,7 +5,7 @@
 {% block title %}{{title}}{% endblock %}
 {% block header_text %}{{block.super}}: <span class="desc">{{title}}</span>{% endblock %}
 
-{% block head %}<link rel="stylesheet" href="{{MEDIA_URL}}css/search.css" type="text/css" />{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{STATIC_URL}}css/search.css" type="text/css" />{% endblock %}
 
 {% block content %}
 
@@ -40,16 +40,16 @@
 </script>
 
 	<div id="timeline_top">
-        
+
         <div id="datepick">
-        <img src="{{MEDIA_URL}}images/m_icon_clock.png" alt="" style=" float:left;"/>
+        <img src="{{STATIC_URL}}img/m_icon_clock.png" alt="" style=" float:left;"/>
             <form method="get" action="">
                 <input class="datepick datepick_from" type="text" name="date_from" id="form_date_from" value="{% if date_from %}{{date_from}}{% else %}date from{% endif %}"/>
                 <input class="datepick datepick_to " type="text" name="date_to" id="form_date_to" value="{% if date_to %}{{date_to}}{% else %}date to{% endif %}"/>
                 <input class="submit" type="submit" id="form_submit" value="Adjust chart"/>
             </form>
         </div>
-        
+
     <div style="clear:both"></div>
 	</div>
 

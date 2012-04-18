@@ -13,7 +13,6 @@ from psycopg2.pool import ThreadedConnectionPool
 from django.conf import settings
 
 
-
 log = logging.getLogger('crawler.db')
 
 

@@ -4,8 +4,8 @@
 {% block title%}{{block.super}}: About{% endblock %}
 {% block head %}
 
-	<link rel="stylesheet" href="{{MEDIA_URL}}css/galleria.css" type="text/css" />
-	<script type="text/javascript" src="{{MEDIA_URL}}js/jquery.galleria.js"></script>
+	<link rel="stylesheet" href="{{STATIC_URL}}css/galleria.css" type="text/css" />
+	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.galleria.js"></script>
 
 	<script>
 		jQuery(function($) {
@@ -50,7 +50,7 @@
 								)
 							}
 			});
-			$.galleria.activate('{{MEDIA_URL}}images/general.jpg');
+			$.galleria.activate('{{STATIC_URL}}img/general.jpg');
 		})
 
 	</script>
@@ -63,17 +63,17 @@
 <div class="span-24">
 
 <div class="span-12 ">
-<img src="{{MEDIA_URL}}images/m_about_1.png" alt="" />
+<img src="{{STATIC_URL}}img/m_about_1.png" alt="" />
 </div>
 
 	<div class="span-12 about last" >
-    
+
 		<h2>How does it work?</h2>
 		<p>
 			We use a web crawler written in python to gather all avaliable information from Amazon Mechanical Turk, we store that information PostgreSQL and everything is working on Amazon EC2 instances.
 			We crawl Mechanical Turk each hour, and compute daily statistics for new projects and completed tasks once a day.
 		</p>
-        
+
 </div>
 
 </div>
@@ -92,9 +92,9 @@
 	<div class="span-12 last">
 
 		<ul class="galleria">
-			<li><img src="{{MEDIA_URL}}images/general.jpg" title="General data" alt="General data"></img></li>
-			<li><img src="{{MEDIA_URL}}images/requesters.jpg" title="Top 1000 requesters" alt="Top 1000 requesters"></img></li>
-			<li><img src="{{MEDIA_URL}}images/requester_details.jpg" title="Requester details" alt="Requester details"></img></li>
+			<li><img src="{{STATIC_URL}}img/general.jpg" title="General data" alt="General data"></img></li>
+			<li><img src="{{STATIC_URL}}img/requesters.jpg" title="Top 1000 requesters" alt="Top 1000 requesters"></img></li>
+			<li><img src="{{STATIC_URL}}img/requester_details.jpg" title="Requester details" alt="Requester details"></img></li>
 		</ul>
 
 	</div>

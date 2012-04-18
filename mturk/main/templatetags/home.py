@@ -49,11 +49,11 @@ pageTracker._trackPageview();
 
 @register.simple_tag
 def jquery():
-    
+
     uncompressed = 'false'
-    if settings.DEBUG: 
+    if settings.DEBUG:
         return """<script src="%sjs/jquery-1.3.2.js"></script>
-<script src="%sjs/jquery-ui-1.7.2.js"></script>""" % (settings.MEDIA_URL, settings.MEDIA_URL)
+<script src="%sjs/jquery-ui-1.7.2.js"></script>""" % (settings.STATIC_URL, settings.STATIC_URL)
     else:
         return """<script src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">

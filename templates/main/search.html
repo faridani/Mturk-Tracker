@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% load webdesign %}
 
 {% block title %}
@@ -8,15 +7,15 @@
 
 {% block head %}
 
-	<link rel="stylesheet" href="{{MEDIA_URL}}css/search.css" type="text/css" />
-	
+	<link rel="stylesheet" href="{{STATIC_URL}}css/search.css" type="text/css" />
+
 	<script>
 
         var metadataQuery = '';
         var metadataOffset = -1;
         var metadataResultsCount = -1;
         var metadataResultsPP = -1;
-	
+
 		function submitEnter(field, e) {
 		    var keycode;
 
@@ -48,7 +47,7 @@
         function keywordFn() {
             $('html,body').animate({ scrollTop: 0 }, 'slow');
             $('#form_query').val($(this).text());
-            $('#form_submit').click();    
+            $('#form_submit').click();
         }
 
         function loadResults(query, offset) {
@@ -158,22 +157,22 @@
                                     $('.next_page').css('background-color', '#C8C8C8');
                                     $('.next_page').css('cursor', 'auto');
                                 }
-        
+
                             }
                     });
         }
-		
+
 		$(document).ready( function() {
 
             {% if query %}
                 $('#form_query').val('{{query}}');
-                loadResults('{{query}}', 0);       
+                loadResults('{{query}}', 0);
             {% endif %}
 
 			$('#form_submit').click( function () {
-				
+
 				if ($('#form_query').val().length > 0){
-				    query = $('#form_query').val(); 
+				    query = $('#form_query').val();
 				    loadResults(query, 0);
 		        }
 
@@ -200,7 +199,7 @@
             </div>
 		</form>
 	</div>
--->	
+-->
 
 	<center><span class="loading"></span></center>
 

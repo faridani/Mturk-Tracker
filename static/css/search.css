@@ -34,7 +34,7 @@ a {
     margin: 0 0.2em 0 0;
 }
 
-/**html #query input.text 
+/**html #query input.text
     width: 12em;
 }*/
 
@@ -61,9 +61,9 @@ a {
     margin: 0 0 0 0.2em;
 }
 
-.loading {  
+.loading {
     float:left;
-    background: url('/s/images/ajax-loader.gif') no-repeat 1px;
+    background: url('../img/ajax-loader.gif') no-repeat 1px;
     height:28px;
     width:28px;
     display:none;

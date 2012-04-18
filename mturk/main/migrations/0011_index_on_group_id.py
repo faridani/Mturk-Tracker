@@ -31,16 +31,17 @@ from django.db import models
 from mturk.main.models import *
 
 class Migration:
-    
+
     def forwards(self, orm):
-        db.create_index('main_hitgroupcontent', ['group_id'], unique=True)
-    
-    
+        pass
+        #db.create_index('main_hitgroupcontent', ['group_id'], unique=True)
+
+
     def backwards(self, orm):
         db.drop_index('main_hitgroupcontent', ['group_id'])
 
-    
-    
+
+
     models = {
         'main.hitgroupstatus': {
             'crawl': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['main.Crawl']"}),
@@ -89,5 +90,5 @@ class Migration:
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         }
     }
-    
+
     complete_apps = ['main']

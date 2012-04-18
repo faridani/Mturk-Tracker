@@ -41,7 +41,7 @@ class Command(BaseCommand):
             make_option('--mturk-email', dest='mturk_email',
                 help='Mturk authentication email'),
             make_option('--mturk-password', dest='mturk_password',
-                help='Mturk authentication passowrd'),
+                help='Mturk authentication password'),
     )
 
     mturk_email = getattr(settings, 'MTURK_AUTH_EMAIL', None)

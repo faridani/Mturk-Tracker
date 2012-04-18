@@ -22,10 +22,9 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-MEDIA_ROOT = ''
-MEDIA_URL = ''
+MEDIA_ROOT = os.path.join(ROOT_PATH, 'media')
+MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(ROOT_DIR, '..', 'collected_static')
-
 STATIC_URL = '/static/'
 
 # Additional locations of static files
@@ -68,6 +67,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
+    'django.core.context_processors.static',
     'django.core.context_processors.request',
 
     'mturk.tabs_context_processor.tabs'

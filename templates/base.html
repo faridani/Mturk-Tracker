@@ -8,19 +8,19 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Mechanical Turk Tracker: {% block title %}{% endblock %}</title>
 
-	<link rel="Shortcut Icon" type="image/png" href="{{MEDIA_URL}}images/favicon.png"/>
+	<link rel="Shortcut Icon" type="image/png" href="{{ STATIC_URL }}img/favicon.png"/>
 
     <!--  blueprint stuff start -->
-	<link rel="stylesheet" href="{{MEDIA_URL}}blueprint/screen.css" type="text/css" media="screen, projection">
-	<link rel="stylesheet" href="{{MEDIA_URL}}blueprint/print.css" type="text/css" media="print">
-	<!--[if lt IE 8]><link rel="stylesheet" href="{{MEDIA_URL}}blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/blueprint/print.css" type="text/css" media="print">
+	<!--[if lt IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
 	<!--  blueprint stuff end -->
-    
-	<link rel="stylesheet" href="{{MEDIA_URL}}css/main.css" media="screen" type="text/css"/>
-	<link rel="stylesheet" href="{{MEDIA_URL}}css/mturk.css" type="text/css" media="screen, projection">
+
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/main.css" media="screen" type="text/css"/>
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/mturk.css" type="text/css" media="screen, projection">
 
 	<!--  jquery stuff start -->
-	<link rel="stylesheet" href="{{MEDIA_URL}}css/jquery-ui-1.7.1.css" type="text/css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-1.7.1.css" type="text/css" />
 	<!--  jquery stuff end -->
 
 	<script src="http://www.google.com/jsapi"></script>
@@ -44,8 +44,8 @@
 		    else return true;
 	}
 </script>
-    
-    
+
+
 </head>
 
 <body>
@@ -53,39 +53,39 @@
 <div class="container">
 
 	<div class="span-24 header">
-    
+
 		<div class=" span-6">
-    	<a href="{%url graphs_general%}"><img src="{{MEDIA_URL}}images/m_logo.png" alt="" /></a>
+    	<a href="{%url graphs_general%}"><img src="{{ STATIC_URL }}img/m_logo.png" alt="" /></a>
         </div>
-        
+
         <div class=" span-18 menu last">
 		<ul>
         {% include 'main/tabs.html' %}
-        <li class="search">                
+        <li class="search">
         <form method="post" action="/search/" onsubmit="submitForm()">
         <input type="text" name="query" id="form_query" value="" onkeypress="return submitEnter(this,event)"/>
         <input type="submit" id="form_submit" value="Search" style="display:none;"/>
-        
+
         <!--
         <span class="loading"></span>
-        -->        
-        
+        -->
+
 		</form>
 		</li>
-        
+
         </ul>
-        
+
         </div>
-        
+
 	</div>
 <!--
 	<div id="logo"><h1>{%block header_text %}Mechanical Turk Tracker{% endblock %}</h1></div>
--->	
+-->
 <div class="span-24 content">
 
 		{% block content %}
 		{% endblock %}
-        
+
     <div style="clear:both;"></div>
 
 </div>
