@@ -1,7 +1,8 @@
+import os
+
 from fabric import colors, api
 from fabric import operations
 from fabric.contrib.project import upload_project
-import os
 
 
 PROJECT_NAME = 'MturkTracker'
@@ -21,6 +22,7 @@ def provision():
     version = operations.prompt('Please specify target version stable or devel: ', validate=r'^(stable|devel)$')
     db = operations.prompt('Please specify database engine [mysql|postgresql]: ', validate=r'^(mysql|postgresql)$')
 
+    db_name = 'mturk_tracker'
     db_password = '10clouds'
     db_user = "%s_%s" % (PROJECT_NAME, version,)
     system_user = "%s.%s" % (PROJECT_NAME, version,)
@@ -51,7 +53,10 @@ def provision():
         api.sudo("echo \"CREATE DATABASE %s DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;\" | mysql --password=%s" % (db_user, db_password))
 
     elif db == 'postgresql':
-        raise Exception('Not implemented')
+
+        api.sudo('apt-get install -q -y postgresql')
+        api.sudo('psql -c "CREATE USER %s WITH NOCREATEDB NOCREATEUSER ENCRYPTED PASSWORD E\'%s\'"' % (db_user, db_password), user='postgres')
+        api.sudo('psql -c "CREATE DATABASE %s WITH OWNER %s"' % (db_name, db_user), user='postgres')
 
     # setup user name and account
     api.sudo('useradd %s -m' % system_user)

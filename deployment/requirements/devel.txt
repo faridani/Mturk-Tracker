@@ -5,4 +5,3 @@ https://guppy-pe.svn.sourceforge.net/svnroot/guppy-pe/trunk/guppy
 werkzeug
 sqlparse
 django-debug-toolbar
-psycopg2

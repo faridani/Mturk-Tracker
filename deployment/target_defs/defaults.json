@@ -1,0 +1,7 @@
+{
+    "settings_name": "defaults",
+    "source_url": "git@github.com:10clouds/Mturk-Tracker.git",
+    "default_prefix": "mturktracker",
+    "deployment_files": "../files",
+    "projects_dir": "/home/projects"
+}

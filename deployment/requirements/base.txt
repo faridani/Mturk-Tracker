@@ -11,3 +11,4 @@ ipython
 #-e git+git@github.com:10clouds/common.git#egg=tenclouds
 BeautifulSoup
 boto==1.7a
+psycopg2

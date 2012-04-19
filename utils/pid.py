@@ -83,13 +83,13 @@ class Pid(object):
         logger.info('new pid %s => %s (%s) has been created' % (self.actual_pid, PID_FILE, name))
         self.name = name
 
-        def remove_pid(self):
-            """
-            This method removes pidfile.
-            """
-            try:
-                remove(self.PID_FILE)
-            except OSError, e:
-                if not self.exists:
-                    logger.info('error deleting pid file %s (%s), error: %s' % (self.PID_FILE, self.name, e))
-            logger.info('pid file %s (%s) has been deleted' % (self.PID_FILE, self.name))
+    def remove_pid(self):
+        """
+        This method removes pidfile.
+        """
+        try:
+            remove(self.PID_FILE)
+        except OSError, e:
+            if not self.exists:
+                logger.info('error deleting pid file %s (%s), error: %s' % (self.PID_FILE, self.name, e))
+        logger.info('pid file %s (%s) has been deleted' % (self.PID_FILE, self.name))
