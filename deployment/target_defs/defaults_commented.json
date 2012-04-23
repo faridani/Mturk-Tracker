@@ -15,7 +15,7 @@
     // "db_password": "password_hash",
 
     //// DEPLOYMENT FILES
-    "deployment_files": "../files/",
+    "files_dir": "../files",
     // Requirements file(s) to use
     //"requirements": ["requirements.txt", "/another/path/to/file/"]
 
@@ -32,7 +32,6 @@
     // Set true to have ssh keys uploaded from local machine
     // "upload_ssh_keys_from_local": True (default and the ONLY implemented)
     // "ssh_files": ['list', 'of', 'filenames']
-    // "ssh_dir": '/path/to/ssh/key/files/'
     // "ssh_target": "/home/{user}/.ssh"
 
     //// REPOSITORY

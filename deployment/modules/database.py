@@ -1,10 +1,11 @@
 from fabric import colors
 from fabric.api import sudo, task, hide, settings
-from utils import show, PROPER_SUDO_PREFIX
+from utils import (show, PROPER_SUDO_PREFIX as SUDO_PREFIX,
+    install_without_prompt)
 
 
 def call_psql(sql_command):
-    with settings(hide("stderr"), sudo_prefix=PROPER_SUDO_PREFIX):
+    with settings(hide("stderr"), sudo_prefix=SUDO_PREFIX):
         return sudo('psql -tAc "%s"' % sql_command, user="postgres")
 
 
@@ -51,3 +52,8 @@ def ensure_database(dbname, owner):
     if not check_database(dbname):
         show("Database %s does not exist in this instance", dbname)
         create_database(dbname, owner)
+
+
+def setup_postgresql():
+    """Installs postgresql."""
+    install_without_prompt('postgresql', 'PostgreSQL database engine')

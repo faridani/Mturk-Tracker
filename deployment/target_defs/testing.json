@@ -1,18 +1,20 @@
 {
+    "project_inner": "MturkTracker",
     "settings_name": "testing",
     "instance": "staging",
     "db_name": "mturk_tracker",
     "db_user": "mturktracker",
     "db_password": "asdfg",
     "default_prefix": "mturktracker",
-    "user": "mturktracker",
     "pip_cache": "/tmp/mturktracker_pip",
     "requirements": [
-        "requirements/base.txt",
-        "requirements/devel.txt"
+        "base.txt", "devel.txt", "production.txt"
+    ],
+    "system_requirements": [
+        "system_requirements.txt"
     ],
     "upload_ssh_keys_from_local": true,
+    "files_dir": "../files",
     "ssh_files": [],
-    "ssh_dir": "../files/ssh/",
-    "ssh_target": "/home/{user}/.ssh"
+    "branch": "new"
 }

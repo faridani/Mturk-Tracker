@@ -1,39 +1,61 @@
 import os
 from os.path import join as pjoin
 import json
-from fabric.colors import red, yellow, green
-from fabric.api import abort, task, env, hide, settings, sudo, cd, prefix
+from fabric.colors import red, yellow
+from fabric.api import abort, task, env, hide, settings, sudo, cd
 from fabric.contrib.console import confirm_or_abort
-from fabric.contrib.files import exists
 
-from modules.chef import bootstrap, provision_chef
-from modules.database import ensure_database, ensure_user, setup_postgres
+
+from modules.services import configure_nginx, reload_nginx
+from modules.database import ensure_database, ensure_user, setup_postgresql
+from modules.supervisor import configure_supervisor
+from modules.virtualenv import update_virtualenv, create_virtualenv, setup_virtualenv
 from modules.utils import (show, put_file_with_perms, create_dir_with_perms,
     dir_exists, PROPER_SUDO_PREFIX as SUDO_PREFIX, cget, cset, print_context,
-    run_django_cmd, upload_template_with_perms, files_dir)
-from modules.services import configure_nginx, reload_nginx
+    run_django_cmd, upload_template_with_perms, local_files_dir, get_boolean,
+    install_without_prompt)
 
-
-# Silencing PyFlakes.
-dir(bootstrap)
-dir(provision_chef)
 
 PARENT_DIR = os.path.abspath(os.path.dirname(__file__))
 DEFAULT_CONF_FILE = pjoin(PARENT_DIR, 'target_defs', 'defaults.json')
 
 
+def prep_apt_get():
+    with settings(hide("stdout", "running"), sudo_prefix=SUDO_PREFIX):
+        sudo("apt-get update")
+    with settings(sudo_prefix=SUDO_PREFIX):
+        sudo("apt-get -f install")
+
+
+def install_system_requirements():
+    """Installs packages included in system_requirements.txt"""
+    reqs = cget('system_requirements')
+    if reqs:
+        for req in reqs:
+            requirements = pjoin(local_files_dir("requirements"), req)
+            show(yellow("Processing system requirements file: %s" %
+                    requirements))
+            with open(requirements) as f:
+                r = ' '.join([f.strip() for f in f.readlines()])
+                name = 'requirements from {0}: {1}'.format(req, r)
+                with settings(hide("stdout", "running"), warn_only=True,
+                        sudo_prefix=SUDO_PREFIX):
+                    install_without_prompt(r, name, silent=False)
+
+
 def prepare_global_env():
     """Ensure global settings - one time only."""
+    prep_apt_get()
+    install_system_requirements()
     setup_ssh()
-    setup_postgres()
+    setup_postgresql()
+    setup_virtualenv()
 
 
 def setup_ssh():
-    """Uploads ssh from the local folder specified in config.
-    TODO: Add copying from remote folder (upload_ssh_keys_from_local).
-    """
+    """Uploads ssh from the local folder specified in config."""
     user = cget("user")
-    ssh_target_dir = cget("ssh_target") or "/home/%s/.ssh" % user
+    ssh_target_dir = cget("ssh_target")
 
     # Ensure SSH directory is created with proper perms.
     if not dir_exists(ssh_target_dir):
@@ -41,11 +63,12 @@ def setup_ssh():
         create_dir_with_perms(ssh_target_dir, "700", user, user)
 
     # Upload SSH config and keys.
-    if cget('upload_ssh_keys_from_local'):
+    # TODO: Add copying files from remote folder (upload_ssh_keys_from_local).
+    if cget('upload_ssh_keys_from_local') or True:
         files = cget('ssh_files')
         show("Uploading SSH configuration and keys")
         for name in files:
-            local_path = pjoin(cget("ssh_dir"), name)
+            local_path = pjoin(local_files_dir("ssh"), name)
             remote_path = pjoin(ssh_target_dir, name)
             put_file_with_perms(local_path, remote_path, "600", user, user)
     else:
@@ -55,7 +78,7 @@ def setup_ssh():
 
 
 def prepare_target_env():
-    u"Prepare all things needed before source code deployment."
+    """Prepare all things needed before source code deployment."""
     user = cget("user")
     project_dir = cget("project_dir")
 
@@ -77,16 +100,11 @@ def prepare_target_env():
             create_dir_with_perms(path, "755", user, user)
 
     # Create Virtualenv if not present.
-    ve_dir = cget("virtualenv_dir")
-    bin_path = pjoin(ve_dir, "bin")
-    if not dir_exists(bin_path) or not exists(pjoin(bin_path, "activate")):
-        show(yellow("Setting up new Virtualenv in: %s"), ve_dir)
-        with settings(hide("stdout", "running"), sudo_prefix=SUDO_PREFIX):
-            sudo("virtualenv --distribute %s" % ve_dir, user=user)
+    create_virtualenv()
 
 
 def fetch_project_code():
-    u"""Fetches project code from Github.
+    """Fetches project code from Github.
         If specified, resets state to selected branch or commit (from context).
     """
     branch = cget("branch")
@@ -101,7 +119,7 @@ def fetch_project_code():
     else:
         rev = "origin/%s" % (branch or "master")
 
-    with settings(hide("stdout", "running"), sudo_prefix=SUDO_PREFIX):
+    with settings(sudo_prefix=SUDO_PREFIX):
         if not dir_exists(pjoin(repo_dir, ".git")):
             show(yellow("Cloning repository following: %s"), rev)
             sudo("git clone %s %s" % (url, repo_dir), user=user)
@@ -113,27 +131,6 @@ def fetch_project_code():
                 sudo("git fetch origin", user=user)  # Prefetch changes.
                 sudo("git clean -f", user=user)  # Clean local files.
                 sudo("git reset --hard %s" % rev, user=user)
-
-
-def update_virtualenv():
-    """Updates virtual Python environment."""
-    ve_dir = cget("virtualenv_dir")
-    activate = pjoin(ve_dir, "bin", "activate")
-    user = cget("user")
-    cache = cget("pip_cache")
-
-    show(yellow("Updating Python virtual environment."))
-    show(green("Be patient. It may take a while."))
-
-    for req in cget('requirements'):
-        requirements = pjoin(cget("deployment_files"), req)
-        show(yellow("Processing requirements file: %s" % requirements))
-        with settings(hide("stdout", "running"), warn_only=True,
-                sudo_prefix=SUDO_PREFIX):
-            with prefix("source %s" % activate):
-                sudo("pip install --no-input --download-cache=%s"
-                    " --requirement %s --log=/tmp/pip.log" % (
-                        cache, requirements), user=user)
 
 
 def upload_settings_files():
@@ -153,7 +150,7 @@ def upload_settings_files():
     context = dict(env["ctx"])
     context
     # Upload main settings and ensure permissions.
-    source = pjoin(files_dir("django"), "target_template.py")
+    source = pjoin(local_files_dir("django"), "target_template.py")
     destination = pjoin(base_dir, "settings",
         "%s.py" % cget("settings_name"))
     upload_template_with_perms(source, destination, context, mode="644",
@@ -200,6 +197,7 @@ def sync_db():
 def configure_services():
     """Ensures correct init and running scripts for services are installed."""
     configure_nginx()
+    configure_supervisor()
 
 
 def reload_services():
@@ -209,10 +207,8 @@ def reload_services():
 
 
 def set_instance_conf():
-    u"""Compute all instance specific paths and settings.
-
-        *It's recommended* to call this function in the beginning of
-        every separate task so the context is properly initialized.
+    """Compute all instance specific paths and settings.
+    Put *all* settings computation login here.
     """
     # Common project settings.
     cset("prefix", cget("default_prefix"))
@@ -225,13 +221,17 @@ def set_instance_conf():
     cset("source_url", cget("source_url"))
 
     # Directory with manage.py script.
-    cset("base_dir", pjoin(cget("project_dir"), "code", "klaud"))
+    cset("base_dir", pjoin(cget("project_dir"), "code", cget("project_inner")))
     cset("log_dir", pjoin(cget("project_dir"), "logs"))
 
     # Database settings
     cset("db_name", "%s_%s" % (cget("prefix"), cget("instance")))
     cset("db_user", cget("db_name"))
     cset("db_password", cget("db_user"))
+
+    # SSH
+    user = cget("user")
+    cget("ssh_target") or cset("ssh_target", "/home/%s/.ssh" % user)
 
 
 def load_config_files(conf_file, default_conf=DEFAULT_CONF_FILE,
@@ -308,10 +308,9 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
 
     # Give user a chance to abort deployment.
     confirm_or_abort(red("\nDo you want to continue?"))
-
     # Prepare server environment for deployment.
     show(yellow("Preparing project environment"))
-    if not skip_global:
+    if not get_boolean(skip_global):
         prepare_global_env()
     prepare_target_env()
 

@@ -36,14 +36,25 @@ def print_context():
     show("Deploying to instance: %s" % colors.green(cget("instance")))
 
 
-def files_dir(subpath=""):
-    u"""Returns the absolute path of deployment assets (`files` directory).
-        This is a *local* path. It is used before code fetch is done
-        on the remote machine.
+def local_files_dir(subpath=""):
+    """Returns the absolute path of deployment assets (`files` directory).
+    This is a *local* path. It is used before code fetch is done
+    on the remote machine.
     """
     this_dir = os.path.dirname(os.path.abspath(__file__))
     deployment_dir = os.path.abspath(pjoin(this_dir, os.path.pardir))
     path = pjoin(deployment_dir, "files")
+    if subpath:
+        path = pjoin(path, subpath)
+    return path
+
+
+def remote_files_dir(subpath=""):
+    """Returns the absolute path of deployment assets (`files` directory).
+    This is a *remote* path. It is used after code fetch is done
+    on the remote machine.
+    """
+    path = cget("deployment_files")
     if subpath:
         path = pjoin(path, subpath)
     return path
@@ -108,3 +119,18 @@ def run_django_cmd(command, args=""):
                 sudo("DJANGO_SETTINGS_MODULE=settings.%s"
                     " python manage.py %s %s" % (cget("settings_name"),
                     command, args), user=cget("user"))
+
+
+def get_boolean(value):
+        return bool(value in [True, 1, 'True', 'true', '1', 'T', 't'])
+
+
+def install_without_prompt(packages, description, silent=True):
+    """Installs given packages with no prompt and output.
+    Parameters:
+        packages - a string of space-separated package names.
+    """
+    show(colors.yellow("Installing {0}.").format(description))
+    with settings(sudo_prefix=PROPER_SUDO_PREFIX):
+        sudo("apt-get install -y{silent} {packages}".format(
+            packages=packages, silent=' -q' if silent else ''))
