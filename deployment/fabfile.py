@@ -24,11 +24,13 @@ def prep_apt_get():
     with settings(hide("stdout", "running"), sudo_prefix=SUDO_PREFIX):
         sudo("apt-get update")
     with settings(sudo_prefix=SUDO_PREFIX):
-        sudo("apt-get -f install")
+        sudo("apt-get -f -y install")
 
 
 def install_system_requirements():
-    """Installs packages included in system_requirements.txt"""
+    """Installs packages included in system_requirements.txt.
+    This is done before fetch, thus the file is taken from *local* storage.
+    """
     reqs = cget('system_requirements')
     if reqs:
         for req in reqs:
@@ -37,9 +39,8 @@ def install_system_requirements():
                     requirements))
             with open(requirements) as f:
                 r = ' '.join([f.strip() for f in f.readlines()])
-                name = 'requirements from {0}: {1}'.format(req, r)
-                with settings(hide("stdout", "running"), warn_only=True,
-                        sudo_prefix=SUDO_PREFIX):
+                name = 'requirements: {0}'.format(r)
+                with settings(warn_only=True, sudo_prefix=SUDO_PREFIX):
                     install_without_prompt(r, name, silent=False)
 
 
@@ -66,8 +67,9 @@ def setup_ssh():
     # TODO: Add copying files from remote folder (upload_ssh_keys_from_local).
     if cget('upload_ssh_keys_from_local') or True:
         files = cget('ssh_files')
-        show("Uploading SSH configuration and keys")
+        show(yellow("Uploading SSH configuration and keys"))
         for name in files:
+            show(u"File: {0}".format(name))
             local_path = pjoin(local_files_dir("ssh"), name)
             remote_path = pjoin(ssh_target_dir, name)
             put_file_with_perms(local_path, remote_path, "600", user, user)
@@ -113,7 +115,6 @@ def fetch_project_code():
     repo_dir = pjoin(project_dir, "code")
     url = cget("source_url")
     user = cget("user")
-
     if commit:
         rev = commit
     else:
@@ -150,9 +151,8 @@ def upload_settings_files():
     context = dict(env["ctx"])
     context
     # Upload main settings and ensure permissions.
-    source = pjoin(local_files_dir("django"), "target_template.py")
-    destination = pjoin(base_dir, "settings",
-        "%s.py" % cget("settings_name"))
+    source = pjoin(local_files_dir("django"), "settings_template.py")
+    destination = pjoin(base_dir, "settings", "%s.py" % cget("settings_name"))
     upload_template_with_perms(source, destination, context, mode="644",
         user=user, group=user)
 
@@ -164,14 +164,15 @@ def upload_settings_files():
         this_dir = os.path.dirname(os.path.abspath(__file__))
         locals_path = pjoin(this_dir, locals_path)
         if not os.path.isfile(locals_path):  # :((
-            show(red("Warning: Specified local settings path is incorrect."))
+            msg = u"Warning: Specified local settings path is incorrect: {0}."
+            show(red(msg.format(locals_path)))
             confirm_or_abort(red("\nDo you want to continue?"))
             locals_path = None
 
     # Upload user supplied locals if present.
     if locals_path:
         show(yellow("Uploading your custom local settings files."))
-        destination = pjoin(base_dir, "settings", "locals.py")
+        destination = pjoin(base_dir, "settings", "local.py")
         put_file_with_perms(locals_path, destination, mode="644", user=user,
             group=user)
 
@@ -210,6 +211,9 @@ def set_instance_conf():
     """Compute all instance specific paths and settings.
     Put *all* settings computation login here.
     """
+    # System
+    cset("user", env["user"])
+
     # Common project settings.
     cset("prefix", cget("default_prefix"))
     cset("project_name", "%s-%s" % (cget("prefix"), cget("instance")))
@@ -217,10 +221,11 @@ def set_instance_conf():
     cset("virtualenv_dir", pjoin(cget("project_dir"), "virtualenv"))
     cset("deployment_files", pjoin(cget("project_dir"), "code", "deployment",
         "files"))
-    cset("settings_name", cget("settings_name"))
-    cset("source_url", cget("source_url"))
+    cset('settings_full_name', '.'.join([cget('project_inner'), 'settings',
+        cget('settings_name')]))
 
     # Directory with manage.py script.
+    cset("manage_py_dir", pjoin(cget("project_dir"), "code"))
     cset("base_dir", pjoin(cget("project_dir"), "code", cget("project_inner")))
     cset("log_dir", pjoin(cget("project_dir"), "logs"))
 
@@ -269,7 +274,7 @@ def load_config_files(conf_file, default_conf=DEFAULT_CONF_FILE,
 
 def update_args(ctx, instance, branch, commit, locals_path):
     """Check args and update ctx."""
-     # Do the sanity checks.
+    # Do the sanity checks.
     instance = cset("instance", instance)
     if not instance or not instance.isalnum():
         abort("You have to specify a proper alphanumeric instance name!")
@@ -283,7 +288,7 @@ def update_args(ctx, instance, branch, commit, locals_path):
 
 @task
 def deploy(conf_file=None, instance=None, branch=None, commit=None,
-        locals_path=None, skip_global=True):
+        locals_path=None, skip_global=True, requirements=True):
     u"""Does a full deployment of the project code.
         You have to supply an ``instance`` name (the name of deployment
         target in colocation environment).
@@ -316,8 +321,11 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
 
     # Fetch source code.
     fetch_project_code()
-    # Update Virtualenv packages.
-    update_virtualenv()
+
+    if get_boolean(requirements):
+        # Update Virtualenv packages.
+        update_virtualenv()
+
     # Upload target specific Django settings.
     upload_settings_files()
     # Collect static files.

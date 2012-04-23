@@ -24,7 +24,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 Initially designed and created by 10clouds.com, contact at 10clouds.com
 '''
-from base import *
 import logging
 import sys
 

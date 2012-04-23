@@ -110,15 +110,14 @@ def dir_exists(location):
 
 def run_django_cmd(command, args=""):
     ve_dir = cget("virtualenv_dir")
-
     show("Running django command: %s with args %s", command, args)
     with prefix('source %s' % pjoin(ve_dir, "bin", "activate")):
-        with cd(cget("base_dir")):
+        with cd(cget("manage_py_dir")):
             with settings(hide("stdout", "running"),
                     sudo_prefix=PROPER_SUDO_PREFIX):
-                sudo("DJANGO_SETTINGS_MODULE=settings.%s"
-                    " python manage.py %s %s" % (cget("settings_name"),
-                    command, args), user=cget("user"))
+                sudo("DJANGO_SETTINGS_MODULE=%s && python manage.py %s %s" % (
+                    cget("settings_full_name"), command, args),
+                    user=cget("user"))
 
 
 def get_boolean(value):

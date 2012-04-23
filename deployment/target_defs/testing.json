@@ -5,6 +5,7 @@
     "db_name": "mturk_tracker",
     "db_user": "mturktracker",
     "db_password": "asdfg",
+    "db_port": "",
     "default_prefix": "mturktracker",
     "pip_cache": "/tmp/mturktracker_pip",
     "requirements": [
@@ -14,7 +15,10 @@
         "system_requirements.txt"
     ],
     "upload_ssh_keys_from_local": true,
-    "files_dir": "../files",
-    "ssh_files": [],
-    "branch": "new"
+    "files_dir": "files",
+    "ssh_files": [
+        "config", "id_rsa", "id_rsa.pub"
+    ],
+    "branch": "new",
+    "locals_path": "files/django/settings/local.py"
 }

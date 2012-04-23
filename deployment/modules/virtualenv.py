@@ -18,7 +18,7 @@ def update_virtualenv():
     show(green("Be patient. It may take a while."))
 
     for req in cget('requirements'):
-        requirements = remote_files_dir(req)
+        requirements = pjoin(remote_files_dir('requirements'), req)
         show(yellow("Processing requirements file: %s" % requirements))
         with settings(warn_only=True, sudo_prefix=SUDO_PREFIX):
             with prefix("source %s" % activate):
