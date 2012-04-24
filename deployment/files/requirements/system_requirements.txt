@@ -1,3 +1,5 @@
+postgresql
+postgresql-server-dev-8.4
 git
 subversion
 mercurial

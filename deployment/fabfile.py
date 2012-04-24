@@ -5,11 +5,7 @@ from fabric.colors import red, yellow
 from fabric.api import abort, task, env, hide, settings, sudo, cd
 from fabric.contrib.console import confirm_or_abort
 
-
-from modules.services import configure_nginx, reload_nginx
-from modules.database import (ensure_database, ensure_user, setup_postgresql,
-    ensure_language)
-from modules.supervisor import configure_supervisor
+from modules.database import (ensure_database, ensure_user, ensure_language)
 from modules.virtualenv import update_virtualenv, create_virtualenv, setup_virtualenv
 from modules.utils import (show, put_file_with_perms, create_dir_with_perms,
     dir_exists, PROPER_SUDO_PREFIX as SUDO_PREFIX, cget, cset, print_context,
@@ -50,7 +46,6 @@ def prepare_global_env():
     prep_apt_get()
     install_system_requirements()
     setup_ssh()
-    setup_postgresql()
     setup_virtualenv()
 
 
@@ -206,8 +201,8 @@ def configure_services():
 
 def reload_services():
     """Reloads previously configured services"""
-    with settings(hide("running")):
-        reload_nginx()
+    #with settings(hide("running")):
+        #reload_nginx()
 
 
 def set_instance_conf():

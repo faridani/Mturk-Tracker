@@ -1,7 +1,6 @@
 from fabric import colors
 from fabric.api import sudo, task, hide, settings
-from utils import (show, PROPER_SUDO_PREFIX as SUDO_PREFIX,
-    install_without_prompt)
+from utils import (show, PROPER_SUDO_PREFIX as SUDO_PREFIX)
 
 
 def call_psql(sql_command, database=None):
@@ -84,8 +83,3 @@ def ensure_database(dbname, owner):
     if not check_database(dbname):
         show("Database %s does not exist in this instance", dbname)
         create_database(dbname, owner)
-
-
-def setup_postgresql():
-    """Installs postgresql."""
-    install_without_prompt('postgresql', 'PostgreSQL database engine')
