@@ -7,7 +7,8 @@ from fabric.contrib.console import confirm_or_abort
 
 
 from modules.services import configure_nginx, reload_nginx
-from modules.database import ensure_database, ensure_user, setup_postgresql
+from modules.database import (ensure_database, ensure_user, setup_postgresql,
+    ensure_language)
 from modules.supervisor import configure_supervisor
 from modules.virtualenv import update_virtualenv, create_virtualenv, setup_virtualenv
 from modules.utils import (show, put_file_with_perms, create_dir_with_perms,
@@ -87,6 +88,7 @@ def prepare_target_env():
     # Ensure we have database and user set up.
     ensure_user(cget("db_user"), cget("db_password"))
     ensure_database(cget("db_name"), cget("db_user"))
+    ensure_language(cget("db_name"), 'plpgsql')
 
     # Ensure proper directory structure.
     if not dir_exists(project_dir):
@@ -193,12 +195,13 @@ def sync_db():
     """Quietly runs `syncdb` management command"""
     show(yellow("Synchronising database"))
     run_django_cmd("syncdb", args="--noinput")
+    run_django_cmd("migrate", args="--noinput")
 
 
 def configure_services():
     """Ensures correct init and running scripts for services are installed."""
-    configure_nginx()
-    configure_supervisor()
+    #configure_nginx()
+    #configure_supervisor()
 
 
 def reload_services():

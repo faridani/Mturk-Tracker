@@ -115,7 +115,7 @@ def run_django_cmd(command, args=""):
         with cd(cget("manage_py_dir")):
             with settings(hide("stdout", "running"),
                     sudo_prefix=PROPER_SUDO_PREFIX):
-                sudo("DJANGO_SETTINGS_MODULE=%s && python manage.py %s %s" % (
+                sudo("DJANGO_SETTINGS_MODULE=%s python manage.py %s %s" % (
                     cget("settings_full_name"), command, args),
                     user=cget("user"))
 

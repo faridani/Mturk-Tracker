@@ -4,9 +4,11 @@ from utils import (show, PROPER_SUDO_PREFIX as SUDO_PREFIX,
     install_without_prompt)
 
 
-def call_psql(sql_command):
+def call_psql(sql_command, database=None):
     with settings(hide("stderr"), sudo_prefix=SUDO_PREFIX):
-        return sudo('psql -tAc "%s"' % sql_command, user="postgres")
+        database = ' -d %s' % database if database is not None else ''
+        return sudo('psql -tAc "%s"%s' % (sql_command, database),
+            user="postgres")
 
 
 @task
@@ -24,6 +26,36 @@ def create_database(dbname, owner):
     show(colors.yellow("Creating PostgreSQL database: %s"), dbname)
     sql_command = ("CREATE DATABASE %s WITH OWNER %s" % (dbname, owner))
     call_psql(sql_command)
+
+
+def ensure_language(dbname, lang):
+    """Ensures language exists."""
+    sql_command = """
+    CREATE OR REPLACE FUNCTION create_language_{0}() RETURNS BOOLEAN AS \$\$
+        CREATE LANGUAGE {0};
+        SELECT TRUE;
+    \$\$ LANGUAGE SQL;
+
+    SELECT CASE WHEN NOT
+        (
+            SELECT  TRUE AS exists
+            FROM    pg_language
+            WHERE   lanname = '{0}'
+            UNION
+            SELECT  FALSE AS exists
+            ORDER BY exists DESC
+            LIMIT 1
+        )
+    THEN
+        create_language_{0}()
+    ELSE
+        FALSE
+    END AS {0}_created;
+
+    DROP FUNCTION create_language_{0}();
+    """.format(lang)
+    show(colors.yellow("Creating PostgreSQL language: %s"), lang)
+    call_psql(sql_command, database=dbname)
 
 
 def check_user(dbuser):

@@ -33,11 +33,13 @@ from mturk.main.models import *
 class Migration:
 
     def forwards(self, orm):
-        db.create_index('main_hitgroupcontent', ['group_id'], unique=True)
+        #db.create_index('main_hitgroupcontent', ['group_id'], unique=True)
+        pass
 
 
     def backwards(self, orm):
-        db.drop_index('main_hitgroupcontent', ['group_id'])
+        #db.drop_index('main_hitgroupcontent', ['group_id'])
+        pass
 
 
 
