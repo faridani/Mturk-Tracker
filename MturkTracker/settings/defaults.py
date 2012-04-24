@@ -6,8 +6,8 @@ TEMPLATE_DEBUG = DEBUG
 JS_DEBUG = DEBUG
 
 _tempdir = tempfile.tempdir or '/tmp'
-ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+PROJECT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+ROOT_PATH = os.path.abspath(os.path.dirname(PROJECT_PATH))
 DJANGO_PATH = os.path.join(ROOT_PATH, os.path.join(ROOT_PATH, 'libs', 'django'))
 PROJECT_NAME = os.path.basename(ROOT_PATH)
 
@@ -17,6 +17,13 @@ DATABASES = {}
 
 TIME_ZONE = 'UTC'
 LANGUAGE_CODE = 'en-us'
+ugettext = lambda x: x
+LANGUAGES = (
+  ('en', ugettext('English')),
+)
+LOCALE_PATHS = (
+    os.path.join(ROOT_PATH, "locale"),
+)
 SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
@@ -24,12 +31,12 @@ USE_TZ = True
 
 MEDIA_ROOT = os.path.join(ROOT_PATH, 'media')
 MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(ROOT_DIR, '..', 'collected_static')
+STATIC_ROOT = os.path.join(PROJECT_PATH, '..', 'collected_static')
 STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(ROOT_DIR, '..', 'static'),
+    os.path.join(PROJECT_PATH, '..', 'static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -80,7 +87,7 @@ WSGI_APPLICATION = 'MturkTracker.wsgi.application'
 
 TEMPLATE_DIRS = (
     "templates",
-    os.path.join(ROOT_DIR, '..', 'templates'),
+    os.path.join(PROJECT_PATH, '..', 'templates'),
 )
 
 CACHES = {
@@ -188,8 +195,8 @@ PIPELINE_COMPILERS = (
     'pipeline.compilers.less.LessCompiler',
 )
 PIPELINE_LESS_BINARY = "lessc"
-PIPELINE_YUI_BINARY = os.path.join(ROOT_DIR, '..', 'bin', 'yuicompressor.sh')
-PIPELINE_COFFEE_SCRIPT_BINARY = os.path.join(ROOT_DIR, '..', 'bin', 'coffeefinder.sh')
+PIPELINE_YUI_BINARY = os.path.join(PROJECT_PATH, '..', 'bin', 'yuicompressor.sh')
+PIPELINE_COFFEE_SCRIPT_BINARY = os.path.join(PROJECT_PATH, '..', 'bin', 'coffeefinder.sh')
 
 PIPELINE_TEMPLATE_FUNC = 'new EJS'
 PIPELINE_TEMPLATE_NAMESPACE = 'window.Template'

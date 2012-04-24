@@ -6,6 +6,7 @@ from defaults import *
 import logging
 from os.path import join as pjoin
 
+
 LOG_DIRECTORY = "%(log_dir)s"
 logging.basicConfig(
     level=logging.DEBUG,
@@ -40,5 +41,5 @@ KEEP_LOGGED_DURATION = 31 * 24 * 60 * 60
 # and loads properly
 local_settings = os.path.join(os.path.dirname(__file__), 'local.py')
 if os.path.isfile(local_settings):
-    from locals import *
+    from local import *
 ################## NO SETTINGS UNDER THIS LINE |#################

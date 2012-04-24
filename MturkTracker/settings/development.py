@@ -4,7 +4,7 @@ from defaults import *
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(ROOT_DIR, '..', 'database.sqlite3.db'),
+        'NAME': os.path.join(PROJECT_PATH, '..', 'database.sqlite3.db'),
     }
 }
 
