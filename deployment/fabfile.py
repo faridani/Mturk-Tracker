@@ -20,6 +20,7 @@ DEFAULT_CONF_FILE = pjoin(PARENT_DIR, 'target_defs', 'defaults.json')
 
 
 def prep_apt_get():
+    show(yellow("Updating and fixing apt-get."))
     with settings(hide("stdout", "running"), sudo_prefix=SUDO_PREFIX):
         sudo("apt-get update")
     with settings(sudo_prefix=SUDO_PREFIX):
