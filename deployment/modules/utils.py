@@ -133,3 +133,11 @@ def install_without_prompt(packages, description, silent=True):
     with settings(sudo_prefix=PROPER_SUDO_PREFIX):
         sudo("apt-get install -y{silent} {packages}".format(
             packages=packages, silent=' -q' if silent else ''))
+
+
+def create_target_directories(dirs, perms, user):
+    """Creates all directories in the list."""
+    for name in dirs:
+        if not dir_exists(name):
+            show(colors.yellow("Creating missing directory: %s"), name)
+            create_dir_with_perms(name, perms, user, user)

@@ -5,12 +5,14 @@ from fabric.colors import red, yellow
 from fabric.api import abort, task, env, hide, settings, sudo, cd
 from fabric.contrib.console import confirm_or_abort
 
+from modules.supervisor import (configure_supervisor, start_supervisor,
+    reload_supervisor)
 from modules.database import (ensure_database, ensure_user, ensure_language)
 from modules.virtualenv import update_virtualenv, create_virtualenv, setup_virtualenv
-from modules.utils import (show, put_file_with_perms, create_dir_with_perms,
+from modules.utils import (show, put_file_with_perms,
     dir_exists, PROPER_SUDO_PREFIX as SUDO_PREFIX, cget, cset, print_context,
     run_django_cmd, upload_template_with_perms, local_files_dir, get_boolean,
-    install_without_prompt)
+    install_without_prompt, create_target_directories)
 
 
 PARENT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -55,9 +57,7 @@ def setup_ssh():
     ssh_target_dir = cget("ssh_target")
 
     # Ensure SSH directory is created with proper perms.
-    if not dir_exists(ssh_target_dir):
-        show(yellow("Creating missing directory: %s"), ssh_target_dir)
-        create_dir_with_perms(ssh_target_dir, "700", user, user)
+    create_target_directories([ssh_target_dir], "700", user)
 
     # Upload SSH config and keys.
     # TODO: Add copying files from remote folder (upload_ssh_keys_from_local).
@@ -86,17 +86,12 @@ def prepare_target_env():
     ensure_language(cget("db_name"), 'plpgsql')
 
     # Ensure proper directory structure.
-    if not dir_exists(project_dir):
-        show(yellow("Creating main project directory: %s"), project_dir)
-        create_dir_with_perms(project_dir, "755", user, user)
+    create_target_directories([project_dir], '755', user)
 
     dirs = ["code", "logs", "logs/old", "misc", "virtualenv",
         "media", "static", "scripts"]
-    for name in dirs:
-        path = pjoin(project_dir, name)
-        if not dir_exists(path):
-            show(yellow("Creating missing directory: %s"), path)
-            create_dir_with_perms(path, "755", user, user)
+    dirs = [pjoin(project_dir, d) for d in dirs]
+    create_target_directories(dirs, "755", user)
 
     # Create Virtualenv if not present.
     create_virtualenv()
@@ -195,14 +190,12 @@ def sync_db():
 
 def configure_services():
     """Ensures correct init and running scripts for services are installed."""
-    #configure_nginx()
-    #configure_supervisor()
+    configure_supervisor()
 
 
 def reload_services():
     """Reloads previously configured services"""
-    #with settings(hide("running")):
-        #reload_nginx()
+    reload_supervisor()
 
 
 def set_instance_conf():

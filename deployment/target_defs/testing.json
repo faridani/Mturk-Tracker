@@ -20,5 +20,8 @@
         "config", "id_rsa", "id_rsa.pub"
     ],
     "branch": "new",
-    "locals_path": "files/django/settings/local.py"
+    "locals_path": "files/django/settings/local.py",
+    "supervisor_files": [
+        "supervisord.conf", "project.conf"
+    ]
 }
