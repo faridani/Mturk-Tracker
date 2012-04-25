@@ -5,10 +5,11 @@ from fabric.colors import red, yellow
 from fabric.api import abort, task, env, hide, settings, sudo, cd
 from fabric.contrib.console import confirm_or_abort
 
-from modules.supervisor import (configure_supervisor, start_supervisor,
-    reload_supervisor)
+from modules import nginx
+from modules.supervisor import (configure_supervisor, reload_supervisor)
 from modules.database import (ensure_database, ensure_user, ensure_language)
-from modules.virtualenv import update_virtualenv, create_virtualenv, setup_virtualenv
+from modules.virtualenv import (update_virtualenv, create_virtualenv,
+    setup_virtualenv)
 from modules.utils import (show, put_file_with_perms,
     dir_exists, PROPER_SUDO_PREFIX as SUDO_PREFIX, cget, cset, print_context,
     run_django_cmd, upload_template_with_perms, local_files_dir, get_boolean,
@@ -50,6 +51,7 @@ def prepare_global_env():
     install_system_requirements()
     setup_ssh()
     setup_virtualenv()
+    nginx.provision()
 
 
 def setup_ssh():

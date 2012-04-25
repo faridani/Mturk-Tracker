@@ -101,6 +101,35 @@ def upload_template_with_perms(source, destination, context=None, mode=None,
     ensure_permissions(destination, mode=mode, user=user, group=group)
 
 
+def upload_templated_folder_with_perms(source, source_root, destination_root,
+    context=None, mode=None, directories_mode=None, user=None, group=None):
+    """Walks the given source directory and copies all the files formatting
+    them using upload_template_with_perms.
+    """
+    directories_mode = directories_mode or mode
+
+    def __visit(arg, dirname, names):
+        """os.path.walk 'visit' function."""
+        # make sure the directory exists on target
+        user = cget("user")
+        dirpart = dirname[len(arg['root']) + 1:]
+        target_dir = pjoin(arg['destination'], dirpart)
+        create_target_directories([target_dir], directories_mode, user)
+        for name in names:
+            source = pjoin(dirname, name)
+            destination = pjoin(target_dir, name)
+            if not os.path.isdir(source):
+                upload_template_with_perms(
+                    source, destination, arg['context'], mode=arg["mode"])
+    arg = {
+        'context': context,
+        'mode': mode,
+        'destination': destination_root,
+        'root': source_root,
+    }
+    os.path.walk(source, __visit, arg)
+
+
 def dir_exists(location):
     """Tells if there is a remote directory at the given location."""
     with settings(hide("running", "stdout")):

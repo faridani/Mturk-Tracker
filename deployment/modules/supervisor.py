@@ -1,8 +1,8 @@
-from os.path import join as pjoin
+from os.path import join as pjoin, isdir
 from fabric.api import env, run, prefix, settings
 from fabric.colors import yellow, red
 from utils import (cget, local_files_dir, show, upload_template_with_perms,
-    cset, create_target_directories)
+    cset, create_target_directories, upload_templated_folder_with_perms)
 
 
 def configure_supervisor():
@@ -15,9 +15,9 @@ def configure_supervisor():
     cset("supervisor_process_id",
         '%s%s' % (cget('supervisor_process_base'), '_supervisor'))
     # create all dirs and log dirs
-    dirs = ['', 'config']
+    dirs = ['', 'config', 'nginx']
     dirs = [pjoin(sdir, l) for l in dirs]
-    log_dirs = ['', cget('project_name'), 'child_auto']
+    log_dirs = ['', cget('project_name'), 'child_auto', 'nginx', 'postgresql']
     log_dirs = [pjoin(slogdir, l) for l in log_dirs]
     create_target_directories(dirs + log_dirs, "700", user)
 
@@ -30,7 +30,12 @@ def configure_supervisor():
     for name in confs:
         source = pjoin(local_dir, name)
         destination = pjoin(dest_dir, name)
-        upload_template_with_perms(source, destination, context, mode="644")
+        if isdir(source):
+            upload_templated_folder_with_perms(source, local_dir, dest_dir,
+                context, mode="644", directories_mode="700")
+        else:
+            upload_template_with_perms(
+                source, destination, context, mode="644")
 
 
 def run_supevisordctl(command):
@@ -45,8 +50,8 @@ def start_supervisor():
     """Start supervisor process."""
     conf = pjoin(cget('project_dir'), 'supervisor', 'config',
         'supervisord.conf')
-    pname = cget('supervisor_process_name')
-    show(yellow("Starting supervisor with process name: %s." % pname))
+    pname = cget('supervisor_process_id')
+    show(yellow("Starting supervisor with id: %s." % pname))
     return run('supervisord --configuration="%s"' % conf)
 
 
