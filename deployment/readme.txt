@@ -48,7 +48,7 @@ project_dir/{default_prefix}-{instance}
         run_service2.sh
 
 on clean environment use:
-fab deploy:conf_file="target_defs/testing.json",skip_global=False -H 192.168.56.103 -u mturk
+fab deploy:conf_file="target_defs/testing.json",setup_environment=True -H 192.168.56.103 -u mturk
 
 deploying without setup:
 fab deploy:conf_file="target_defs/testing.json",requirements=False -H 192.168.56.103 -u mturk

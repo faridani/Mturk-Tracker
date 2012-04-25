@@ -53,7 +53,7 @@ def ensure_language(dbname, lang):
 
     DROP FUNCTION create_language_{0}();
     """.format(lang)
-    show(colors.yellow("Creating PostgreSQL language: %s"), lang)
+    show(colors.yellow("Ensuring PostgreSQL language exists: %s"), lang)
     call_psql(sql_command, database=dbname)
 
 

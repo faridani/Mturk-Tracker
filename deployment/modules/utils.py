@@ -34,6 +34,9 @@ def print_context():
     pprint(dict((k, v) for k, v in env["ctx"].items() if v is not None))
     show("Working on: %s" % colors.green(env["host"]))
     show("Deploying to instance: %s" % colors.green(cget("instance")))
+    tf = lambda x: colors.green(x) if x else colors.red(x)
+    show("Requirements: %s" % tf(cget("requirements")))
+    show("Setup environment: %s" % tf(cget("setup_environment")))
 
 
 def local_files_dir(subpath=""):

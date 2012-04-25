@@ -84,6 +84,7 @@ def prepare_target_env():
     project_dir = cget("project_dir")
 
     # Ensure we have database and user set up.
+    show(yellow("Setting database up"))
     ensure_user(cget("db_user"), cget("db_password"))
     ensure_database(cget("db_name"), cget("db_user"))
     ensure_language(cget("db_name"), 'plpgsql')
@@ -266,7 +267,8 @@ def load_config_files(conf_file, default_conf=DEFAULT_CONF_FILE,
     return dctx
 
 
-def update_args(ctx, instance, branch, commit, locals_path):
+def update_args(ctx, instance, branch, commit, locals_path, requirements,
+        setup_environment):
     """Check args and update ctx."""
     # Do the sanity checks.
     instance = cset("instance", instance)
@@ -277,12 +279,14 @@ def update_args(ctx, instance, branch, commit, locals_path):
     commit and cset("commit", commit, force=True)
     branch and cset("branch", branch, force=True)
     cset("locals_path", locals_path)
+    cset("requirements", get_boolean(requirements))
+    cset("setup_environment", get_boolean(setup_environment))
     return ctx
 
 
 @task
 def deploy(conf_file=None, instance=None, branch=None, commit=None,
-        locals_path=None, skip_global=True, requirements=True):
+        locals_path=None, setup_environment=False, requirements=True):
     u"""Does a full deployment of the project code.
         You have to supply an ``instance`` name (the name of deployment
         target in colocation environment).
@@ -299,7 +303,8 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
     env['ctx'] = {}
 
     ctx = load_config_files(conf_file)
-    ctx = update_args(ctx, instance, branch, commit, locals_path)
+    ctx = update_args(ctx, instance, branch, commit, locals_path,
+        requirements, setup_environment)
 
     # Fill instance context.
     set_instance_conf()
@@ -309,7 +314,7 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
     confirm_or_abort(red("\nDo you want to continue?"))
     # Prepare server environment for deployment.
     show(yellow("Preparing project environment"))
-    if not get_boolean(skip_global):
+    if get_boolean(setup_environment):
         prepare_global_env()
     prepare_target_env()
 

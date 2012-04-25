@@ -17,7 +17,7 @@ def update_virtualenv():
     show(yellow("Updating Python virtual environment."))
     show(green("Be patient. It may take a while."))
 
-    for req in cget('requirements'):
+    for req in cget('pip_requirements'):
         requirements = pjoin(remote_files_dir('requirements'), req)
         show(yellow("Processing requirements file: %s" % requirements))
         with settings(warn_only=True, sudo_prefix=SUDO_PREFIX):

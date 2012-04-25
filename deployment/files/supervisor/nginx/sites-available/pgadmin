@@ -2,8 +2,8 @@ server {
         listen   80;
         server_name pgadmin.mturk-tracker.com pgadmin;
 
-        access_log  /var/log/nginx/pgadmin.access.log;
-        error_log   /var/log/nginx/pgadmin.error.log;
+        access_log  %(supervisor_log_dir)s/nginx/pgadmin.access.log;
+        error_log   %(supervisor_log_dir)s/nginx/pgadmin.error.log;
 
         location / {
 
@@ -17,12 +17,13 @@ server {
                 auth_basic_user_file  /etc/nginx/htpasswd;
 
         }
-        
+
         location ~ \.php$ {
     	    fastcgi_pass 127.0.0.1:9000;
     	    fastcgi_index index.php;
     	    fastcgi_param SCRIPT_FILENAME /usr/share/phpPgAdmin$fastcgi_script_name;
-    	    include /etc/nginx/fastcgi.conf;
+    	    #include /etc/nginx/fastcgi.conf;
+            include %(supervisor_dir)s/conf/nginx/fastcgi.conf;
         }
 
         error_page  404  /404.html;

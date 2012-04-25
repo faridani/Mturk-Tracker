@@ -2,29 +2,29 @@ server {
         listen   80;
         server_name .mturk-tracker.com mturk;
 
-        access_log  /home/mtracker/log/mturk.access.log;
-        error_log   /home/mtracker/log/mturk.error.log;
+        access_log  %(supervisor_log_dir)s/nginx/mturk.access.log;
+        error_log   %(supervisor_log_dir)s/nginx/mturk.error.log;
 
 	rewrite ^/s/(.*)$ /media/$1 last;
 
         location /media  {
                 gzip on;
-                root /home/mtracker/mturk/src;
+                root %(project_dir)s;
 		autoindex  off;
                 expires 60d;
         }
 
-	location /admin/media {
-		gzip on;
-		root /home/mtracker/mturk/src/libs/django/contrib/;
-		autoindex off;
-		expires 60d;
-	}
+	#location /admin/media {
+	#	gzip on;
+	#	root /home/mtracker/mturk/src/libs/django/contrib/;
+	#	autoindex off;
+	#	expires 60d;
+	#}
 
         location / {
 
 		gzip on;
-		
+
 		expires -1;
 
                 #auth_basic            "Restricted";
@@ -48,7 +48,7 @@ server {
         }
 
         location = /robots.txt {
-                root   /home/mtracker/mturk/src/templates/;
+                root   %(project_dir)s/templates/;
         }
 
 
