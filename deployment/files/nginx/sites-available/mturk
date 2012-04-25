@@ -2,8 +2,8 @@ server {
         listen   80;
         server_name .mturk-tracker.com mturk;
 
-        access_log  %(supervisor_log_dir)s/nginx/mturk.access.log;
-        error_log   %(supervisor_log_dir)s/nginx/mturk.error.log;
+        access_log  %(log_dir)s/nginx/mturk.access.log;
+        error_log   %(log_dir)s/nginx/mturk.error.log;
 
 	rewrite ^/s/(.*)$ /media/$1 last;
 

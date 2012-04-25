@@ -5,8 +5,7 @@ from fabric.colors import red, yellow
 from fabric.api import abort, task, env, hide, settings, sudo, cd
 from fabric.contrib.console import confirm_or_abort
 
-from modules import nginx
-from modules.supervisor import (configure_supervisor, reload_supervisor)
+from modules import nginx, supervisor, postgresql
 from modules.database import (ensure_database, ensure_user, ensure_language)
 from modules.virtualenv import (update_virtualenv, create_virtualenv,
     setup_virtualenv)
@@ -93,9 +92,12 @@ def prepare_target_env():
     create_target_directories([project_dir], '755', user)
 
     dirs = ["code", "logs", "logs/old", "misc", "virtualenv",
-        "media", "static", "scripts"]
+        "media", "static", "scripts", "services"]
     dirs = [pjoin(project_dir, d) for d in dirs]
     create_target_directories(dirs, "755", user)
+
+    nginx.configure()
+    postgresql.configure()
 
     # Create Virtualenv if not present.
     create_virtualenv()
@@ -194,12 +196,14 @@ def sync_db():
 
 def configure_services():
     """Ensures correct init and running scripts for services are installed."""
-    configure_supervisor()
+    supervisor.configure()
+    postgresql.configure()
 
 
 def reload_services():
     """Reloads previously configured services"""
-    reload_supervisor()
+    supervisor.reload()
+    nginx.reload()
 
 
 def set_instance_conf():
@@ -218,6 +222,7 @@ def set_instance_conf():
         "files"))
     cset('settings_full_name', '.'.join([cget('project_inner'), 'settings',
         cget('settings_name')]))
+    cset('service_dir', pjoin(cget("project_dir"), "services"))
 
     # Directory with manage.py script.
     cset("manage_py_dir", pjoin(cget("project_dir"), "code"))

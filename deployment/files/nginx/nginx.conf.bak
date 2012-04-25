@@ -1,17 +1,17 @@
 worker_processes  1;
 
-error_log  %(supervisor_log_dir)s/nginx/error.log;
-pid        %(supervisor_dir)s/nginx/nginx.pid;
+error_log  %(log_dir)s/nginx/error.log;
+pid        %(service_dir)s/nginx/nginx.pid;
 
 events {
     worker_connections  1024;
 }
 
 http {
-    include       %(supervisor_dir)s/config/nginx/mime.types;
+    include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
 
-    access_log	%(supervisor_log_dir)s/nginx/access.log;
+    access_log	%(log_dir)s/nginx/access.log;
 
     sendfile        on;
     #tcp_nopush     on;
@@ -31,6 +31,6 @@ http {
 
     server_names_hash_bucket_size 33;
 
-    include %(supervisor_dir)s/config/nginx/conf.d/*.conf;
-    include %(supervisor_dir)s/config/nginx/sites-enabled/*;
+    include %(service_dir)s/config/nginx/conf.d/*.conf;
+    include %(service_dir)s/config/nginx/sites-enabled/*;
 }

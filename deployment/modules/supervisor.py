@@ -5,19 +5,19 @@ from utils import (cget, local_files_dir, show, upload_template_with_perms,
     cset, create_target_directories, upload_templated_folder_with_perms)
 
 
-def configure_supervisor():
+def configure():
     """Upload supervisor configuration files."""
     user = cget('user')
     # settings directories
-    sdir = cset('supervisor_dir', pjoin(cget('project_dir'), 'supervisor'))
+    sdir = cset('supervisor_dir', pjoin(cget('service_dir'), 'supervisor'))
     slogdir = cset('supervisor_log_dir', pjoin(cget('log_dir'), 'supervisor'))
     cset("supervisor_process_base", cget('project_name').replace('-', '_'))
     cset("supervisor_process_id",
         '%s%s' % (cget('supervisor_process_base'), '_supervisor'))
     # create all dirs and log dirs
-    dirs = ['', 'config', 'nginx']
+    dirs = ['', 'config', 'solr']
     dirs = [pjoin(sdir, l) for l in dirs]
-    log_dirs = ['', cget('project_name'), 'child_auto', 'nginx', 'postgresql']
+    log_dirs = ['', cget('project_name'), 'child_auto', 'solr']
     log_dirs = [pjoin(slogdir, l) for l in log_dirs]
     create_target_directories(dirs + log_dirs, "700", user)
 
@@ -40,7 +40,7 @@ def configure_supervisor():
 
 def run_supevisordctl(command):
     """Start supervisor process."""
-    conf = pjoin(cget('project_dir'), 'supervisor', 'config',
+    conf = pjoin(cget('service_dir'), 'supervisor', 'config',
         'supervisord.conf')
     show(yellow("Running supervisorctrl: %s." % command))
     return run('supervisorctl --configuration="%s" %s' % (conf, command))
@@ -48,15 +48,15 @@ def run_supevisordctl(command):
 
 def start_supervisor():
     """Start supervisor process."""
-    conf = pjoin(cget('project_dir'), 'supervisor', 'config',
+    conf = pjoin(cget('service_dir'), 'supervisor', 'config',
         'supervisord.conf')
     pname = cget('supervisor_process_id')
     show(yellow("Starting supervisor with id: %s." % pname))
     return run('supervisord --configuration="%s"' % conf)
 
 
-def reload_supervisor():
-    """Start supervisor process."""
+def reload():
+    """Start or restart supervisor process."""
     ve_dir = cget("virtualenv_dir")
     activate = pjoin(ve_dir, "bin", "activate")
     show(yellow("Reloading supervisor."))
