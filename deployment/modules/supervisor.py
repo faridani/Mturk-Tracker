@@ -1,5 +1,5 @@
 from os.path import join as pjoin, isdir
-from fabric.api import env, run, prefix, settings
+from fabric.api import env, run, prefix, settings, sudo
 from fabric.colors import yellow, red
 from utils import (cget, local_files_dir, show, upload_template_with_perms,
     cset, create_target_directories, upload_templated_folder_with_perms)
@@ -15,7 +15,7 @@ def configure():
     cset("supervisor_process_id",
         '%s%s' % (cget('supervisor_process_base'), '_supervisor'))
     # create all dirs and log dirs
-    dirs = ['', 'config', 'solr']
+    dirs = ['', 'config', 'solr', 'solr/config']
     dirs = [pjoin(sdir, l) for l in dirs]
     log_dirs = ['', cget('project_name'), 'child_auto', 'solr']
     log_dirs = [pjoin(slogdir, l) for l in log_dirs]
@@ -43,7 +43,7 @@ def run_supevisordctl(command):
     conf = pjoin(cget('service_dir'), 'supervisor', 'config',
         'supervisord.conf')
     show(yellow("Running supervisorctrl: %s." % command))
-    return run('supervisorctl --configuration="%s" %s' % (conf, command))
+    return sudo('supervisorctl --configuration="%s" %s' % (conf, command))
 
 
 def start_supervisor():
@@ -52,7 +52,7 @@ def start_supervisor():
         'supervisord.conf')
     pname = cget('supervisor_process_id')
     show(yellow("Starting supervisor with id: %s." % pname))
-    return run('supervisord --configuration="%s"' % conf)
+    return sudo('supervisord --configuration="%s"' % conf)
 
 
 def reload():

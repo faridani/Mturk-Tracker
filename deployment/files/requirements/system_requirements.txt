@@ -5,3 +5,4 @@ subversion
 mercurial
 python2.7-dev
 libevent-dev
+openjdk-6-jdk

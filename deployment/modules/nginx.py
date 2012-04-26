@@ -36,13 +36,16 @@ def configure():
             upload_template_with_perms(
                 source, destination, context, mode="644")
     enabled = cget("nginx_sites_enabled")
-    with settings(sudo_prefix=SUDO_PREFIX, warn_only=True):
-        show(yellow("Enabling sites: %s." % enabled))
+    with settings(hide("stderr", "stdout"), sudo_prefix=SUDO_PREFIX,
+        warn_only=True):
+        show("Enabling sites: %s." % enabled)
         for s in enabled:
             available = '/etc/nginx/sites-available'
             enabled = '/etc/nginx/sites-enabled'
-            sudo("ln -s {available}/{site} {enabled}/{site}".format(
+            ret = sudo("ln -s {available}/{site} {enabled}/{site}".format(
                 available=available, enabled=enabled, site=s))
+            if ret.failed:
+                show("Error enabling site: %s: %s." % (s, ret))
 
 
 def reload():

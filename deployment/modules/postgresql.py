@@ -7,7 +7,7 @@ from modules.utils import (PROPER_SUDO_PREFIX as SUDO_PREFIX, show,
 
 
 def configure():
-    """Uploads postgresql settings."""
+    """Uploads postgresql configuration files."""
     context = dict(env["ctx"])
     local_dir = local_files_dir("postgresql")
     dest_dir = "/etc/postgresql"

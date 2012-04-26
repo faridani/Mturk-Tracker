@@ -3,11 +3,17 @@ from os.path import join as pjoin
 
 from pprint import pprint
 from fabric import colors
-from fabric.api import run, sudo, hide, settings, put, env, prefix, cd
+from fabric.api import run, sudo, hide, settings, put, env, prefix, cd, abort
 from fabric.contrib.files import upload_template
+from fabric.contrib.console import confirm
 
 
 PROPER_SUDO_PREFIX = "sudo -i -S -p '%s' "
+
+
+def confirm_or_abort(question, default=False):
+    if not confirm(colors.red("\nDo you want to continue?"), default=False):
+        abort("Aborting deployment")
 
 
 def show(msg, *args):
@@ -44,9 +50,7 @@ def local_files_dir(subpath=""):
     This is a *local* path. It is used before code fetch is done
     on the remote machine.
     """
-    this_dir = os.path.dirname(os.path.abspath(__file__))
-    deployment_dir = os.path.abspath(pjoin(this_dir, os.path.pardir))
-    path = pjoin(deployment_dir, "files")
+    path = pjoin(cget("local_root"), "deployment", "files")
     if subpath:
         path = pjoin(path, subpath)
     return path

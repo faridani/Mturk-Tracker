@@ -22,7 +22,7 @@
     "branch": "new",
     "locals_path": "files/django/settings/local.py",
     "supervisor_files": [
-        "supervisord.conf", "project.conf"
+        "supervisord.conf", "project.conf", "solr.conf"
     ],
     "nginx_sites_enabled": [
         "mturk"

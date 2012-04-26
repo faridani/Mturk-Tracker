@@ -10,6 +10,8 @@ for lib in $SOLR_HOME/*.jar ; do
   LIBS="${LIBS}:$lib"
 done
 
+echo $LIBS
+
 #-Dsolr.clustering.enabled=true
 java \
     -Xmx512m \

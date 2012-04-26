@@ -1,18 +1,17 @@
 import os
 from os.path import join as pjoin
 import json
-from fabric.colors import red, yellow
+from fabric.colors import red, yellow, green, blue, magenta
 from fabric.api import abort, task, env, hide, settings, sudo, cd
-from fabric.contrib.console import confirm_or_abort
 
-from modules import nginx, supervisor, postgresql
+from modules import nginx, supervisor, postgresql, solr
 from modules.database import (ensure_database, ensure_user, ensure_language)
 from modules.virtualenv import (update_virtualenv, create_virtualenv,
     setup_virtualenv)
 from modules.utils import (show, put_file_with_perms,
     dir_exists, PROPER_SUDO_PREFIX as SUDO_PREFIX, cget, cset, print_context,
     run_django_cmd, upload_template_with_perms, local_files_dir, get_boolean,
-    install_without_prompt, create_target_directories)
+    install_without_prompt, create_target_directories, confirm_or_abort)
 
 
 PARENT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -40,7 +39,7 @@ def install_system_requirements():
             with open(requirements) as f:
                 r = ' '.join([f.strip() for f in f.readlines()])
                 name = 'requirements: {0}'.format(r)
-                with settings(warn_only=True, sudo_prefix=SUDO_PREFIX):
+                with settings(sudo_prefix=SUDO_PREFIX):
                     install_without_prompt(r, name, silent=False)
 
 
@@ -51,6 +50,7 @@ def prepare_global_env():
     setup_ssh()
     setup_virtualenv()
     nginx.provision()
+    solr.provision(update=True)
 
 
 def setup_ssh():
@@ -95,9 +95,6 @@ def prepare_target_env():
         "media", "static", "scripts", "services"]
     dirs = [pjoin(project_dir, d) for d in dirs]
     create_target_directories(dirs, "755", user)
-
-    nginx.configure()
-    postgresql.configure()
 
     # Create Virtualenv if not present.
     create_virtualenv()
@@ -198,6 +195,9 @@ def configure_services():
     """Ensures correct init and running scripts for services are installed."""
     supervisor.configure()
     postgresql.configure()
+    nginx.configure()
+    solr.provision(update=False)
+    solr.configure()
 
 
 def reload_services():
@@ -223,6 +223,10 @@ def set_instance_conf():
     cset('settings_full_name', '.'.join([cget('project_inner'), 'settings',
         cget('settings_name')]))
     cset('service_dir', pjoin(cget("project_dir"), "services"))
+
+    this_dir = os.path.dirname(os.path.abspath(__file__))
+    deployment_dir = os.path.abspath(pjoin(this_dir, os.path.pardir))
+    cset('local_root',  deployment_dir)
 
     # Directory with manage.py script.
     cset("manage_py_dir", pjoin(cget("project_dir"), "code"))
@@ -287,6 +291,23 @@ def update_args(ctx, instance, branch, commit, locals_path, requirements,
     cset("requirements", get_boolean(requirements))
     cset("setup_environment", get_boolean(setup_environment))
     return ctx
+
+
+@task
+def help():
+    """Prints help."""
+    show(green("Available options:"))
+    show(red("conf_file") + ": " + yellow("JSON configuration file to use"))
+    show(red("instance") + ": " + yellow("name of the instance (can be "
+        "specified using in the settings)"))
+    show(magenta("setup_environment") + ": " + yellow("if a full environment "
+        "configuration should be perfomed (default: False)"))
+    show(magenta("requirements") + ": " + yellow("if requirements should be "
+        "installed (default: True)"))
+
+    show(blue("locals_path") + ": " + yellow("path to local settings"))
+    show(blue("branch") + ": " + yellow("repository branch to use"))
+    show(blue("commit") + ": " + yellow("repository commit to use"))
 
 
 @task
