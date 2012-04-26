@@ -15,7 +15,7 @@ def configure():
     cset("supervisor_process_id",
         '%s%s' % (cget('supervisor_process_base'), '_supervisor'))
     # create all dirs and log dirs
-    dirs = ['', 'config', 'solr', 'solr/config']
+    dirs = ['', 'config', 'solr', 'solr/config', cget('project_name')]
     dirs = [pjoin(sdir, l) for l in dirs]
     log_dirs = ['', cget('project_name'), 'child_auto', 'solr']
     log_dirs = [pjoin(slogdir, l) for l in log_dirs]

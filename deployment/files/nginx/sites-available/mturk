@@ -5,7 +5,7 @@ server {
         access_log  %(log_dir)s/nginx/mturk.access.log;
         error_log   %(log_dir)s/nginx/mturk.error.log;
 
-	rewrite ^/s/(.*)$ /media/$1 last;
+	#rewrite ^/s/(.*)$ /media/$1 last;
 
         location /media  {
                 gzip on;

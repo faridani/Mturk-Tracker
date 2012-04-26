@@ -50,7 +50,6 @@ def prepare_global_env():
     setup_ssh()
     setup_virtualenv()
     nginx.provision()
-    solr.provision(update=True)
 
 
 def setup_ssh():
@@ -196,7 +195,7 @@ def configure_services():
     supervisor.configure()
     postgresql.configure()
     nginx.configure()
-    solr.provision(update=False)
+    solr.provision(update=cget("setup_environment"))
     solr.configure()
 
 
