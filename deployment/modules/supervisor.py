@@ -1,5 +1,5 @@
 from os.path import join as pjoin, isdir
-from fabric.api import env, run, prefix, settings, sudo
+from fabric.api import env, prefix, settings, sudo, hide
 from fabric.colors import yellow, red
 from utils import (cget, local_files_dir, show, upload_template_with_perms,
     cset, create_target_directories, upload_templated_folder_with_perms)
@@ -61,7 +61,7 @@ def reload():
     activate = pjoin(ve_dir, "bin", "activate")
     show(yellow("Reloading supervisor."))
     with prefix("source %s" % activate):
-        with settings(warn_only=True):
+        with settings(hide("stderr", "stdout", "running"), warn_only=True):
             res = run_supevisordctl('reload')
             if res.return_code == 2:
                 show(yellow("Supervisor unavailable, starting new process."))

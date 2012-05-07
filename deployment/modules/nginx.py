@@ -1,6 +1,6 @@
 from os.path import join as pjoin, isdir
 from fabric.api import sudo, settings, env, hide
-from fabric.colors import yellow
+from fabric.colors import yellow, red
 from modules.utils import (PROPER_SUDO_PREFIX as SUDO_PREFIX, show,
     install_without_prompt, cget, create_target_directories, local_files_dir,
     upload_templated_folder_with_perms, upload_template_with_perms)
@@ -45,10 +45,16 @@ def configure():
             ret = sudo("ln -s {available}/{site} {enabled}/{site}".format(
                 available=available, enabled=enabled, site=s))
             if ret.failed:
-                show("Error enabling site: %s: %s." % (s, ret))
+                show(red("Error enabling site: %s: %s." % (s, ret)))
 
 
 def reload():
     """Starts or restarts nginx."""
     with settings(hide("stderr"), sudo_prefix=SUDO_PREFIX, warn_only=True):
-        return sudo("service nginx reload")
+        sudo("service nginx reload")
+        res = sudo("service nginx restart")
+        if res.return_code == 2:
+            show(yellow("Nginx unavailable, starting new process."))
+            res = sudo("service nginx start")
+            if res.return_code != 0:
+                show(red("Error starting nginx!."))
