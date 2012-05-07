@@ -6,6 +6,8 @@
     "db_user": "mturktracker",
     "db_password": "asdfg",
     "db_port": "",
+    "solr_db_user": "mturktracker",
+    "solr_db_password": "asdfg",
     "default_prefix": "mturktracker",
     "pip_cache": "/tmp/mturktracker_pip",
     "pip_requirements": [
@@ -26,5 +28,8 @@
     ],
     "nginx_sites_enabled": [
         "mturk"
+    ],
+    "cron_files": [
+        "cron.d", "cron.daily"
     ]
 }

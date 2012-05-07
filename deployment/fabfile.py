@@ -4,7 +4,7 @@ import json
 from fabric.colors import red, yellow, green, blue, magenta
 from fabric.api import abort, task, env, hide, settings, sudo, cd
 
-from modules import nginx, supervisor, postgresql, solr
+from modules import nginx, supervisor, postgresql, solr, cron
 from modules.database import (ensure_database, ensure_user, ensure_language)
 from modules.virtualenv import (update_virtualenv, create_virtualenv,
     setup_virtualenv)
@@ -197,6 +197,7 @@ def configure_services():
     postgresql.configure()
     nginx.configure()
     solr.configure()
+    cron.configure()
 
 
 def __reload_services():

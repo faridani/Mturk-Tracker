@@ -1,5 +1,5 @@
 #MAILTO="michal.klujszo@10clouds.com"
-PROJECT_ROOT="/home/mtracker/mturk/src"
+PROJECT_ROOT="%(manage_py_dir)s"
 
 */6     *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec crawl --workers=4;
 40		1		*		*		*		root	cd $PROJECT_ROOT; ./control/python_manage_exec db_update_diffs --limit=200;

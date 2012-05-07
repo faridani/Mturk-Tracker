@@ -2,13 +2,10 @@
 
 CMD=$1
 
-HOME="/home/mtracker"
-PROJECT_ROOT="$HOME/mturk/src"
-DJANGO_SETTINGS_MODULE=`cat $PROJECT_ROOT/DJANGO_SETTINGS_MODULE`
-LOGDIR="$HOME/log"
+LOGDIR="%(logs_dir)s/cron"
 
-. "$HOME/mturk/bin/activate"
-cd "$HOME/mturk/src"
+. "%(virtualenv_dir)s/bin/activate"
+cd "%(manage_py_dir)s"
 
 shift 1
 ARGUMENTS=$*

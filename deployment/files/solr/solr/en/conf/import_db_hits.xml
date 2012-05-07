@@ -2,8 +2,8 @@
     <dataSource name="mturk_crawl"
                 driver="org.postgresql.Driver"
                 url="jdbc:postgresql://localhost/mturk_crawl"
-                user="postgres"
-                password="test12"
+                user="%(solr_db_user)s"
+                password="%(solr_db_password)s"
                 readOnly="true"
                 autoCommit="false"
                 transactionIsolation="TRANSACTION_READ_COMMITTED"
@@ -16,7 +16,7 @@
                     FROM
                         main_hitgroupcontent
                     WHERE
-                        is_public = true AND 
+                        is_public = true AND
                         LENGTH(html) &lt; 9000001"
 
 				deltaQuery="SELECT DISTINCT
