@@ -11,14 +11,21 @@ from fabric.contrib.console import confirm
 PROPER_SUDO_PREFIX = "sudo -i -S -p '%s' "
 
 
-def confirm_or_abort(question, default=False):
-    if not confirm(colors.red("\nDo you want to continue?"), default=False):
+def confirm_or_abort(question="\nDo you want to continue?", default=False):
+    if not confirm(colors.red(question), default=False):
         abort("Aborting deployment")
 
 
 def show(msg, *args):
-    "Print some message with increased visibility."
-    print colors.cyan('==>', bold=True), msg % args
+    """Print some message with increased visibility.
+    If possible, message will be formatted using args. In case some arguments
+    are missing, the exception will be caught and raw msg will be displayed.
+    """
+    try:
+        msg = msg % args
+    except TypeError:
+        pass
+    print colors.cyan('==>', bold=True), msg
 
 
 def cget(name):
@@ -102,10 +109,19 @@ def create_dir_with_perms(path, mode=None, user=None, group=None):
 
 def upload_template_with_perms(source, destination, context=None, mode=None,
         user=None, group=None):
-    with settings(hide("stdout", "running")):
-        upload_template(source, destination, context=context, use_sudo=True,
-            backup=False)
-    ensure_permissions(destination, mode=mode, user=user, group=group)
+    try:
+        with settings(hide("stdout", "running")):
+            upload_template(source, destination, context=context, use_sudo=True,
+                backup=False)
+        ensure_permissions(destination, mode=mode, user=user, group=group)
+    except TypeError as e:
+        msg = "Error uploading settings file: {0}, to {1}: {2}"
+        msg = msg.format(source, destination, str(e))
+        show(colors.red(msg))
+        show(colors.green("If it is a formatting error, you may want to search"
+            " the uploaded settings file for any misintepreted %'s and replace"
+            " them with: '%({0})s'.".format(cget('percent_escape_key'))))
+        confirm_or_abort()
 
 
 def upload_templated_folder_with_perms(source, source_root, destination_root,

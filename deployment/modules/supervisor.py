@@ -15,7 +15,7 @@ def configure():
     cset("supervisor_process_id",
         '%s%s' % (cget('supervisor_process_base'), '_supervisor'))
     # create all dirs and log dirs
-    dirs = ['', 'config', 'solr', 'solr/config', cget('project_name')]
+    dirs = ['', 'config', cget('project_name')]
     dirs = [pjoin(sdir, l) for l in dirs]
     log_dirs = ['', cget('project_name'), 'child_auto', 'solr']
     log_dirs = [pjoin(slogdir, l) for l in log_dirs]
@@ -63,8 +63,21 @@ def reload():
     with prefix("source %s" % activate):
         with settings(hide("stderr", "stdout", "running"), warn_only=True):
             res = run_supevisordctl('reload')
-            if res.return_code == 2:
+            if res.return_code != 0:
                 show(yellow("Supervisor unavailable, starting new process."))
                 res = start_supervisor()
                 if res.return_code != 0:
                     show(red("Error starting supervisor!."))
+
+
+def shutdown():
+    """Requests supervisor process and all controlled services shutdown."""
+    ve_dir = cget("virtualenv_dir")
+    activate = pjoin(ve_dir, "bin", "activate")
+    show(yellow("Shutting supervisor down."))
+    with prefix("source %s" % activate):
+        with settings(hide("stderr", "stdout", "running"), warn_only=True):
+            res = run_supevisordctl('shutdown all')
+            if res.return_code != 2:
+                msg = "Could not shutdown supervisor, process does not exists."
+                show(yellow(msg))

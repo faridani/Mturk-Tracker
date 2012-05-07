@@ -199,8 +199,9 @@ def configure_services():
     solr.configure()
 
 
-def reload_services():
+def __reload_services():
     """Reloads previously configured services"""
+    supervisor.shutdown()
     nginx.reload()
     supervisor.reload()
 
@@ -209,6 +210,10 @@ def set_instance_conf():
     """Compute all instance specific paths and settings.
     Put *all* settings computation login here.
     """
+    # Use to escape % characters in config files
+    cset("p", '%')
+    cset("percent_escape_key", "p")
+
     # System
     cset("user", env["user"])
 
@@ -310,6 +315,12 @@ def help():
 
 
 @task
+def reload_services():
+    """Reloads all services."""
+    __reload_services()
+
+
+@task
 def deploy(conf_file=None, instance=None, branch=None, commit=None,
         locals_path=None, setup_environment=False, requirements=True):
     u"""Does a full deployment of the project code.
@@ -361,4 +372,4 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
     # Uploads settings and scripts for services.
     configure_services()
     # Reload services to load new config.
-    reload_services()
+    __reload_services()

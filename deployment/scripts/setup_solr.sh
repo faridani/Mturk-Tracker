@@ -5,7 +5,7 @@ SOLR_VERSION="${SOLR_VERSION:-1.4.1}"
 DL_TO=/tmp/%(project_name)s
 FILE=solr.tgz
 UPDATE=${UPDATE:-false}
-SUCCESS_FILE="$MTURK_HOME/solr/fabric_solr_install_success"
+SUCCESS_FILE="$MTURK_HOME/solr/.fabric_solr_install_success"
 
 if [ ! -d "$DL_TO" ]; then
     mkdir "$DL_TO"
@@ -29,5 +29,5 @@ then
     cp -rf "$DL_TO/apache-solr-$SOLR_VERSION/example/webapps" "$MTURK_HOME/solr"
     touch $SUCCESS_FILE
 else
-    echo "Solr installed - skipping install."
+    echo "Solr already installed - skipping install."
 fi

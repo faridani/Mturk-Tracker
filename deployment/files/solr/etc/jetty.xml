@@ -192,7 +192,7 @@
     <Ref id="RequestLog">
       <Set name="requestLog">
         <New id="RequestLogImpl" class="org.mortbay.jetty.NCSARequestLog">
-          <Arg><SystemProperty name="jetty.logs" default="/var/log/mturk/solr"/>/yyyy_mm_dd.request.log</Arg>
+          <Arg><SystemProperty name="jetty.logs" default="%(supervisor_log_dir)s/solr/"/>/yyyy_mm_dd.request.log</Arg>
           <Set name="retainDays">90</Set>
           <Set name="append">true</Set>
           <Set name="extended">false</Set>
@@ -204,7 +204,7 @@
     <New id="ServerLog" class="java.io.PrintStream">
       <Arg>
         <New class="org.mortbay.util.RolloverFileOutputStream">
-          <Arg><SystemProperty name="jetty.logs" default="/var/log/mturk/solr"/>/yyyy_mm_dd.stderrout.log</Arg>
+          <Arg><SystemProperty name="jetty.logs" default="%(supervisor_log_dir)s/solr/"/>/yyyy_mm_dd.stderrout.log</Arg>
           <Arg type="boolean">false</Arg>
           <Arg type="int">90</Arg>
           <Arg><Call class="java.util.TimeZone" name="getTimeZone"><Arg>GMT</Arg></Call></Arg>

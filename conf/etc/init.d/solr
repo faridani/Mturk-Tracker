@@ -1,17 +1,13 @@
 #!/bin/bash
-#
-# chkconfig: 2345 95 20
-# description: Some description
-# processname: java
-# pidfile: /var/run/solr.pid
 
 . /etc/rc.d/init.d/functions
 
-SOLR_HOME="/var/www/mturk/solr"
-SOLR_PID="/var/run/solr.pid"
-SOLR_LOCK="/var/lock/subsys/solr"
+SOLR_HOME="%(service_dir)s/solr"
+SOLR_PID="%(service_dir)s/solr/solr.pid"
+#SOLR_LOCK="/var/lock/subsys/solr"
+SOLR_LOCK="%(service_dir)s/solr/lock"
 SOLR_SCRIPT="$SOLR_HOME/start.sh"
-LOG_FILE=/tmp/mturk.solr.log
+LOG_FILE="%(supervisor_log_dir)s/solr"
 
 case "$1" in
     start)
