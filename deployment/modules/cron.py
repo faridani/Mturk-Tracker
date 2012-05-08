@@ -12,7 +12,6 @@ def configure():
     in /etc/crond.d/ etc. Thus those files/folders must be specified explictly.
     """
     user = cget("user")
-
     logdir = pjoin(cget('log_dir'), 'cron')
     create_target_directories([logdir], "700", user)
 
@@ -35,3 +34,10 @@ def configure():
         else:
             upload_template_with_perms(
                 source, destination, context, mode="755")
+
+    # format and upload command execution script used by cron
+    scripts = ['manage_py_exec', 'manage_py_exec_silent']
+    for script_name in scripts:
+        source = pjoin(cget("local_root"), 'deployment', 'scripts', script_name)
+        destination = pjoin(cget("script_dir"), script_name)
+        upload_template_with_perms(source, destination, context, mode="755")

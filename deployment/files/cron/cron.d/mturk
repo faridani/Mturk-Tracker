@@ -1,12 +1,14 @@
 #MAILTO="michal.klujszo@10clouds.com"
 PROJECT_ROOT="%(manage_py_dir)s"
+SCRIPT_ROOT="%(script_dir)s"
+SCRIPT_NAME="manage_py_exec_silent"
 
-*/6     *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec crawl --workers=4;
-40		1		*		*		*		root	cd $PROJECT_ROOT; ./control/python_manage_exec db_update_diffs --limit=200;
-5       *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec db_refresh_mviews;
-15		*		*		*		*		root 	cd $PROJECT_ROOT; ./control/python_manage_exec db_update_agregates; python manage.py db_update_diffs --limit=20; python manage.py classify_spam --limit=40;
-25      1       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec db_calculate_daily_stats
-#15      2       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec solr_sync --clean-queue
-#45      *       *       *       *       root    cd $PROJECT_ROOT; ./control/python_manage_exec solr_sync
+*/6     *       *       *       *       root    cd $PROJECT_ROOT; $SCRIPT_ROOT/$SCRIPT_NAME crawl --workers=4;
+40		1		*		*		*		root	cd $PROJECT_ROOT; $SCRIPT_ROOT/$SCRIPT_NAME db_update_diffs --limit=200;
+5       *       *       *       *       root    cd $PROJECT_ROOT; $SCRIPT_ROOT/$SCRIPT_NAME db_refresh_mviews;
+15		*		*		*		*		root 	cd $PROJECT_ROOT; $SCRIPT_ROOT/$SCRIPT_NAME db_update_agregates; python manage.py db_update_diffs --limit=20; python manage.py classify_spam --limit=40;
+25      1       *       *       *       root    cd $PROJECT_ROOT; $SCRIPT_ROOT/$SCRIPT_NAME db_calculate_daily_stats
+#15      2       *       *       *       root    cd $PROJECT_ROOT; $SCRIPT_ROOT/$SCRIPT_NAME solr_sync --clean-queue
+#45      *       *       *       *       root    cd $PROJECT_ROOT; $SCRIPT_ROOT/$SCRIPT_NAME solr_sync
 
-#50	*/3	*	*	*	root cd $PROJECT_ROOT; ./control/python_manage_exec cache_toprequesters
+#50	*/3	*	*	*	root cd $PROJECT_ROOT; $SCRIPT_ROOT/$SCRIPT_NAME cache_toprequesters

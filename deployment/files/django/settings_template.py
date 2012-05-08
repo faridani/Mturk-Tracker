@@ -25,7 +25,7 @@ DATABASES.update({
         'NAME': '%(db_name)s',
         'USER': '%(db_user)s',
         'PASSWORD': '%(db_password)s',
-        'HOST': 'localhost',
+        'HOST': '%(db_host)s',
         'PORT': '%(db_port)s',
     },
 })

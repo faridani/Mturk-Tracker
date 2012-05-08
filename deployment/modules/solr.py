@@ -22,7 +22,7 @@ def provision(update=False):
     script_name = "setup_solr.sh"
     source = pjoin(cget("local_root"), 'deployment', 'scripts', script_name)
 
-    dest_scripts = pjoin(cget("project_dir"), 'scripts')
+    dest_scripts = cget("script_dir")
     create_target_directories([dest_scripts, solr_dir], "700", user)
 
     context = dict(env['ctx'])

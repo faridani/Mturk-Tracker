@@ -82,12 +82,6 @@ def prepare_target_env():
     user = cget("user")
     project_dir = cget("project_dir")
 
-    # Ensure we have database and user set up.
-    show(yellow("Setting database up"))
-    ensure_user(cget("db_user"), cget("db_password"))
-    ensure_database(cget("db_name"), cget("db_user"))
-    ensure_language(cget("db_name"), 'plpgsql')
-
     # Ensure proper directory structure.
     create_target_directories([project_dir], '755', user)
 
@@ -198,6 +192,15 @@ def configure_services():
     nginx.configure()
     solr.configure()
     cron.configure()
+    setup_database()
+
+
+def setup_database():
+    # Ensure we have database and user set up.
+    show(yellow("Setting database up"))
+    ensure_user(cget("db_user"), cget("db_password"))
+    ensure_database(cget("db_name"), cget("db_user"))
+    ensure_language(cget("db_name"), 'plpgsql')
 
 
 def __reload_services():
@@ -221,14 +224,18 @@ def set_instance_conf():
     # Common project settings.
     cset("prefix", cget("default_prefix"))
     cset("project_name", "%s-%s" % (cget("prefix"), cget("instance")))
+    cset('settings_full_name', '.'.join([cget('project_inner'), 'settings',
+        cget('settings_name')]))
+
+    # Host directories
     cset("project_dir", pjoin(cget("projects_dir"), cget("project_name")))
     cset("virtualenv_dir", pjoin(cget("project_dir"), "virtualenv"))
     cset("deployment_files", pjoin(cget("project_dir"), "code", "deployment",
         "files"))
-    cset('settings_full_name', '.'.join([cget('project_inner'), 'settings',
-        cget('settings_name')]))
     cset('service_dir', pjoin(cget("project_dir"), "services"))
+    cset("script_dir", pjoin(cget("project_dir"), "scripts"))
 
+    # Local directories
     this_dir = os.path.dirname(os.path.abspath(__file__))
     deployment_dir = os.path.abspath(pjoin(this_dir, os.path.pardir))
     cset('local_root',  deployment_dir)
@@ -242,6 +249,8 @@ def set_instance_conf():
     cset("db_name", "%s_%s" % (cget("prefix"), cget("instance")))
     cset("db_user", cget("db_name"))
     cset("db_password", cget("db_user"))
+    cset("db_port", "")
+    cset("db_host", "localhost")
 
     # SSH
     user = cget("user")
@@ -358,12 +367,13 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
     # Fetch source code.
     fetch_project_code()
 
+    # Upload target specific Django settings.
+    upload_settings_files()
+
     if get_boolean(requirements):
         # Update Virtualenv packages.
         update_virtualenv()
 
-    # Upload target specific Django settings.
-    upload_settings_files()
     # Collect static files.
     collect_staticfiles()
     # Compile translation messages.
