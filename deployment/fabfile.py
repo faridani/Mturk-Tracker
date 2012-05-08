@@ -192,7 +192,6 @@ def configure_services():
     nginx.configure()
     solr.configure()
     cron.configure()
-    setup_database()
 
 
 def setup_database():
@@ -358,10 +357,13 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
 
     # Give user a chance to abort deployment.
     confirm_or_abort(red("\nDo you want to continue?"))
+
     # Prepare server environment for deployment.
     show(yellow("Preparing project environment"))
     if get_boolean(setup_environment):
         prepare_global_env()
+
+    # create folders
     prepare_target_env()
 
     # Fetch source code.
@@ -369,6 +371,9 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
 
     # Upload target specific Django settings.
     upload_settings_files()
+
+    # Setup database (this relies on settings)
+    setup_database()
 
     if get_boolean(requirements):
         # Update Virtualenv packages.

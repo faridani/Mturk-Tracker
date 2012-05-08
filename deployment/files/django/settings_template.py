@@ -17,8 +17,8 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 # sudo -u postgres psql
-# CREATE USER mturk_tracker WITH CREATEDB NOCREATEUSER ENCRYPTED PASSWORD E'mturk_tracker';
-# CREATE DATABASE mturk_tracker_db WITH OWNER mturk_tracker;
+# CREATE USER %(db_user)s WITH CREATEDB NOCREATEUSER ENCRYPTED PASSWORD E'%(db_password)s';
+# CREATE DATABASE %(db_name)s' WITH OWNER %(db_user)s;
 DATABASES.update({
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

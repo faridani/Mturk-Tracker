@@ -4,7 +4,7 @@
     "instance": "staging",
     "db_name": "mturk_tracker",
     "db_user": "mturktracker",
-    "db_password": "asdfg",
+    "db_password": "mturk_tracker",
     "db_port": "",
     "solr_db_user": "mturktracker",
     "solr_db_password": "asdfg",
