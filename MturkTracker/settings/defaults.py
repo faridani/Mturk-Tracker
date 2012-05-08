@@ -98,7 +98,7 @@ CACHES = {
 }
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
-INSTALLED_APPS = (
+FOREIGN_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -111,11 +111,15 @@ INSTALLED_APPS = (
     'pipeline',
     'south',
     'bootstrap',
+)
 
+MTRACKER_APPS = (
     'mturk.main',
     'mturk.importer',
     'mturk.spam',
 )
+
+INSTALLED_APPS = tuple(list(FOREIGN_APPS) + list(MTRACKER_APPS))
 
 SOUTH_TESTS_MIGRATE = False
 
