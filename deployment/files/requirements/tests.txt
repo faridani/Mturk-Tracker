@@ -1,2 +1,5 @@
 mock
 https://github.com/kmmbvnr/django-jenkins/zipball/master#egg=django-jenkins.egg
+pylint==0.25.1
+pyflakes
+pep8
