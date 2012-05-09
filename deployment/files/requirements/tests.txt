@@ -4,3 +4,4 @@ pylint==0.25.1
 pyflakes
 pep8
 coverage
+nose

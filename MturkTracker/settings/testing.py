@@ -1,5 +1,6 @@
 """Settings specific for running under Jenkins."""
 
+import re
 import os
 from defaults import *
 
@@ -44,39 +45,9 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pyflakes',
     'django_jenkins.tasks.run_pep8',
     # JSlint is broken with Django jenkins.
-    'django_jenkins.tasks.run_jslint',
+    #'django_jenkins.tasks.run_jslint',
     'django_jenkins.tasks.with_coverage',
     'django_jenkins.tasks.django_tests',
 )
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-
-
-JS_IGNORES = []
-
-
-def prepare_js_files():
-    js_dir = os.path.join(STATICFILES_DIRS[0], 'js')
-    js_files = []
-    for dirname, dirs, files in os.walk(js_dir):
-        for file_name in files:
-            # JS Libraries ignore.
-            if file_name.endswith('min.js'):
-                continue
-            if file_name in JS_IGNORES:
-                continue
-            if file_name.startswith('bootstrap'):
-                continue
-            if not file_name.endswith('.js'):
-                continue
-            js_files.append(os.path.join(dirname, file_name))
-    return js_files
-
-
-JSLINT_CHECKED_FILES = prepare_js_files()
-###################################################################
-## voodoo magic needed to run jslint :)                          ##
-if 'compressor.finders.CompressorFinder' in STATICFILES_FINDERS:
-    from compressor.conf import settings as c_settings
-    if not os.path.exists(c_settings.COMPRESS_ROOT):
-        os.makedirs(c_settings.COMPRESS_ROOT)

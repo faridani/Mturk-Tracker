@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
+#import sys
 import signal
 import unittest
 import itertools
@@ -9,9 +9,7 @@ import datetime
 
 TESTS_DIR = os.path.abspath(os.path.dirname(__file__))
 # add upper dir to PYTHONPATH
-sys.path.append(TESTS_DIR)
-
-import parser
+from mturk.main.management.commands.crawler import parser
 
 
 class ParserTest(unittest.TestCase):
