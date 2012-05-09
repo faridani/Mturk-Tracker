@@ -13,6 +13,7 @@ def install_opener():
     urllib2.install_opener(opener)
     return opener
 
+
 def authenticate(email, password):
     """Authenticate using mturk worker account. This should be done after
     installation of opener with cookie support.

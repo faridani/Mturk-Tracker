@@ -72,7 +72,6 @@ class TestParers(ParserTest):
         result = parser.hits_group_details(html)
         self.assertEqual(result, expected)
 
-
     def test_hits_group_details_no_iframe(self):
         html = self.get_html('hitsgroupdetails2.html')
         expected = {
@@ -88,7 +87,6 @@ class TestParers(ParserTest):
         expected = {}
         result = parser.hits_group_details(html)
         self.assertEqual(result, expected)
-
 
     def test_hits_group_listinfo(self):
         html = self.get_html('hitslist.html')
