@@ -1,29 +1,3 @@
-'''
-Copyright (c) 2009 Panagiotis G. Ipeirotis
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-Initially designed and created by 10clouds.com, contact at 10clouds.com
-'''
 # -*- coding: utf-8 -*-
 
 from south.db import db
@@ -31,20 +5,20 @@ from django.db import models
 from mturk.main.models import *
 
 class Migration:
-    
+
     def forwards(self, orm):
         db.execute('''
             CREATE INDEX hits_mv_start_time_group_id
               ON hits_mv
               USING btree
-              (group_id, start_time);        
+              (group_id, start_time);
         ''')
-    
-    
+
+
     def backwards(self, orm):
         db.execute('''DROP INDEX hits_mv_start_time_group_id;''')
-    
-    
+
+
     models = {
         'main.hitgroupstatus': {
             'crawl': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['main.Crawl']"}),
@@ -103,5 +77,5 @@ class Migration:
             'start_time': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True'})
         }
     }
-    
+
     complete_apps = ['main']

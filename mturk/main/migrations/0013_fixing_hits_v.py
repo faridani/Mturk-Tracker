@@ -1,29 +1,3 @@
-'''
-Copyright (c) 2009 Panagiotis G. Ipeirotis
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-Initially designed and created by 10clouds.com, contact at 10clouds.com
-'''
 # -*- coding: utf-8 -*-
 
 from south.db import db
@@ -31,11 +5,11 @@ from django.db import models
 from mturk.main.models import *
 
 class Migration:
-    
+
     def forwards(self, orm):
 
         db.execute("""
-CREATE OR REPLACE VIEW hits_v AS 
+CREATE OR REPLACE VIEW hits_v AS
  SELECT p.id AS status_id, q.id AS content_id, p.group_id, p.crawl_id, ( SELECT main_crawl.start_time
            FROM main_crawl
           WHERE main_crawl.id = p.crawl_id) AS start_time, q.requester_id, p.hits_available, p.page_number, p.inpage_position, p.hit_expiration_date, q.requester_name, q.reward, q.html, q.description, q.title, q.keywords, q.qualifications, q.time_alloted
@@ -45,11 +19,11 @@ CREATE OR REPLACE VIEW hits_v AS
       FROM hits_mv
      ORDER BY hits_mv.crawl_id));
     """)
-    
-    
+
+
     def backwards(self, orm):
         db.execute("""
-            CREATE OR REPLACE VIEW hits_v AS 
+            CREATE OR REPLACE VIEW hits_v AS
              SELECT p.id AS status_id, q.id AS content_id, p.group_id, p.crawl_id, ( SELECT main_crawl.start_time
                        FROM main_crawl
                       WHERE main_crawl.id = p.crawl_id) AS start_time, q.requester_id, p.hits_available, p.page_number, p.inpage_position, p.hit_expiration_date, q.requester_name, q.reward, q.html, q.description, q.title, q.keywords, q.qualifications, q.time_alloted
@@ -57,11 +31,11 @@ CREATE OR REPLACE VIEW hits_v AS
                LEFT JOIN main_hitgroupcontent q ON p.group_id::text = q.group_id::text
               WHERE NOT (p.crawl_id IN ( SELECT DISTINCT hits_mv.crawl_id
                   FROM hits_mv
-                 ORDER BY hits_mv.crawl_id));        
+                 ORDER BY hits_mv.crawl_id));
         """)
 
-    
-    
+
+
     models = {
         'main.hitgroupstatus': {
             'crawl': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['main.Crawl']"}),
@@ -110,5 +84,5 @@ CREATE OR REPLACE VIEW hits_v AS
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         }
     }
-    
+
     complete_apps = ['main']

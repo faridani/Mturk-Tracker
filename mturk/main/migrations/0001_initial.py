@@ -1,29 +1,3 @@
-'''
-Copyright (c) 2009 Panagiotis G. Ipeirotis
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-Initially designed and created by 10clouds.com, contact at 10clouds.com
-'''
 # -*- coding: utf-8 -*-
 
 from south.db import db
@@ -31,9 +5,9 @@ from django.db import models
 from mturk.main.models import *
 
 class Migration:
-    
+
     def forwards(self, orm):
-        
+
         # Adding model 'HitGroupStatus'
         db.create_table('main_hitgroupstatus', (
             ('crawl', orm['main.HitGroupStatus:crawl']),
@@ -46,7 +20,7 @@ class Migration:
             ('hit_expiration_date', orm['main.HitGroupStatus:hit_expiration_date']),
         ))
         db.send_create_signal('main', ['HitGroupStatus'])
-        
+
         # Adding model 'HitGroupContent'
         db.create_table('main_hitgroupcontent', (
             ('reward', orm['main.HitGroupContent:reward']),
@@ -62,7 +36,7 @@ class Migration:
             ('id', orm['main.HitGroupContent:id']),
         ))
         db.send_create_signal('main', ['HitGroupContent'])
-        
+
         # Adding model 'Crawl'
         db.create_table('main_crawl', (
             ('errors', orm['main.Crawl:errors']),
@@ -73,22 +47,22 @@ class Migration:
             ('id', orm['main.Crawl:id']),
         ))
         db.send_create_signal('main', ['Crawl'])
-        
-    
-    
+
+
+
     def backwards(self, orm):
-        
+
         # Deleting model 'HitGroupStatus'
         db.delete_table('main_hitgroupstatus')
-        
+
         # Deleting model 'HitGroupContent'
         db.delete_table('main_hitgroupcontent')
-        
+
         # Deleting model 'Crawl'
         db.delete_table('main_crawl')
-        
-    
-    
+
+
+
     models = {
         'main.hitgroupstatus': {
             'crawl': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['main.Crawl']"}),
@@ -122,5 +96,5 @@ class Migration:
             'success': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'})
         }
     }
-    
+
     complete_apps = ['main']

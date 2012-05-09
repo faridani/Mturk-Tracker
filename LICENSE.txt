@@ -1,5 +1,5 @@
 '''
-Copyright (c) 2009 Panagiotis G. Ipeirotis
+Copyright (c) 2009-2012 Panagiotis G. Ipeirotis
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
