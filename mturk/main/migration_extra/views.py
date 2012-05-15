@@ -30,7 +30,7 @@ def drop_mviews():
 def create_hits_views():
     """Creates hits view and related material view.
     First query creates basic hits_v, generating schema for hits_mv.
-    Next, hits_V is altered to select only the objects that are not yet
+    Next, hits_v is altered to select only the objects that are not yet
     included in hits_mv.
     """
     CREATE_HITS_V = """
@@ -53,8 +53,14 @@ def create_hits_views():
                                    p.hit_group_content_id = q.id
     """
     db.execute(CREATE_HITS_V)
-    db.execute("""SELECT create_matview('hits_mv', 'hits_v');""")
-    db.execute("""drop view hits_v;""")
+    db.execute("SELECT create_matview('hits_mv', 'hits_v');")
+    add_mv_columns = """
+    ALTER TABLE hits_mv
+        ADD COLUMN hits_diff INTEGER,
+        ADD COLUMN is_spam BOOLEAN;
+    """
+    db.execute(add_mv_columns)
+    db.execute("drop view hits_v;")
     CREATE_HITS_V = """
     CREATE OR REPLACE VIEW hits_v AS
     SELECT p.id AS status_id,
@@ -91,8 +97,7 @@ def create_indexes():
     db.create_index('hits_mv', ['start_time'])
     db.create_index('hits_mv', ['crawl_id'])
     db.create_index('hits_mv', ['group_id'])
-    db.create_index('main_hitgroupcontent', ['group_id'], unique=True)
-    db.create_index('main_hitgroupcontent', ['requester_id'])
+    db.create_index('hits_mv', ['is_spam'])
     db.execute("""
     CREATE INDEX hits_mv_start_time_group_id ON hits_mv
     USING btree (group_id, start_time);
@@ -103,6 +108,5 @@ def drop_indexes():
     db.drop_index('hits_mv', ['start_time'])
     db.drop_index('hits_mv', ['crawl_id'])
     db.drop_index('hits_mv', ['group_id'])
-    db.drop_index('main_hitgroupcontent', ['group_id'])
-    db.drop_index('main_hitgroupcontent', ['requester_id'])
+    db.drop_index('hits_mv', ['is_spam'])
     db.execute("DROP INDEX hits_mv_start_time_group_id;")
