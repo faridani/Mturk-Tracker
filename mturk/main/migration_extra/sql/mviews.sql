@@ -83,7 +83,7 @@ CREATE OR REPLACE FUNCTION refresh_matview(name) RETURNS VOID
 END
 ';
 
-CREATE OR REPLACE FUNCTION incremental_refresh_matview(name) VOID
+CREATE OR REPLACE FUNCTION incremental_refresh_matview(name) RETURNS VOID
 SECURITY DEFINER
 LANGUAGE plpgsql
 COST 100 AS '

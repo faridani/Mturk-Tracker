@@ -187,11 +187,11 @@ def sync_db():
 
 def configure_services():
     """Ensures correct init and running scripts for services are installed."""
+    cron.configure()
     supervisor.configure()
     postgresql.configure()
     nginx.configure()
     solr.configure()
-    cron.configure()
 
 
 def setup_database():

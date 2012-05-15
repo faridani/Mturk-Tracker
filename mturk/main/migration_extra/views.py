@@ -1,5 +1,6 @@
+import os
+from django.conf import settings
 from south.db import db
-from mturk.main.models import *
 
 
 def create_mviews():
@@ -15,14 +16,14 @@ def create_mviews():
         matviews
     """
     mviews_sql = os.path.join(
-        settings.ROOT_PATH, 'mturk/main/migrations/sql/mviews.sql')
+        settings.ROOT_PATH, 'mturk/main/migration_extra/sql/mviews.sql')
     db.execute_many(open(mviews_sql).read())
 
 
 def drop_mviews():
     """Drops objects created by create_mviews."""
     mviews_drop_sql = os.path.join(
-        settings.ROOT_PATH, 'mturk/main/migrations/sql/mviews_drop.sql')
+        settings.ROOT_PATH, 'mturk/main/migration_extra/sql/mviews_drop.sql')
     db.execute_many(open(mviews_drop_sql).read())
 
 

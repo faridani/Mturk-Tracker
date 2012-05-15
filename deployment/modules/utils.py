@@ -36,7 +36,7 @@ def cget(name):
 def cset(name, value, force=False):
     u"Save configuration variable to the global context, if it's not defined."
     if force:
-        env["ctx"]["name"] = value
+        env["ctx"][name] = value
     else:
         value = env["ctx"].setdefault(name, value)
     return value
