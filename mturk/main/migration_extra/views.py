@@ -105,4 +105,4 @@ def drop_indexes():
     db.drop_index('hits_mv', ['group_id'])
     db.drop_index('main_hitgroupcontent', ['group_id'])
     db.drop_index('main_hitgroupcontent', ['requester_id'])
-    db.execute('''DROP INDEX hits_mv_start_time_group_id;''')
+    db.execute("DROP INDEX hits_mv_start_time_group_id;")
