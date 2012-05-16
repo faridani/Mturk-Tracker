@@ -1,18 +1,22 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from mturk.main.migration_extra import views
+
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        db.drop_index('hits_mv', ['hits_diff'])
-
+        views.create_mviews()
+        views.create_hits_views()
+        views.create_indexes()
 
     def backwards(self, orm):
-        pass
-
+        views.drop_indexes()
+        views.drop_hits_views()
+        views.drop_mviews()
 
     models = {
         'main.crawl': {
@@ -21,13 +25,15 @@ class Migration(SchemaMigration):
             'errors': ('mturk.fields.JSONField', [], {'null': 'True', 'blank': 'True'}),
             'groups_available': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
             'groups_downloaded': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-            'has_diffs': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True', 'blank': 'True'}),
+            'has_diffs': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
+            'has_hits_mv': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'hits_available': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
             'hits_downloaded': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_spam_computed': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'old_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'start_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'success': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'})
+            'success': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         },
         'main.crawlagregates': {
             'Meta': {'object_name': 'CrawlAgregates'},
@@ -36,6 +42,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'projects': ('django.db.models.fields.IntegerField', [], {}),
             'reward': ('django.db.models.fields.FloatField', [], {}),
+            'spam_projects': ('django.db.models.fields.IntegerField', [], {}),
             'start_time': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True'})
         },
         'main.daystats': {
@@ -52,10 +59,11 @@ class Migration(SchemaMigration):
             'description': ('django.db.models.fields.TextField', [], {'max_length': '1000000'}),
             'first_crawl': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['main.Crawl']", 'null': 'True', 'blank': 'True'}),
             'group_id': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '50', 'db_index': 'True'}),
-            'group_id_hashed': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'group_id_hashed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'html': ('django.db.models.fields.TextField', [], {'max_length': '100000000'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
+            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'is_spam': ('django.db.models.fields.NullBooleanField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             'keywords': ('django.db.models.fields.CharField', [], {'max_length': '10000', 'null': 'True', 'blank': 'True'}),
             'occurrence_date': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             'qualifications': ('django.db.models.fields.CharField', [], {'max_length': '10000', 'null': 'True', 'blank': 'True'}),
@@ -81,7 +89,7 @@ class Migration(SchemaMigration):
         'main.hitgroupstatus': {
             'Meta': {'object_name': 'HitGroupStatus'},
             'crawl': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['main.Crawl']"}),
-            'group_id': ('django.db.models.fields.CharField', [], {'max_length': '50', 'db_index': 'True'}),
+            'group_id': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'hit_expiration_date': ('django.db.models.fields.DateTimeField', [], {}),
             'hit_group_content': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['main.HitGroupContent']"}),
             'hits_available': ('django.db.models.fields.IntegerField', [], {}),
@@ -98,7 +106,7 @@ class Migration(SchemaMigration):
         },
         'main.requesterprofile': {
             'Meta': {'object_name': 'RequesterProfile'},
-            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
+            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'requester_id': ('django.db.models.fields.CharField', [], {'max_length': '64', 'primary_key': 'True'})
         }
     }

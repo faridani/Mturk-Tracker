@@ -147,7 +147,9 @@ def update_first_occured_agregates():
         logging.info("inserting missing crawl into main_hitgroupfirstoccurences: %s" % crawl_id)
 
         execute_sql("""INSERT INTO
-                main_hitgroupfirstoccurences
+                main_hitgroupfirstoccurences (reward, group_content_id,
+                    crawl_id, requester_name, group_status_id, occurrence_date,
+                    requester_id, group_id, hits_available, id)
                     select
                         p.reward,
                         p.id,
@@ -182,7 +184,8 @@ def update_crawl_agregates(commit_threshold=10, only_new=True):
 
             execute_sql("""
             INSERT INTO
-                main_crawlagregates
+                main_crawlagregates (hits, start_time, reward, crawl_id, id,
+                    projects, spam_projects)
             SELECT
                 sum(hits_available) as "hits",
                 start_time,

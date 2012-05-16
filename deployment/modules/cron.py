@@ -10,6 +10,11 @@ def configure():
     """Creates all neccessary folders and uploads settings.
     Keep in mind that the base for filenames is /etc, because the files reside
     in /etc/crond.d/ etc. Thus those files/folders must be specified explictly.
+
+    Additionally this will format and upload
+        manage_py_exec and
+        manage_py_exec_silent
+    scripts.
     """
     user = cget("user")
     logdir = pjoin(cget('log_dir'), 'cron')
