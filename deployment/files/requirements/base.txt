@@ -13,3 +13,5 @@ BeautifulSoup
 boto==1.7a
 psycopg2
 gevent
+django-sphinxdoc
+Sphinx
