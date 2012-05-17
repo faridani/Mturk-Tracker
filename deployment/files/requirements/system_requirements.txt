@@ -1,5 +1,5 @@
-postgresql
-postgresql-server-dev-8.4
+postgresql-9.1
+postgresql-server-dev-9.1
 git
 subversion
 mercurial

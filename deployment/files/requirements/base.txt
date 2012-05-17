@@ -10,6 +10,6 @@ ipython
 -e hg+https://bitbucket.org/cogtree/python-solr#egg=pythonsolr
 #-e git+git@github.com:10clouds/common.git#egg=tenclouds
 BeautifulSoup
-boto==1.7a
+boto>=2.4.1
 psycopg2
 gevent

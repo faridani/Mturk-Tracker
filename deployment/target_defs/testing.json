@@ -17,7 +17,6 @@
         "system_requirements.txt"
     ],
     "upload_ssh_keys_from_local": true,
-    "files_dir": "files",
     "ssh_files": [
         "config", "id_rsa", "id_rsa.pub"
     ],
