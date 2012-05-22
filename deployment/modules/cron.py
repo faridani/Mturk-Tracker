@@ -1,9 +1,9 @@
 from os.path import join as pjoin, isdir
-from fabric.api import env
+from fabric.api import env, sudo, settings, hide
 from fabric.colors import yellow, red
 from modules.utils import (show, cget, create_target_directories,
     local_files_dir, upload_templated_folder_with_perms,
-    upload_template_with_perms)
+    upload_template_with_perms, PROPER_SUDO_PREFIX as SUDO_PREFIX)
 
 
 def configure():
@@ -35,10 +35,11 @@ def configure():
         destination = pjoin(dest_dir, name)
         if isdir(source):
             upload_templated_folder_with_perms(source, local_dir, dest_dir,
-                context, mode="755", directories_mode="700")
+                context, mode="644", user='root', group='root',
+                directories_mode="700")
         else:
             upload_template_with_perms(
-                source, destination, context, mode="755")
+                source, destination, context, mode="644", user='root', group='root')
 
     # format and upload command execution script used by cron
     scripts = ['manage_py_exec', 'manage_py_exec_silent']
@@ -46,3 +47,9 @@ def configure():
         source = pjoin(cget("local_root"), 'deployment', 'scripts', script_name)
         destination = pjoin(cget("script_dir"), script_name)
         upload_template_with_perms(source, destination, context, mode="755")
+
+    show(yellow("Reloading cron"))
+    with settings(hide("stderr"), sudo_prefix=SUDO_PREFIX, warn_only=True):
+        res = sudo("service cron reload")
+        if res.return_code == 2:
+            show(red("Error reloading cron!"))
