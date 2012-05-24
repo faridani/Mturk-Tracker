@@ -30,7 +30,7 @@ DATABASES.update({
     },
 })
 
-
+RUN_DATA_PATH = "%(service_dir)s"
 DEBUG = False
 TEMPLATE_DEBUG = False
 

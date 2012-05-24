@@ -8,6 +8,7 @@ JS_DEBUG = DEBUG
 _tempdir = tempfile.tempdir or '/tmp'
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 ROOT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(PROJECT_PATH)))
+RUN_DATA_PATH = '/tmp/mturktracker/data'
 
 ADMINS = ()
 MANAGERS = ADMINS
