@@ -3,7 +3,7 @@
 
 Include the following in settings:
 
-HAYSTACK_SITECONF = "MturkTracker.search_sites"
+HAYSTACK_SITECONF = "mtracker.search_sites"
 
 """
 import haystack

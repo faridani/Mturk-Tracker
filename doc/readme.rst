@@ -10,7 +10,7 @@ There are two methods of generating the documentation:
 
 Both approaches use sphinx-build command to generate the output files.
 
-From now on, all paths will be given relative from `/path/to/MturkTracker`, while your domain will be referred to as `yourdomain.com`.
+From now on, all paths will be given relative from `/path/to/Mturk-Tracker`, while your domain will be referred to as `yourdomain.com`.
 
 Makefile, pure Sphinx
 ---------------------

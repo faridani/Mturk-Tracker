@@ -9,7 +9,7 @@ def bad(request):
     """ Simulates a server error """
     1 / 0
 
-urlpatterns = patterns('MturkTracker',
+urlpatterns = patterns('mtracker',
 
     #url(r'^$', 'main.views.index', name='index'),
 

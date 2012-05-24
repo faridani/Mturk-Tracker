@@ -1,6 +1,7 @@
 import os
-from django.conf import settings
 from south.db import db
+
+SQL_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'sql'))
 
 
 def create_mviews():
@@ -15,15 +16,13 @@ def create_mviews():
     and a table:
         matviews
     """
-    mviews_sql = os.path.join(
-        settings.ROOT_PATH, 'mturk/main/migration_extra/sql/mviews.sql')
+    mviews_sql = os.path.join(SQL_PATH, 'mviews.sql')
     db.execute_many(open(mviews_sql).read())
 
 
 def drop_mviews():
     """Drops objects created by create_mviews."""
-    mviews_drop_sql = os.path.join(
-        settings.ROOT_PATH, 'mturk/main/migration_extra/sql/mviews_drop.sql')
+    mviews_drop_sql = os.path.join(SQL_PATH, 'mviews_drop.sql')
     db.execute_many(open(mviews_drop_sql).read())
 
 

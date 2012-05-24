@@ -1,5 +1,7 @@
 {
-    "project_inner": "MturkTracker",
+    "project_inner": "app/mtracker",
+    "django_project_name": "mtracker",
+    "manage_py_dir": "app",
     "settings_name": "defaults",
     "source_url": "git://github.com/10clouds/Mturk-Tracker.git",
     "default_prefix": "mturktracker",

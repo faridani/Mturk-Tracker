@@ -224,8 +224,8 @@ def set_instance_conf():
     # Common project settings.
     cset("prefix", cget("default_prefix"))
     cset("project_name", "%s-%s" % (cget("prefix"), cget("instance")))
-    cset('settings_full_name', '.'.join([cget('project_inner'), 'settings',
-        cget('settings_name')]))
+    cset('settings_full_name', '.'.join([cget('django_project_name'),
+        'settings', cget('settings_name')]))
 
     # Host directories
     cset("project_dir", pjoin(cget("projects_dir"), cget("project_name")))
@@ -241,7 +241,9 @@ def set_instance_conf():
     cset('local_root',  deployment_dir)
 
     # Directory with manage.py script.
-    cset("manage_py_dir", pjoin(cget("project_dir"), "code"))
+    if not os.path.isabs(cget('manage_py_dir')):
+        mpy_dir = pjoin(cget("project_dir"), "code", cget('manage_py_dir'))
+        cset("manage_py_dir", mpy_dir, force=True)
     cset("base_dir", pjoin(cget("project_dir"), "code", cget("project_inner")))
     cset("log_dir", pjoin(cget("project_dir"), "logs"))
 
@@ -383,7 +385,8 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
     # Collect static files.
     collect_staticfiles()
     # Compile translation messages.
-    compile_messages()
+    # Make sure this folder exists before using compile_messages
+    # compile_messages()
     # Update database schema.
     sync_db()
     # Uploads settings and scripts for services.

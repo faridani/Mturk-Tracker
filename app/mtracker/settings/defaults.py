@@ -7,9 +7,7 @@ JS_DEBUG = DEBUG
 
 _tempdir = tempfile.tempdir or '/tmp'
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-ROOT_PATH = os.path.abspath(os.path.dirname(PROJECT_PATH))
-DJANGO_PATH = os.path.join(ROOT_PATH, os.path.join(ROOT_PATH, 'libs', 'django'))
-PROJECT_NAME = os.path.basename(ROOT_PATH)
+ROOT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(PROJECT_PATH)))
 
 ADMINS = ()
 MANAGERS = ADMINS
@@ -21,11 +19,9 @@ ugettext = lambda x: x
 LANGUAGES = (
   ('en', ugettext('English')),
 )
-LOCALE_PATHS = (
-    os.path.join(ROOT_PATH, "locale"),
-)
+LOCALE_PATHS = ()
 SITE_ID = 1
-USE_I18N = True
+USE_I18N = False
 USE_L10N = True
 USE_TZ = True
 
@@ -80,20 +76,20 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'mturk.tabs_context_processor.tabs'
 )
 
-ROOT_URLCONF = 'MturkTracker.urls'
+ROOT_URLCONF = 'mtracker.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'MturkTracker.wsgi.application'
+WSGI_APPLICATION = 'mtracker.wsgi.application'
 
 TEMPLATE_DIRS = (
     "templates",
-    os.path.join(PROJECT_PATH, '..', 'templates'),
+    os.path.join(ROOT_PATH, 'templates'),
 )
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(_tempdir, 'MturkTracker__file_based_cache'),
+        'LOCATION': os.path.join(_tempdir, 'mtracker__file_based_cache'),
     }
 }
 
@@ -203,8 +199,8 @@ PIPELINE_COMPILERS = (
     'pipeline.compilers.less.LessCompiler',
 )
 PIPELINE_LESS_BINARY = "lessc"
-PIPELINE_YUI_BINARY = os.path.join(PROJECT_PATH, '..', 'bin', 'yuicompressor.sh')
-PIPELINE_COFFEE_SCRIPT_BINARY = os.path.join(PROJECT_PATH, '..', 'bin', 'coffeefinder.sh')
+PIPELINE_YUI_BINARY = os.path.join(ROOT_PATH, 'bin', 'yuicompressor.sh')
+PIPELINE_COFFEE_SCRIPT_BINARY = os.path.join(ROOT_PATH, 'bin', 'coffeefinder.sh')
 
 PIPELINE_TEMPLATE_FUNC = 'new EJS'
 PIPELINE_TEMPLATE_NAMESPACE = 'window.Template'
@@ -241,7 +237,7 @@ PREDICTION_API_DATA_SET = "mturk-tracker/spam-training-data-20110506.txt"
 MTURK_AUTH_EMAIL = None
 MTURK_AUTH_PASSWORD = None
 
-HAYSTACK_SITECONF = "MturkTracker.search_sites"
+HAYSTACK_SITECONF = "mtracker.search_sites"
 HAYSTACK_SEARCH_ENGINE = 'dummy'
 #HAYSTACK_SEARCH_ENGINE = 'solr'
 #HAYSTACK_SOLR_URL = 'http://127.0.0.1:8983/solr/en'

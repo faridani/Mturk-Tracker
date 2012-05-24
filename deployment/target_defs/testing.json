@@ -1,5 +1,5 @@
 {
-    "project_inner": "MturkTracker",
+    "project_inner": "app/mtracker",
     "settings_name": "testing",
     "instance": "staging",
     "db_name": "mturk_tracker",
