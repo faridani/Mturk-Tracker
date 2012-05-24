@@ -31,12 +31,12 @@ USE_TZ = True
 
 MEDIA_ROOT = os.path.join(ROOT_PATH, 'media')
 MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(PROJECT_PATH, '..', 'collected_static')
+STATIC_ROOT = os.path.join(ROOT_PATH, 'collected_static')
 STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(PROJECT_PATH, '..', 'static'),
+    os.path.join(ROOT_PATH, 'static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -96,7 +96,8 @@ CACHES = {
         'LOCATION': os.path.join(_tempdir, 'MturkTracker__file_based_cache'),
     }
 }
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 FOREIGN_APPS = (
     'django.contrib.auth',
@@ -108,9 +109,11 @@ FOREIGN_APPS = (
     'django.contrib.admin',
     'django.contrib.webdesign',
 
+    'haystack',
     'pipeline',
     'south',
     'bootstrap',
+    'sphinxdoc',
 )
 
 MTRACKER_APPS = (
@@ -237,3 +240,8 @@ PREDICTION_API_DATA_SET = "mturk-tracker/spam-training-data-20110506.txt"
 
 MTURK_AUTH_EMAIL = None
 MTURK_AUTH_PASSWORD = None
+
+HAYSTACK_SITECONF = "MturkTracker.search_sites"
+HAYSTACK_SEARCH_ENGINE = 'dummy'
+#HAYSTACK_SEARCH_ENGINE = 'solr'
+#HAYSTACK_SOLR_URL = 'http://127.0.0.1:8983/solr/en'

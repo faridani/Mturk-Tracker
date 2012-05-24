@@ -221,4 +221,4 @@ def logout(request):
 
 def main_page(request):
     ctx = RequestContext(request)
-    return render_to_response('_admin/main.html', ctx)
+    return render_to_response('admin/main.html', ctx)

@@ -12,7 +12,8 @@ def bad(request):
 urlpatterns = patterns('MturkTracker',
 
     #url(r'^$', 'main.views.index', name='index'),
-    url(r'^_admin/', include(admin.site.urls)),
+
+    url(r'^admin/', include(admin.site.urls)),
 
     (r'^bad/$', bad),
 )

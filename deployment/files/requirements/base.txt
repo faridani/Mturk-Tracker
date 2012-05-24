@@ -13,5 +13,12 @@ BeautifulSoup
 boto==1.7a
 psycopg2
 gevent
-django-sphinxdoc
+
+# sphinx documentation as a part of the site
 Sphinx
+-e hg+https://bitbucket.org/ssc/django-sphinxdoc#egg=django-sphinxdoc
+
+# django-sphinxdoc does not support Django Haystack 2.0.0-beta
+#https://github.com/toastdriven/django-haystack/zipball/master#egg=django-haystack.egg
+django-haystack==1.2.7
+pysolr

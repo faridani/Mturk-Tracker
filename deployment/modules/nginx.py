@@ -9,8 +9,8 @@ from modules.utils import (PROPER_SUDO_PREFIX as SUDO_PREFIX, show,
 def provision():
     """Add nginx repository to known repositories and installs it."""
     show(yellow("Installing nginx."))
-    with settings(sudo_prefix=SUDO_PREFIX):
-        sudo("nginx=stable && add-apt-repository -y ppa:nginx/$nginx")
+    with settings(sudo_prefix=SUDO_PREFIX, warn_only=True):
+        sudo("nginx=stable && add-apt-repository ppa:nginx/$nginx")
         sudo("apt-get update")
     install_without_prompt('nginx', 'nginx')
 

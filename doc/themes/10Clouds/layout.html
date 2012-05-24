@@ -1,0 +1,21 @@
+{% extends "basic/layout.html" %}
+
+{% if theme_collapsiblesidebar|tobool %}
+{% set script_files = script_files + ['_static/sidebar.js'] %}
+{% endif %}
+
+
+{% block sidebarlogo %}
+    {%- if logo %}
+        <p class="logo">
+            <a href="{{ pathto(master_doc) }}">
+                <img class="logo" src="{{ pathto('_static/' + logo, 1) }}" alt="Logo"/>
+            </a>
+        </p>
+    {%- endif %}
+    <p class="logo">
+        <a href="http://10clouds.com">
+            <img class="logo" src="{{ pathto('_static/', 1) }}/10clouds_logo.png" alt="10Clouds Logo"/>
+        </a>
+    <p>
+{% endblock %}
