@@ -143,12 +143,15 @@ def upload_templated_folder_with_perms(source, source_root, destination_root,
             destination = pjoin(target_dir, name)
             if not os.path.isdir(source):
                 upload_template_with_perms(
-                    source, destination, arg['context'], mode=arg["mode"])
+                    source, destination, arg['context'], mode=arg["mode"],
+                    group=arg['group'], user=arg['user'])
     arg = {
         'context': context,
         'mode': mode,
         'destination': destination_root,
         'root': source_root,
+        'user': user,
+        'group': group,
     }
     os.path.walk(source, __visit, arg)
 

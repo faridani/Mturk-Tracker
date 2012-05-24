@@ -207,6 +207,7 @@ def __reload_services():
     supervisor.shutdown()
     nginx.reload()
     supervisor.reload()
+    postgresql.reload()
 
 
 def set_instance_conf():

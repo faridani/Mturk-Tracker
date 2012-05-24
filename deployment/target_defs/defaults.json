@@ -3,6 +3,5 @@
     "settings_name": "defaults",
     "source_url": "git://github.com/10clouds/Mturk-Tracker.git",
     "default_prefix": "mturktracker",
-    "files_dir": "../files",
     "projects_dir": "/home/projects"
 }

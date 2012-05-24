@@ -57,4 +57,4 @@ def reload():
             show(yellow("Nginx unavailable, starting new process."))
             res = sudo("service nginx start")
             if res.return_code != 0:
-                show(red("Error starting nginx!."))
+                show(red("Error starting nginx!"))
