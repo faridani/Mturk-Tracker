@@ -45,7 +45,7 @@ def configure():
             ret = sudo("ln -s {available}/{site} {enabled}/{site}".format(
                 available=available, enabled=enabled, site=s))
             if ret.failed:
-                show(red("Error enabling site: %s: %s." % (s, ret)))
+                show(red("Error enabling site: {}: {}.".format(s, ret)))
 
 
 def reload():
