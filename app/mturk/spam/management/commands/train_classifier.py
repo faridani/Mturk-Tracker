@@ -8,6 +8,7 @@ from django.conf import settings
 
 log = logging.getLogger('classify_spam')
 
+
 class Command(BaseCommand):
 
     help = 'Train classifier'
@@ -32,7 +33,7 @@ class Command(BaseCommand):
             status = train.get(data=options['file']).execute()
             log.info(status)
             if 'RUNNING' != status['trainingStatus']:
-              break
+                break
             log.info('Waiting for training to complete.')
             time.sleep(2)
 

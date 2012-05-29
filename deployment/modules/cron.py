@@ -14,7 +14,9 @@ def configure():
     Additionally this will format and upload
         manage_py_exec and
         manage_py_exec_silent
+
     scripts.
+
     """
     user = cget("user")
     logdir = pjoin(cget('log_dir'), 'cron')

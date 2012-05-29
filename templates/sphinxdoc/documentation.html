@@ -2,6 +2,11 @@
 
 {% block title %}{{ block.super }} » {{ project.name }}{% for p in doc.parents %} » {{ p.title|striptags|safe }}{% endfor %} » {{ doc.title|striptags|safe }}{% endblock %}
 
+{% block css %}
+{{ block.super }}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/sphinxdoc.css" type="text/css" media="screen">
+{% endblock %}
+
 {% block content %}
 
 <div class="pagination-top">
@@ -25,7 +30,7 @@
     {% endif %}
 </div>
 
-<div class="span-5">
+<div class="span-6">
     {% block sidebar %}
         {% block doc_toc %}
         <div class="box">

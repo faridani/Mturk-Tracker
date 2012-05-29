@@ -22,7 +22,6 @@ from django.conf import settings
 
 from utils.pid import Pid
 from crawler import tasks
-from crawler.db import dbpool
 from crawler import auth
 from mturk.main.models import Crawl, RequesterProfile
 
@@ -127,6 +126,8 @@ class Command(BaseCommand):
         # are public or not
         reqesters = RequesterProfile.objects.all_as_dict()
 
+        dbpool = ThreadedConnectionPool(10, 90, 'dbname=%s user=%s password=%s' % \
+            (settings.DATABASE_NAME, settings.DATABASE_USER, settings.DATABASE_PASSWORD))
         # collection of group_ids that were already processed - this should
         # protect us from duplicating data
         processed_groups = set()
@@ -136,7 +137,7 @@ class Command(BaseCommand):
             jobs = []
             for hg in hg_pack:
                 j = gevent.spawn(tasks.process_group,
-                        hg, crawl.id, reqesters, processed_groups)
+                        hg, crawl.id, reqesters, processed_groups, dbpool)
                 jobs.append(j)
                 total_reward += hg['reward'] * hg['hits_available']
             log.debug('processing pack of hitgroups objects')

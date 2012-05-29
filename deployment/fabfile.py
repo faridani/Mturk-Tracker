@@ -4,7 +4,7 @@ import json
 from fabric.colors import red, yellow, green, blue, magenta
 from fabric.api import abort, task, env, hide, settings, sudo, cd
 
-from modules import nginx, supervisor, postgresql, solr, cron
+from modules import nginx, supervisor, postgresql, solr, cron, doc
 from modules.database import (ensure_database, ensure_user, ensure_language)
 from modules.virtualenv import (update_virtualenv, create_virtualenv,
     setup_virtualenv)
@@ -29,6 +29,7 @@ def prep_apt_get():
 def install_system_requirements():
     """Installs packages included in system_requirements.txt.
     This is done before fetch, thus the file is taken from *local* storage.
+
     """
     reqs = cget('system_requirements')
     if reqs:
@@ -97,6 +98,7 @@ def prepare_target_env():
 def fetch_project_code():
     """Fetches project code from Github.
         If specified, resets state to selected branch or commit (from context).
+
     """
     branch = cget("branch")
     commit = cget("commit")
@@ -129,6 +131,7 @@ def upload_settings_files():
 
         *Warning*: Settings are uploaded from your local template file.
         Make sure to have proper branch/revision checked out.
+
     """
     base_dir = cget("base_dir")
     user = cget("user")
@@ -246,6 +249,7 @@ def set_instance_conf():
         cset("manage_py_dir", mpy_dir, force=True)
     cset("base_dir", pjoin(cget("project_dir"), "code", cget("project_inner")))
     cset("log_dir", pjoin(cget("project_dir"), "logs"))
+    cset("doc_dir", pjoin(cget("project_dir"), "doc"))
 
     # Database settings
     cset("db_name", "%s_%s" % (cget("prefix"), cget("instance")))
@@ -262,10 +266,12 @@ def set_instance_conf():
 def load_config_files(conf_file, default_conf=DEFAULT_CONF_FILE,
         use_default=True):
     """Populates env['ctx'] with settings from the provided and default files.
+    Params:
         ``conf_file`` - configuration file to use
         ``default_conf`` - default configuration file used as a base,
                            global default is 'target_defs/defaults.json'
-        ``use_defaults`` - allows to avoid using the defaults file
+        ``use_defaults`` - allows to avoid using the defaults file.
+
     """
     # Try loading configuration from JSON file.
     if conf_file:
@@ -346,6 +352,7 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
         a local settings file.
         Arguments ``commit`` and ``branch`` can be used to deploy
         some specific state of the codebase.
+
     """
     # Get file configuration and update with args
     env['ctx'] = {}
@@ -393,3 +400,7 @@ def deploy(conf_file=None, instance=None, branch=None, commit=None,
     configure_services()
     # Reload services to load new config.
     __reload_services()
+
+    # Configure and build documentation
+    doc.configure()
+    doc.build()

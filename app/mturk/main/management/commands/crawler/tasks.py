@@ -10,7 +10,7 @@ import gevent
 from gevent import thread
 
 import parser
-from db import dbpool, DB
+from db import DB
 
 
 log = logging.getLogger('crawler.tasks')
@@ -82,7 +82,7 @@ def hits_groups_total():
     html = _get_html(url)
     return parser.hits_group_total(html)
 
-def process_group(hg, crawl_id, requesters, processed_groups):
+def process_group(hg, crawl_id, requesters, processed_groups, dbpool):
     """Gevent worker that should process single hitgroup.
 
     This should write some data into database and do not return any important

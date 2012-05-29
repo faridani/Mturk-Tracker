@@ -82,17 +82,18 @@ def get_permissions(path, use_sudo=False):
     return mode, user, group
 
 
-def ensure_permissions(path, mode=None, user=None, group=None):
+def ensure_permissions(path, mode=None, user=None, group=None, recursive=False):
     current = get_permissions(path, use_sudo=True)
+    recursive = '--recursive' if recursive else ''
     if mode is not None and current[0] != mode:
         with settings(hide("running", "stdout")):
-            sudo("chmod %s %s" % (str(mode), path))
+            sudo("chmod %s %s %s" % (recursive, str(mode), path))
     if user is not None and current[1] != user:
         with settings(hide("running", "stdout")):
-            sudo("chown %s %s" % (user, path))
+            sudo("chown %s %s %s" % (recursive, user, path))
     if group is not None and current[2] != group:
         with settings(hide("running", "stdout")):
-            sudo("chown :%s %s" % (group, path))
+            sudo("chown %s :%s %s" % (recursive, group, path))
 
 
 def put_file_with_perms(local, remote, mode=None, user=None, group=None):

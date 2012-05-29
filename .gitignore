@@ -42,7 +42,7 @@ gapi
 # doc files to ignore
 doc/build/*
 doc/source/_build/*
-doc/source/api_doc/*
+doc/source/apidoc/*
 
 # deployment files to ignore
 deployment/files/ssh/*

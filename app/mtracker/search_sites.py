@@ -6,5 +6,6 @@ Include the following in settings:
 HAYSTACK_SITECONF = "mtracker.search_sites"
 
 """
-import haystack
-haystack.autodiscover()
+if __name__ == '__main__':
+    import haystack
+    haystack.autodiscover()

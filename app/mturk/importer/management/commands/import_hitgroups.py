@@ -76,6 +76,7 @@ HitGroupStatus
     hit_group_content   = models.ForeignKey(HitGroupContent)
 
     crawl               = models.ForeignKey(Crawl)
+
     '''
 
         items_per_transaction = 1000
@@ -185,6 +186,7 @@ HitGroupStatus
         except KeyboardInterrupt:
             '''
             User stopped script, rollback last data, close file descriptors  exit
+
             '''
             transaction.rollback()
             error_log.close()

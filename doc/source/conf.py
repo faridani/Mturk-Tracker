@@ -17,12 +17,18 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 DOC_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-PROJECT_PATH = os.path.abspath(os.path.dirname(DOC_PATH))
-sys.path.insert(0, os.path.abspath(os.path.dirname(os.path.join(PROJECT_PATH, 'utils'))))
+ROOT_PATH = os.path.abspath(os.path.dirname(DOC_PATH))
 
-# for running with make
-from django.conf import settings
-settings.configure()
+sys.path.insert(0, os.path.join(ROOT_PATH, 'deployment'))
+sys.path.insert(0, os.path.join(ROOT_PATH, 'app'))
+sys.path.insert(0, os.path.join(ROOT_PATH))
+
+from mtracker.settings import development as settings
+from django.core.management import setup_environ
+setup_environ(settings)
+
+#from django.conf import settings
+#settings.configure()
 
 
 # -- General configuration -----------------------------------------------------
@@ -74,7 +80,7 @@ release = '1'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['api_doc/Mturk-Tracker.wapi*']
+exclude_patterns = ['apidoc/Mturk-Tracker.wapi*']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None

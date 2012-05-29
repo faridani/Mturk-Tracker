@@ -20,6 +20,7 @@ The pure approach is to create the output html documentation files and host them
 To do so:
 
     $ cd doc
+
     $ make html
 
 The output will be available in `doc/build`, the documentation
@@ -46,4 +47,4 @@ Generating apidoc
 
 To create an automated api documentation, use sphinx-apidoc:
 
-    sphinx-apidoc -o doc/source/api_doc/ . -H Mturk-Tracker wapi migrations
+    sphinx-apidoc -o doc/source/apidoc/ . -H Mturk-Tracker wapi migrations

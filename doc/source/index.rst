@@ -12,7 +12,8 @@ API documentation (automatically generated)
 .. toctree::
    :maxdepth: 4
 
-   api_doc/modules
+   apidoc/app/modules
+   apidoc/deployment/modules
 
 
 Indices and tables
