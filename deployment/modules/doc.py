@@ -50,7 +50,15 @@ def configure():
         destination = pjoin(cget("script_dir"), script_name)
         upload_template_with_perms(source, destination, context, mode="755")
 
+    # Upload formatted conf.py file
+    show(yellow("Uploading formatted conf.py file."))
+    conf_file = "conf_formatted.py"
+    source = pjoin(cget("local_root"), "doc", 'source', conf_file)
+    destination = pjoin(ddir, 'source', conf_file)
+    upload_template_with_perms(source, destination, context, mode="755")
+
     # Add Project to the database using formatted fixture and loaddata
+    show(yellow("Adding django-sphinxdoc database models."))
     fixture_name = "fixture.json"
     source = pjoin(local_dir, fixture_name)
     destination = pjoin(ddir, fixture_name)
