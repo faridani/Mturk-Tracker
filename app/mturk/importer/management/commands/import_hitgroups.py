@@ -47,8 +47,8 @@ class Command(BaseCommand):
     def handle(self, **options):
         '''
         Sample data:
-groupid|hit_title|requester_name|requester_id|description|keywords|qualifications|hit_expiration_date|time_allotted|reward|hits_available|time_crawled|crawl_id|pageNo|inpage_position|dollars
-CW18RQ8BPZWWMWY3DY4Z|Validate the addresses. Great bonus |Product Search|A28JEQTWH76JDT|Given the list of addresses and it's site URL, please verify whether the given addresses exists in the site or not. [ Note: Bonus and Reward Details: 1). For each validated address you will get $0.02 as bonus. Suppose if the input file contains 10 addresses and you have validated all of them then you will get $0.2(i.e., 10*0.02) as bonus + $0.01 as reward. ]|reward,  online,  shopping,  web,  quality,  testing,  relevance,  search,  engine,  US,  India,  browse,  hit |HIT approval rate (%) is not less than 80 |Aug 26, 2009  (33 weeks) |1 day 12 hours|$0.01|295|2009-01-07 14:00:05|1|2|5|0.01
+groupid | hit_title | requester_name | requester_id | description | keywords | qualifications | hit_expiration_date | time_allotted | reward | hits_available | time_crawled | crawl_id | pageNo | inpage_position | dollars
+CW18RQ8BPZWWMWY3DY4Z | Validate the addresses. Great bonus  | Product Search | A28JEQTWH76JDT | Given the list of addresses and it's site URL, please verify whether the given addresses exists in the site or not. [ Note: Bonus and Reward Details: 1). For each validated address you will get $0.02 as bonus. Suppose if the input file contains 10 addresses and you have validated all of them then you will get $0.2(i.e., 10*0.02) as bonus + $0.01 as reward. ] | reward,  online,  shopping,  web,  quality,  testing,  relevance,  search,  engine,  US,  India,  browse,  hit  | HIT approval rate (%) is not less than 80  | Aug 26, 2009  (33 weeks)  | 1 day 12 hours | $0.01 | 295 | 2009-01-07 14:00:05 | 1 | 2 | 5 | 0.01
 
 HitGroupContent:
     group_id            = models.CharField('Group ID', max_length=50, db_index=True, unique=True)

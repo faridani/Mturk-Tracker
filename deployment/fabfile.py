@@ -266,11 +266,11 @@ def set_instance_conf():
 def load_config_files(conf_file, default_conf=DEFAULT_CONF_FILE,
         use_default=True):
     """Populates env['ctx'] with settings from the provided and default files.
-    Params:
-        ``conf_file`` - configuration file to use
-        ``default_conf`` - default configuration file used as a base,
-                           global default is 'target_defs/defaults.json'
-        ``use_defaults`` - allows to avoid using the defaults file.
+    Keyword arguments:
+    conf_file -- configuration file to use
+    default_conf -- default configuration file used as a base, global default
+    is 'target_defs/defaults.json'
+    use_defaults -- allows to avoid using the defaults file.
 
     """
     # Try loading configuration from JSON file.
