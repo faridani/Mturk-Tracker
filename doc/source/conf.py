@@ -28,9 +28,14 @@ needs_sphinx = '1.1'
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
+sys.path.append(os.path.abspath('exts'))
+
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(__file__), 'extensions')))
+
 extensions = [
-  'sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo',
-  'sphinx.ext.coverage', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode'
+  'sphinx.ext.autodoc', 'djangomodel',
+  'sphinx.ext.coverage', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -295,4 +300,4 @@ epub_copyright = u'2012, 10Clouds'
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+# intersphinx_mapping = {'http://docs.python.org/': None}

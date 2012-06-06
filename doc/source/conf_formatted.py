@@ -25,6 +25,5 @@ settings_name = "%(settings_name)s"
 if settings_name.find('(settings_name)s') != -1:
     settings_name = 'development'
 
-settings = __import__("mtracker.settings.{0}".format(settings_name))
-from django.core.management import setup_environ
-setup_environ(settings)
+settings_full_name = "mtracker.settings.{0}".format(settings_name)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_full_name)
