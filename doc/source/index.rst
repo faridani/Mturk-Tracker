@@ -22,3 +22,13 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+Database schema
+===============
+
+.. djangomodellist::
+
+.. automodule:: app.mturk.main.models
+    :members:
+    :undoc-members:
+    :show-inheritance:

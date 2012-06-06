@@ -34,7 +34,7 @@ sys.path.append(os.path.abspath(os.path.join(
     os.path.dirname(__file__), 'extensions')))
 
 extensions = [
-  'sphinx.ext.autodoc', 'djangomodel',
+  'sphinx.ext.autodoc', 'djangomodel', 'djmex',
   'sphinx.ext.coverage', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode',
 ]
 
@@ -301,3 +301,7 @@ epub_copyright = u'2012, 10Clouds'
 
 # Example configuration for intersphinx: refer to the Python standard library.
 # intersphinx_mapping = {'http://docs.python.org/': None}
+
+# -- Options for django model extended -----------------------------------------
+djmex_include_djangomodellists = True
+djmex_pretty_model = True
