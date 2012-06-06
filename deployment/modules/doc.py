@@ -63,7 +63,7 @@ def configure():
     source = pjoin(local_dir, fixture_name)
     destination = pjoin(ddir, fixture_name)
     upload_template_with_perms(source, destination, context, mode="755")
-    run_django_cmd('loaddata {path}'.format(path=destination))
+    run_django_cmd('loaddata', args=destination)
 
 
 def build():
